@@ -11,7 +11,7 @@ class HomePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('지금 인기 있는 수정ㅇㅇ',),
+              const Text('지금 인기 있는 수정ㅇddㅇ',),
               SingleChildScrollView(
                 padding: EdgeInsets.fromLTRB(0, 0 , 20, 0),
                 scrollDirection: Axis.horizontal, //상위 싱글찰드 스크롤 뷰가 수직으로 씌워져 있는데 될지 의문
