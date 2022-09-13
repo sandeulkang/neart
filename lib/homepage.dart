@@ -6,48 +6,149 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      appBar: AppBar(
+        title: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('지금 인기 있는 수정ㅇdddsafㅇ',),
-              SingleChildScrollView(
-                padding: EdgeInsets.fromLTRB(0, 0 , 20, 0),
-                scrollDirection: Axis.horizontal, //상위 싱글찰드 스크롤 뷰가 수직으로 씌워져 있는데 될지 의문
-                child: Row(
-                  children: [
-                    InkWell(
-                      child: Column(
-                        children: [
-                          Image.asset('assets/포스터1.jpg', width: 200,),
-                          const Text('Teracota Frendship',)
-                        ],
-                      ),
-                    ),
-                    InkWell(
-                      child: Column(
-                        children: [
-                          Image.asset('assets/포스터2.png', width: 200,),
-                          const Text('Conering',)
-                        ],
-                      ),
-                    ),
-                    InkWell(
-                      child: Column(
-                        children: [
-                          Image.asset('assets/포스터3.jpeg', width: 200,),
-                          const Text('텍스트 뷔페',)
-                        ],
-                      ),
-                    )
-                  ],
+              Opacity(
+                opacity: 0,
+                child: IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.search,
+                  ),
                 ),
               ),
-              SizedBox(height: 40,),
-              Text('지역별 전시'),
+              const Text('NeArt'),
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.search,
+                ),
+              ),
             ],
           ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              '지금 인기 있는',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+            ),
+            const SizedBox(height: 8),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          height:350,
+                          child: Image.asset(
+                            'assets/포스터1.jpg',
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(12, 7, 0, 0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Teracota Frendship',
+                                style: TextStyle(fontSize: 14),
+                              ),
+                              const SizedBox(
+                                height: 3,
+                              ),
+                              const Text('국립 현대 미술관'),
+                              const Text('09.02.-10.06.'),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  InkWell(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          height:350,
+                          child: Image.asset(
+                            'assets/포스터2.png',
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(12, 7, 0, 0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Conering',
+                                style: TextStyle(fontSize: 14),
+                              ),
+                              const SizedBox(
+                                height: 3,
+                              ),
+                              const Text('아마도 예술공간'),
+                              const Text('09.27.-09.25.'),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  InkWell(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          height:350,
+                          child: Image.asset(
+                            'assets/포스터3.png',
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(12, 7, 0, 0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                '텍스트 뷔페',
+                                style: TextStyle(fontSize: 14),
+                              ),
+                              const SizedBox(
+                                height: 3,
+                              ),
+                              const Text('수건과 화환'),
+                              const Text('09.02.-10.06.'),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 40,
+            ),
+            const Text(
+              '지역별 전시',
+              style: TextStyle(fontSize: 20),
+            ),
+            const SizedBox(height: 10),
+          ],
+        ),
       ),
     );
   }
