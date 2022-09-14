@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -150,80 +151,189 @@ class HomePage extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 8),
-            Container( // 배경색 넣어줄 거 아니면 컨테이너 지워도 된다
+            Container(
+              // 배경색 넣어줄 거 아니면 컨테이너 지워도 된다
               child: Table(
-                border: TableBorder.all(borderRadius: BorderRadius.circular(10), color: Colors.black45),
+                border: TableBorder.all(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.black45),
                 children: [
-                  TableRow(children: [
-                    InkWell(
-                      child: SizedBox(
-                        height: 45,
-                        child: Center(child: Text('서울')),
+                  TableRow(
+                    children: [
+                      InkWell(
+                        child: const SizedBox(
+                          height: 45,
+                          child: Center(child: Text('서울')),
+                        ),
+                        onTap: () {},
                       ),
-                      onTap: (){},
-                    ),
-                    InkWell(
-                      child: SizedBox(
-                        height: 45,
-                        child: Center(child: Text('강원')),
+                      InkWell(
+                        child: const SizedBox(
+                          height: 45,
+                          child: Center(child: Text('강원')),
+                        ),
+                        onTap: () {},
                       ),
-                      onTap: (){},
-                    ),
-                  ],),
-                  TableRow(children: [
-                    InkWell(
-                      child: SizedBox(
-                        height: 45,
-                        child: Center(child: Text('광주,전라')),
+                    ],
+                  ),
+                  TableRow(
+                    children: [
+                      InkWell(
+                        child: const SizedBox(
+                          height: 45,
+                          child: Center(child: Text('광주,전라')),
+                        ),
+                        onTap: () {},
                       ),
-                      onTap: (){},
-                    ),
-                    InkWell(
-                      child: SizedBox(
-                        height: 45,
-                        child: Center(child: Text('대구,경북')),
+                      InkWell(
+                        child: const SizedBox(
+                          height: 45,
+                          child: Center(child: Text('대구,경북')),
+                        ),
+                        onTap: () {},
                       ),
-                      onTap: (){},
-                    ),
-                  ],),
-                  TableRow(children: [
-                    InkWell(
-                      child: SizedBox(
-                        height: 45,
-                        child: Center(child: Text('대전,충청,세종')),
+                    ],
+                  ),
+                  TableRow(
+                    children: [
+                      InkWell(
+                        child: const SizedBox(
+                          height: 45,
+                          child: Center(child: Text('대전,충청,세종')),
+                        ),
+                        onTap: () {},
                       ),
-                      onTap: (){},
-                    ),
-                    InkWell(
-                      child: SizedBox(
-                        height: 45,
-                        child: Center(child: Text('부산,울산,경북')),
+                      InkWell(
+                        child: const SizedBox(
+                          height: 45,
+                          child: Center(child: Text('부산,울산,경북')),
+                        ),
+                        onTap: () {},
                       ),
-                      onTap: (){},
-                    ),
-                  ],),
-                  TableRow(children: [
-                    InkWell(
-                      child: SizedBox(
-                        height: 45,
-                        child: Center(child: Text('인천,경기')),
+                    ],
+                  ),
+                  TableRow(
+                    children: [
+                      InkWell(
+                        child: const SizedBox(
+                          height: 45,
+                          child: Center(child: Text('인천,경기')),
+                        ),
+                        onTap: () {},
                       ),
-                      onTap: (){},
-                    ),
-                    InkWell(
-                      child: SizedBox(
-                        height: 45,
-                        child: Center(child: Text('제주')),
+                      InkWell(
+                        child: const SizedBox(
+                          height: 45,
+                          child: Center(child: Text('제주')),
+                        ),
+                        onTap: () {},
                       ),
-                      onTap: (){},
-                    ),
-                  ],),
+                    ],
+                  ),
                 ],
               ),
+            ),
+            const SizedBox(
+              height: 50,
+            ),
+            const Text(
+              '분야별 전시', //종류? 장르?
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                TextButton(
+                    onPressed: () {},
+                    child: Column(
+                      children: [
+                        Image.asset(
+                          "assets/포스터1.jpg",
+                          width: 20,
+                          height: 20,
+                        ),
+                        Text('가구')
+                      ],
+                    )),
+                InkWell(
+                    onTap: () {},
+                    child: Column(
+                      children: [
+                        Image.asset(
+                          "assets/포스터1.jpg",
+                          width: 20,
+                          height: 20,
+                        ),
+                        Text('가구')
+                      ],
+                    )),
+                IconButton(
+                    onPressed: () {}, icon: Image.asset("assets/포스터1.jpg")),
+                IconButton(
+                    onPressed: () {}, icon: Image.asset("assets/포스터1.jpg")),
+                IconButton(
+                    onPressed: () {}, icon: Image.asset("assets/포스터1.jpg")),
+              ],
             )
           ],
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.black38,
+        type: BottomNavigationBarType.fixed, //라벨이 항상 보이게 하는 것
+        items: [
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'home',
+          ),
+          BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                "assets/glass.svg",
+                color: Colors.black38,
+                width: 22,
+                height: 22,
+              ),
+              label: 'Exhibit'),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset(
+              "assets/other.svg",
+              color: Colors.black38,
+              width: 22,
+              height: 22,
+            ),
+            label: 'Other',
+          ),
+          const BottomNavigationBarItem(
+              icon: Icon(Icons.account_balance), label: 'Curator'),
+          const BottomNavigationBarItem(icon: Icon(Icons.person), label: 'My'),
+        ],
+      ),
     );
+  }
+}
+
+//서클 버튼 만들기
+class CircleButton extends StatelessWidget {
+  CircleButton({
+    //생성자를 한번 적어주고 가야한다. 여기서 기본값 지정 가능. 아래에 변수를 먼저 만들어주고 생성자를 적어주어야 당연히 에러가 안나겠지!
+    Key? key,
+    this.onTap,
+    this.borderSize,
+    this.child,
+    this.radius : 30,
+  }) : super(key: key);
+
+  final onTap;
+  final borderSize;
+  final child;
+  final radius;
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }
