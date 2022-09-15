@@ -245,36 +245,31 @@ class HomePage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               mainAxisSize: MainAxisSize.max,
               children: [
-                TextButton(
-                    onPressed: () {},
-                    child: Column(
-                      children: [
-                        Image.asset(
-                          "assets/포스터1.jpg",
-                          width: 20,
-                          height: 20,
-                        ),
-                        Text('가구')
-                      ],
-                    )),
-                InkWell(
-                    onTap: () {},
-                    child: Column(
-                      children: [
-                        Image.asset(
-                          "assets/포스터1.jpg",
-                          width: 20,
-                          height: 20,
-                        ),
-                        Text('가구')
-                      ],
-                    )),
-                IconButton(
-                    onPressed: () {}, icon: Image.asset("assets/포스터1.jpg")),
-                IconButton(
-                    onPressed: () {}, icon: Image.asset("assets/포스터1.jpg")),
-                IconButton(
-                    onPressed: () {}, icon: Image.asset("assets/포스터1.jpg")),
+                CircleButton(
+                  child: Image.asset("assets/에곤실레.jpg"),
+                  onTap: () {},
+                  text: '평면',
+                ),
+                CircleButton(
+                  child: Image.asset("assets/chair.jpg"),
+                  onTap: () {},
+                  text: '영상',
+                ),
+                CircleButton(
+                  child: Image.asset("assets/chair.jpg"),
+                  onTap: () {},
+                  text: '입체',
+                ),
+                CircleButton(
+                  child: Image.asset("assets/chair.jpg"),
+                  onTap: () {},
+                  text: '체험',
+                ),
+                CircleButton(
+                  child: Image.asset("assets/chair.jpg"),
+                  onTap: () {},
+                  text: '대학',
+                ),
               ],
             )
           ],
@@ -321,19 +316,38 @@ class CircleButton extends StatelessWidget {
     //생성자를 한번 적어주고 가야한다. 여기서 기본값 지정 가능. 아래에 변수를 먼저 만들어주고 생성자를 적어주어야 당연히 에러가 안나겠지!
     Key? key,
     this.onTap,
-    this.borderSize,
     this.child,
-    this.radius : 30,
+    this.width,
+    this.height,
+    this.text,
   }) : super(key: key);
 
   final onTap;
-  final borderSize;
   final child;
-  final radius;
-
+  final width;
+  final height;
+  final text;
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Column(
+      children: [
+        GestureDetector(
+          child: SizedBox(
+            width: 50,
+            height: 50,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(30),
+              child: child,
+            ),
+          ),
+          onTap: () {
+            if (onTap != null) onTap();
+          },
+        ),
+        SizedBox(height: 7,),
+        Text('$text'),
+      ],
+    );
   }
 }
