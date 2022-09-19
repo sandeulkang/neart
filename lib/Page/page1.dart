@@ -20,98 +20,28 @@ class Page1 extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                InkWell(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 350,
-                        child: Image.asset(
-                          'assets/포스터1.jpg',
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(12, 7, 0, 0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Teracota Frendship',
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.w600),
-                            ),
-                            const SizedBox(
-                              height: 3,
-                            ),
-                            const Text('국립 현대 미술관'),
-                            const Text('09.02.-10.06.'),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                MainExhibit(
+                  title: 'Teracota Friendship',
+                  place: '국립현대미술관',
+                  date: '07.27.-09.25.',
+                  onTap: () {},
+                  child: Image.asset('assets/포스터1.jpg'),
                 ),
                 Container(width: 10),
-                InkWell(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 350,
-                        child: Image.asset(
-                          'assets/포스터2.png',
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(12, 7, 0, 0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Conering',
-                              style: TextStyle(fontSize: 14),
-                            ),
-                            const SizedBox(
-                              height: 3,
-                            ),
-                            const Text('아마도 예술공간'),
-                            const Text('09.27.-09.25.'),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                MainExhibit(
+                  title: '코너링(Concering)',
+                  place: '아마도 예술공간',
+                  date: '09.02.-10.06.',
+                  onTap: () {},
+                  child: Image.asset('assets/포스터2.png'),
                 ),
                 Container(width: 20),
-                InkWell(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 350,
-                        child: Image.asset(
-                          'assets/포스터3.png',
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(12, 7, 0, 0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              '텍스트 뷔페',
-                              style: TextStyle(fontSize: 14),
-                            ),
-                            const SizedBox(
-                              height: 3,
-                            ),
-                            const Text('수건과 화환'),
-                            const Text('09.02.-10.06.'),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                MainExhibit(
+                  title: '텍스트 뷔페',
+                  place: '수건과 화환',
+                  date: '09.02.-10.06.',
+                  onTap: () {},
+                  child: Image.asset('assets/포스터3.png'),
                 ),
               ],
             ),
@@ -219,30 +149,99 @@ class Page1 extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: [
               CircleButton(
-                child: Image.asset("assets/에곤실레.jpg"),
                 onTap: () {},
                 text: '평면',
+                child: Image.asset("assets/에곤실레.jpg"),
               ),
               CircleButton(
-                child: Image.asset("assets/영상.png"),
                 onTap: () {},
                 text: '영상',
+                child: Image.asset("assets/영상.png"),
               ),
               CircleButton(
-                child: Image.asset("assets/chair.jpg"),
                 onTap: () {},
                 text: '입체',
+                child: Image.asset("assets/조각.jpg"),
               ),
               CircleButton(
-                child: Image.asset("assets/chair.jpg"),
                 onTap: () {},
                 text: '체험',
+                child: Image.asset("assets/체험.jpg"),
               ),
               CircleButton(
-                child: Image.asset("assets/chair.jpg"),
                 onTap: () {},
                 text: '대학',
+                child: Image.asset("assets/chair.jpg"),
               ),
+            ],
+          ),
+          const SizedBox(
+            height: 50,
+          ),
+          const Text(
+            '최근에 시작한',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+          ),
+          const SizedBox(height: 10),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                MainExhibit(
+                  title: '길 배틀 : 프리즌 프리덤',
+                  place: '워킹하우스뉴욕 한남',
+                  date: '07.27.-09.25.',
+                  onTap: () {},
+                  child: Image.asset('assets/포스터5.jpg'),
+                ),
+                Container(width: 10),
+                MainExhibit(
+                  title: '김기주 : assortiment(조합)',
+                  place: '갤러리엠나인',
+                  date: '09.16.-10.30.',
+                  onTap: () {},
+                  child: Image.asset('assets/포스터6.jfif'),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 50,
+          ),
+          const Text(
+            '아트 칼럼',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Column(
+            children: [
+              MainColumn(
+                title:'10월, 우리가 주목해야 할 전시 컬렉션',
+                explanation: '최진희는 그림 금손으로 소개됐다. 최진희는 동양화와 서양화가 섞인 그림을 배우고 갤러리까지 오픈해 작품 활동을 하고 있다는 것이다. 정다경은 “최진희 선배님께서 10월에 전시회를 연다 하더라”라며 “최진희 선배님이 굉장히 오랫동안 그림을',
+                child: Image.asset('assets/exam.jpg'),
+                onTap: () {},
+              ),
+              MainColumn(
+                title: '아트퍼니쳐 속에서 나타나는 예술과 디자인의 비경계',
+                explanation: '아트와 디자인의 경계가 허물어지는 현상을 아트퍼니쳐에서 탐구하다!',
+                child: Image.asset('assets/가구칼럼.jpg'),
+                onTap: () {},
+              ),
+              MainColumn(
+                title: '10월, 우리가 주목해야 할 전시 컬렉션',
+                explanation: '최진희는 그림 금손으로 소개됐다. 최진희는 동양화와 서양화가 섞인 그림을 배우고 갤러리까지 오픈해 작품 활동을 하고',
+                child: Image.asset('assets/exam.jpg'),
+                onTap: () {},
+              ),
+              MainColumn(
+                title: '아트퍼니쳐 속에서 나타나는 예술과 디자인의 비경계',
+                explanation: '아트와 디자인의 경계가 허물어지는 현상을 아트퍼니쳐에서 탐구하다!',
+                child: Image.asset('assets/가구칼럼.jpg'),
+                onTap: () {},
+              )
             ],
           )
         ],
@@ -263,11 +262,13 @@ class CircleButton extends StatelessWidget {
     this.text,
   }) : super(key: key);
 
-  final onTap;
-  final child;
-  final width;
-  final height;
-  final text;
+  dynamic
+      onTap; //final로 하면 Prefer typing uninitialized variables and fields.이라는 경고가 떠서 dynamic으로 함
+  dynamic
+      child; //근데 dynamic으로 하면 This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: 어쩌고 경고 뜸
+  dynamic width;
+  dynamic height;
+  dynamic text;
 
   @override
   Widget build(BuildContext context) {
@@ -286,9 +287,109 @@ class CircleButton extends StatelessWidget {
             if (onTap != null) onTap();
           },
         ),
-        SizedBox(height: 7,),
+        const SizedBox(
+          height: 7,
+        ),
         Text('$text'),
       ],
     );
+  }
+}
+
+class MainExhibit extends StatelessWidget {
+  MainExhibit({
+    Key? key,
+    this.child,
+    this.title,
+    this.place,
+    this.date,
+    this.onTap,
+  }) : super(key: key);
+
+  final title;
+  final place;
+  final date;
+  final child;
+  final onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        InkWell(
+          child: SizedBox(
+            height: 350,
+            child: child,
+          ),
+          onTap: () {},
+        ),
+        Container(
+          padding: const EdgeInsets.fromLTRB(8, 12, 0, 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '$title',
+                style:
+                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+              ),
+              const SizedBox(
+                height: 4,
+              ),
+              Text('$place'),
+              const SizedBox(height: 2),
+              Text('$date'),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class MainColumn extends StatelessWidget {
+  MainColumn({Key? key, this.child, this.title, this.explanation, this.onTap})
+      : super(key: key);
+
+  final child;
+  final title;
+  final explanation;
+  final onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        padding: const EdgeInsets.fromLTRB(6, 5, 0, 0),
+        child: GestureDetector(
+          child: Row(
+            children: [
+              SizedBox(child: child, height: 80),
+              Container(
+                padding: const EdgeInsets.fromLTRB(10, 3, 0, 0),
+                  width: 260,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '$title',
+                        overflow: TextOverflow.clip,
+                        maxLines: 1,
+                      ),
+                      SizedBox(height: 5,),
+                      Text(
+                        '$explanation',
+                        style: TextStyle(fontSize: 10,color: Colors.black54),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                      ),
+                    ],
+                  ),
+                  height: 80),
+            ],
+          ),
+          onTap: () {},
+        ));
   }
 }
