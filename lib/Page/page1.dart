@@ -12,7 +12,7 @@ class Page1 extends StatelessWidget {
         children: [
           const Text(
             '지금 인기 있는',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 10),
           SingleChildScrollView(
@@ -46,12 +46,10 @@ class Page1 extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(
-            height: 50,
-          ),
+          SizedBox(height: 60,),
           const Text(
             '지역별 전시',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 10),
           Container(
@@ -137,11 +135,11 @@ class Page1 extends StatelessWidget {
             ),
           ),
           const SizedBox(
-            height: 50,
+            height: 60,
           ),
           const Text(
             '분야별 전시', //종류? 장르?
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 10),
           Row(
@@ -171,16 +169,16 @@ class Page1 extends StatelessWidget {
               CircleButton(
                 onTap: () {},
                 text: '대학',
-                child: Image.asset("assets/chair.jpg"),
+                child: Image.asset("assets/대하.jpg"),
               ),
             ],
           ),
           const SizedBox(
-            height: 50,
+            height: 60,
           ),
           const Text(
             '최근에 시작한',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 10),
           SingleChildScrollView(
@@ -207,11 +205,11 @@ class Page1 extends StatelessWidget {
             ),
           ),
           const SizedBox(
-            height: 50,
+            height: 60,
           ),
           const Text(
             '아트 칼럼',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
           ),
           const SizedBox(
             height: 10,
@@ -231,15 +229,15 @@ class Page1 extends StatelessWidget {
                 onTap: () {},
               ),
               MainColumn(
-                title: '10월, 우리가 주목해야 할 전시 컬렉션',
-                explanation: '최진희는 그림 금손으로 소개됐다. 최진희는 동양화와 서양화가 섞인 그림을 배우고 갤러리까지 오픈해 작품 활동을 하고',
-                child: Image.asset('assets/exam.jpg'),
+                title: '강산들이 선정한 에곤쉴레의 3대 작품',
+                explanation: '사실 잘 모른다. 에곤실레도 저 그림을 보고 좋아하게 된 건 맞는데 에곤실레를 주인공으로 한 영화 배우가 잘생겨서 실존인물 에곤실레마저 나한테 매력적인 인물이 돼 버렸다',
+                child: Image.asset('assets/칼럼3.jpg'),
                 onTap: () {},
               ),
               MainColumn(
-                title: '아트퍼니쳐 속에서 나타나는 예술과 디자인의 비경계',
-                explanation: '아트와 디자인의 경계가 허물어지는 현상을 아트퍼니쳐에서 탐구하다!',
-                child: Image.asset('assets/가구칼럼.jpg'),
+                title: '이 꽃은 이름이 뭔가요?',
+                explanation: '인하대학교의 산책로에서 찍힌 이 꽃, 정체가 무엇일까? 내가 찍었는데 모른다!',
+                child: Image.asset('assets/칼럼4.jpg'),
                 onTap: () {},
               )
             ],
@@ -332,7 +330,7 @@ class MainExhibit extends StatelessWidget {
               Text(
                 '$title',
                 style:
-                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                    const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
               ),
               const SizedBox(
                 height: 4,
@@ -364,10 +362,10 @@ class MainColumn extends StatelessWidget {
         child: GestureDetector(
           child: Row(
             children: [
-              SizedBox(child: child, height: 80),
+              SizedBox(child: child, height: 80, width:100),
               Container(
-                padding: const EdgeInsets.fromLTRB(10, 3, 0, 0),
-                  width: 260,
+                padding: const EdgeInsets.fromLTRB(10, 5, 0, 0),
+                  width: MediaQuery.of(context).size.width - 150,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -390,6 +388,7 @@ class MainColumn extends StatelessWidget {
             ],
           ),
           onTap: () {},
-        ));
+        ),
+    );
   }
 }
