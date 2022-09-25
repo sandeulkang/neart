@@ -6,6 +6,16 @@ class Page2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
-  }
-}
+    return Container(); }}
+
+
+// GridView.builder(
+    //         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+    //         crossAxisCount: 2,
+    //         crossAxisSpacing: 10,
+    //         mainAxisSpacing: 10,
+    //     ),
+    //     itemCount: 42,
+    //     itemBuilder: (BuildContext context, int index){}
+    //   }
+    // }

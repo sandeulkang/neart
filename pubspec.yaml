@@ -36,6 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_svg: ^1.1.5
   flutter_native_splash: ^2.2.9
+  carousel_slider: ^4.1.1
 
 dev_dependencies:
   flutter_test:
@@ -96,6 +97,6 @@ flutter:
       - asset: fonts/Roboto-Medium.ttf
 
 flutter_native_splash:
-  color: "#42a5f5"
-  image: "assets/splashscreen.png"
+  color: "#ffffff"
+  image: assets/splashscreen.png
   fullscreen: true

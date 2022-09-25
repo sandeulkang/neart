@@ -3,7 +3,10 @@ import 'package:neart/homepage.dart';
 import 'package:neart/loginpage.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
-void main() {
+Future<void> main() async {
+  bool data = await fetchData();
+  print(data);
+
   runApp(MyApp());
 }
 
@@ -29,4 +32,15 @@ class MyApp extends StatelessWidget {
       home: const HomePage(),
     );
   }
+}
+
+Future<bool> fetchData() async {
+  bool data = false;
+
+  // Change to API call
+  await Future.delayed(Duration(seconds: 3), () {
+    data = true;
+  });
+
+  return data;
 }

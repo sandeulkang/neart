@@ -1,8 +1,80 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:neart/Lab/model_exhibitions.dart';
 
+import 'Listvew_builder.dart';
 
-class Page1 extends StatelessWidget {
-  const Page1({Key? key}) : super(key: key);
+//나는 여기에 홈 만든다고 생각하면 되는 듯?
+
+class  HomeScreen extends StatefulWidget {
+  _HomeScreen createState() => _HomeScreen();
+}
+
+class _HomeScreen extends State<HomeScreen> {
+  List<Exhibition> exhibitions = [
+    Exhibition.fromMap(
+        {
+          'title' : 'Teracota Friendship',
+          'place': '국립현대미술관',
+          'date' : '07.27.-09.25.',
+          'bookmark' : false,
+          'keyword' : '서울/입체/도자기',
+          'poster' : '포스터1.jpg',
+          'child' : Image.asset('assets/포스터1.jpg'),
+        }
+    ),
+    Exhibition.fromMap(
+        {
+          'title' : 'Teracota Friep',
+          'place': '국립현대미술관',
+          'date' : '07.27.-09.25.',
+          'bookmark' : false,
+          'keyword' : '서울/입체/도자기',
+          'poster' : '포스터1.jpg',
+          'child' : Image.asset('assets/포스터1.jpg'),
+        }
+    ),
+    Exhibition.fromMap(
+        {
+          'title' : 'Teraendship',
+          'place': '국립현대미술관',
+          'date' : '07.27.-09.25.',
+          'bookmark' : false,
+          'keyword' : '서울/입체/도자기',
+          'poster' : '포스터1.jpg',
+          'child' : Image.asset('assets/포스터1.jpg'),
+        }
+    ),
+    Exhibition.fromMap(
+        {
+          'title' : 'Teracota Friendship',
+          'place': '국립현대미술관',
+          'date' : '07.27.-09.25.',
+          'bookmark' : false,
+          'keyword' : '서울/입체/도자기',
+          'poster' : '포스터1.jpg',
+          'child' : Image.asset('assets/포스터1.jpg'),
+        }
+    ),
+    Exhibition.fromMap(
+        {
+          'title' : 'Teracota Friendship',
+          'place': '국립현대미술관',
+          'date' : '07.27.-09.25.',
+          'bookmark' : false,
+          'keyword' : '서울/입체/도자기',
+          'poster' : '포스터1.jpg',
+          'child' : Image.asset('assets/포스터1.jpg'),
+        }
+    )
+
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -16,37 +88,7 @@ class Page1 extends StatelessWidget {
             style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 10),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                MainExhibit(
-                  title: 'Teracota Friendship',
-                  place: '국립현대미술관',
-                  date: '07.27.-09.25.',
-                  onTap: () {},
-                  child: Image.asset('assets/포스터1.jpg'),
-                ),
-                Container(width: 10),
-                MainExhibit(
-                  title: '코너링(Concering)',
-                  place: '아마도 예술공간',
-                  date: '09.02.-10.06.',
-                  onTap: () {},
-                  child: Image.asset('assets/포스터2.png'),
-                ),
-                Container(width: 20),
-                MainExhibit(
-                  title: '텍스트 뷔페',
-                  place: '수건과 화환',
-                  date: '09.02.-10.06.',
-                  onTap: () {},
-                  child: Image.asset('assets/포스터3.png'),
-                ),
-              ],
-            ),
-          ),
+        Listviewtype(exhibitions: exhibitions),
           SizedBox(height: 60,),
           const Text(
             '지역별 전시',
@@ -262,9 +304,9 @@ class CircleButton extends StatelessWidget {
   }) : super(key: key);
 
   dynamic
-      onTap; //final로 하면 Prefer typing uninitialized variables and fields.이라는 경고가 떠서 dynamic으로 함
+  onTap; //final로 하면 Prefer typing uninitialized variables and fields.이라는 경고가 떠서 dynamic으로 함
   dynamic
-      child; //근데 dynamic으로 하면 This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: 어쩌고 경고 뜸
+  child; //근데 dynamic으로 하면 This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: 어쩌고 경고 뜸
   dynamic width;
   dynamic height;
   dynamic text;
@@ -331,7 +373,7 @@ class MainExhibit extends StatelessWidget {
               Text(
                 '$title',
                 style:
-                    const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
               ),
               const SizedBox(
                 height: 4,
@@ -359,37 +401,37 @@ class MainColumn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: const EdgeInsets.fromLTRB(6, 5, 0, 0),
-        child: GestureDetector(
-          child: Row(
-            children: [
-              SizedBox(child: child, height: 80, width:100),
-              Container(
+      padding: const EdgeInsets.fromLTRB(6, 5, 0, 0),
+      child: GestureDetector(
+        child: Row(
+          children: [
+            SizedBox(child: child, height: 80, width:100),
+            Container(
                 padding: const EdgeInsets.fromLTRB(10, 5, 0, 0),
-                  width: MediaQuery.of(context).size.width - 150,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '$title',
-                        overflow: TextOverflow.clip,
-                        maxLines: 1,
-                      ),
-                      SizedBox(height: 5,),
-                      Text(
-                        '$explanation',
-                        style: TextStyle(fontSize: 10,color: Colors.black54),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                      ),
-                    ],
-                  ),
-                  height: 80),
-            ],
-          ),
-          onTap: () {},
+                width: MediaQuery.of(context).size.width - 150,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '$title',
+                      overflow: TextOverflow.clip,
+                      maxLines: 1,
+                    ),
+                    SizedBox(height: 5,),
+                    Text(
+                      '$explanation',
+                      style: TextStyle(fontSize: 10,color: Colors.black54),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    ),
+                  ],
+                ),
+                height: 80),
+          ],
         ),
+        onTap: () {},
+      ),
     );
   }
 }

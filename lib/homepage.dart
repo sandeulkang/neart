@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:neart/Lab/home_screen.dart';
 import 'package:neart/Page/page1.dart';
 import 'package:neart/Page/page2.dart';
 import 'package:neart/Page/page3.dart';
 import 'package:neart/Page/page4.dart';
 import 'package:neart/Page/page5.dart';
+import 'package:neart/Lab/home_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -16,7 +18,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   var _index = 0;
   final _pages = [
-    const Page1(), //index = 0일때
+    HomeScreen(), //index = 0일때
     const Page2(), //index = 1일때
     const Page3(),
     const Page4(),
