@@ -12,23 +12,26 @@ class Listviewtype extends StatefulWidget {
 
 class _ListviewtypeState extends State<Listviewtype> {
   late List<Exhibition> exhibitions;
-  late List<Widget> images;
+  late List<Widget> posters;
   late List<String> keywords;
   late List<String> titles;
+  late List<String> places;
+  late List<String> dates;
   late List<bool> bookmarks;
   int _currentPage = 0;
-  late String _currentKeyword;
+
 
   @override
   void initState() {
     super.initState();
     exhibitions = widget.exhibitions;
-    images =
-        exhibitions.map((m) => Image.asset('./assets/' + m.poster)).toList();
+    posters =
+        exhibitions.map((m) => Image.asset(m.poster)).toList();
     keywords = exhibitions.map((m) => m.keyword).toList();
     bookmarks = exhibitions.map((m) => m.bookmark).toList();
     titles = exhibitions.map((m)=>m.title).toList();
-    _currentKeyword = keywords[0];
+    places = exhibitions.map((m) => m.place).toList();
+    dates = exhibitions.map((m) => m.date).toList();
   }
 
   @override
@@ -36,34 +39,46 @@ class _ListviewtypeState extends State<Listviewtype> {
     return Container(
       child: Column(
         children: [
-          Container(
-            padding: EdgeInsets.all(3),
-          ),
           SizedBox(
-            height:400,
+            height:430,
             child: ListView.builder(
+              itemCount: exhibitions.length,
               scrollDirection: Axis.horizontal,
-              shrinkWrap: true,
               itemBuilder: (BuildContext context, int index){
-                return Container(
-                  child: Text(titles[index]),
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    InkWell(
+                      child: SizedBox(
+                        height: 350,
+                        child: posters[index],
+                      ),
+                      onTap: () {},
+                    ),
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(8, 10, 0, 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            titles[index],
+                            style:
+                            const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                          ),
+                          const SizedBox(
+                            height: 4,
+                          ),
+                          Text(places[index]),
+                          const SizedBox(height: 2),
+                          Text(dates[index]),
+                        ],
+                      ),
+                    ),
+                  ],
                 );
               },
             ),
           ),
-
-          Container(
-              child: Row(
-                children: [
-                  Container(child: Column(children: [
-                    bookmarks[_currentPage]
-                        ? IconButton(icon: Icon(Icons.check), onPressed: (){},)
-                        : IconButton(icon: Icon(Icons.add), onPressed: (){},),
-                    Text('내가 즐겨찾기한 전시')
-                  ],))
-                ],
-              )
-          )
         ],
       ),
     );

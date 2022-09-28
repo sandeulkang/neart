@@ -37,6 +37,8 @@ dependencies:
   flutter_svg: ^1.1.5
   flutter_native_splash: ^2.2.9
   carousel_slider: ^4.1.1
+  cloud_firestore: ^3.4.9
+  firebase_core: ^1.23.0
 
 dev_dependencies:
   flutter_test:

@@ -1,83 +1,38 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:neart/Lab/model_exhibitions.dart';
+import 'package:neart/Lab/Listvew_builder.dart';
+import 'package:neart/Lab/box_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-import 'Listvew_builder.dart';
-
-//나는 여기에 홈 만든다고 생각하면 되는 듯?
-
-class  HomeScreen extends StatefulWidget {
-  _HomeScreen createState() => _HomeScreen();
+class Ppage1 extends StatefulWidget {
+  @override
+  State<Ppage1> createState() => _Ppage1State();
 }
 
-class _HomeScreen extends State<HomeScreen> {
-  List<Exhibition> exhibitions = [
-    Exhibition.fromMap(
-        {
-          'title' : 'Teracota Friendship',
-          'place': '국립현대미술관',
-          'date' : '07.27.-09.25.',
-          'bookmark' : false,
-          'keyword' : '서울/입체/도자기',
-          'poster' : '포스터1.jpg',
-          'child' : Image.asset('assets/포스터1.jpg'),
-        }
-    ),
-    Exhibition.fromMap(
-        {
-          'title' : 'Teracota Friep',
-          'place': '국립현대미술관',
-          'date' : '07.27.-09.25.',
-          'bookmark' : false,
-          'keyword' : '서울/입체/도자기',
-          'poster' : '포스터1.jpg',
-          'child' : Image.asset('assets/포스터1.jpg'),
-        }
-    ),
-    Exhibition.fromMap(
-        {
-          'title' : 'Teraendship',
-          'place': '국립현대미술관',
-          'date' : '07.27.-09.25.',
-          'bookmark' : false,
-          'keyword' : '서울/입체/도자기',
-          'poster' : '포스터1.jpg',
-          'child' : Image.asset('assets/포스터1.jpg'),
-        }
-    ),
-    Exhibition.fromMap(
-        {
-          'title' : 'Teracota Friendship',
-          'place': '국립현대미술관',
-          'date' : '07.27.-09.25.',
-          'bookmark' : false,
-          'keyword' : '서울/입체/도자기',
-          'poster' : '포스터1.jpg',
-          'child' : Image.asset('assets/포스터1.jpg'),
-        }
-    ),
-    Exhibition.fromMap(
-        {
-          'title' : 'Teracota Friendship',
-          'place': '국립현대미술관',
-          'date' : '07.27.-09.25.',
-          'bookmark' : false,
-          'keyword' : '서울/입체/도자기',
-          'poster' : '포스터1.jpg',
-          'child' : Image.asset('assets/포스터1.jpg'),
-        }
-    )
-
-  ];
+class _Ppage1State extends State<Ppage1> {
+  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+  late Stream<QuerySnapshot> streamData;
 
   @override
   void initState() {
     super.initState();
+    streamData = firebaseFirestore.collection('exhibition').snapshots();
   }
 
+  Widget _fetchData(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('exhibition').snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return LinearProgressIndicator();
+        return _buildBody(context, snapshot.data!.docs);
+      },
+    );
+  }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildBody(BuildContext context, List<DocumentSnapshot> snapshot) {
+    //실제적으로 movie들의 리스트가 생겨나는 타이밍
+    List<Exhibition> exhibitions = snapshot.map((d) => Exhibition.fromSnapshot(d)).toList();
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -88,7 +43,7 @@ class _HomeScreen extends State<HomeScreen> {
             style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 10),
-        Listviewtype(exhibitions: exhibitions),
+          BoxSlider(exhibitions: exhibitions),
           SizedBox(height: 60,),
           const Text(
             '지역별 전시',
@@ -224,29 +179,7 @@ class _HomeScreen extends State<HomeScreen> {
             style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 10),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                MainExhibit(
-                  title: '길 배틀 : 프리즌 프리덤',
-                  place: '워킹하우스뉴욕 한남',
-                  date: '07.27.-09.25.',
-                  onTap: () {},
-                  child: Image.asset('assets/포스터5.jpg'),
-                ),
-                Container(width: 10),
-                MainExhibit(
-                  title: '김기주 : assortiment(조합)',
-                  place: '갤러리엠나인',
-                  date: '09.16.-10.30.',
-                  onTap: () {},
-                  child: Image.asset('assets/포스터6.jfif'),
-                ),
-              ],
-            ),
-          ),
+          BoxSlider(exhibitions: exhibitions),
           const SizedBox(
             height: 60,
           ),
@@ -289,7 +222,13 @@ class _HomeScreen extends State<HomeScreen> {
       ),
     );
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return _fetchData(context);
+  }
 }
+
 
 //서클 버튼 만들기
 class CircleButton extends StatelessWidget {
@@ -332,58 +271,6 @@ class CircleButton extends StatelessWidget {
           height: 7,
         ),
         Text('$text'),
-      ],
-    );
-  }
-}
-
-class MainExhibit extends StatelessWidget {
-  MainExhibit({
-    Key? key,
-    this.child,
-    this.title,
-    this.place,
-    this.date,
-    this.onTap,
-  }) : super(key: key);
-
-  final title;
-  final place;
-  final date;
-  final child;
-  final onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        InkWell(
-          child: SizedBox(
-            height: 350,
-            child: child,
-          ),
-          onTap: () {},
-        ),
-        Container(
-          padding: const EdgeInsets.fromLTRB(8, 12, 0, 0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '$title',
-                style:
-                const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(
-                height: 4,
-              ),
-              Text('$place'),
-              const SizedBox(height: 2),
-              Text('$date'),
-            ],
-          ),
-        ),
       ],
     );
   }
