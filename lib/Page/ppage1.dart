@@ -24,14 +24,20 @@ class _Ppage1State extends State<Ppage1> {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance.collection('exhibition').snapshots(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return LinearProgressIndicator();
-        return _buildBody(context, snapshot.data!.docs);
-      },
+        if (snapshot.hasError) {
+          return Center(
+            child: Text('Some error occured: ${snapshot.error.toString()}'),
+          );
+        }
+        if (snapshot.hasData) {
+          return _buildBody(context, snapshot.data!.docs);
+        }
+        return LinearProgressIndicator();}
     );
   }
 
   Widget _buildBody(BuildContext context, List<DocumentSnapshot> snapshot) {
-    //실제적으로 movie들의 리스트가 생겨나는 타이밍
+    //실제적으로 movie들의 '리스트'가 생겨나는 타이밍
     List<Exhibition> exhibitions = snapshot.map((d) => Exhibition.fromSnapshot(d)).toList();
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
@@ -40,14 +46,14 @@ class _Ppage1State extends State<Ppage1> {
         children: [
           const Text(
             '지금 인기 있는',
-            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 10),
           BoxSlider(exhibitions: exhibitions),
           SizedBox(height: 60,),
           const Text(
             '지역별 전시',
-            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 10),
           Container(
@@ -64,7 +70,9 @@ class _Ppage1State extends State<Ppage1> {
                         height: 45,
                         child: Center(child: Text('서울')),
                       ),
-                      onTap: () {},
+                      onTap: () {setState(() {
+
+                      });},
                     ),
                     InkWell(
                       child: const SizedBox(
@@ -137,7 +145,7 @@ class _Ppage1State extends State<Ppage1> {
           ),
           const Text(
             '분야별 전시', //종류? 장르?
-            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 10),
           Row(
@@ -176,7 +184,7 @@ class _Ppage1State extends State<Ppage1> {
           ),
           const Text(
             '최근에 시작한',
-            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 10),
           BoxSlider(exhibitions: exhibitions),
@@ -185,7 +193,7 @@ class _Ppage1State extends State<Ppage1> {
           ),
           const Text(
             '아트 칼럼',
-            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
           ),
           const SizedBox(
             height: 10,

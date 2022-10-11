@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:neart/Lab/model_exhibitions.dart';
 import 'package:neart/Lab/Listvew_builder.dart';
 import 'package:neart/Lab/detail_screen.dart';
+import 'package:neart/Page/ppage1.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class BoxSlider extends StatefulWidget {
   late final List<Exhibition> exhibitions;
@@ -9,42 +12,28 @@ class BoxSlider extends StatefulWidget {
 
   @override
   State<BoxSlider> createState() => _BoxSliderState();
+
 }
 
 class _BoxSliderState extends State<BoxSlider> {
 
+  late Stream<QuerySnapshot> streamData;
+  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   late List<Exhibition> exhibitions;
-  late List<Widget> posters;
-  late List<String> keywords;
-  late List<String> titles;
-  late List<String> places;
-  late List<String> dates;
-  late List<bool> bookmarks;
-  late List<String> placeinfoes;
-  late List<String> explanations;
-
-  int _currentPage = 0;
 
 
   @override
   void initState() {
     super.initState();
-    exhibitions = widget.exhibitions;
-    posters = exhibitions.map((m) => Image.asset(m.poster)).toList();
-    keywords = exhibitions.map((m) => m.keyword).toList();
-    bookmarks = exhibitions.map((m) => m.bookmark).toList();
-    titles = exhibitions.map((m)=>m.title).toList();
-    places = exhibitions.map((m) => m.place).toList();
-    dates = exhibitions.map((m) => m.date).toList();
-    placeinfoes = exhibitions.map((m)=>m.placeinfo).toList();
-    explanations = exhibitions.map((m)=>m.explanation).toList();
+    exhibitions = widget.exhibitions; //초기값 선언해준거 ㅇㅇ
+    // final streamData = firebaseFirestore.collection('exhibition').snapshots(); 없어도 됨
   }
 
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 440,
+      height: 420,
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: makeBoxImages(context, widget.exhibitions),
@@ -61,26 +50,30 @@ List<Widget> makeBoxImages(BuildContext context, List<Exhibition> exhibitions) {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           InkWell(
-            onTap: () {Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context)=>DetailScreen(exhibition: exhibitions[i])),
-            );
-              /***
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) {
-                return DetailScreen(
-                  exhibition: exhibitions[i],
+            onTap: () async{
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context)=>DetailScreen(exhibition: exhibitions[i])),
               );
-                }));
-              ***/
+
+              /***
+                  Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) {
+                  return DetailScreen(
+                  exhibition: exhibitions[i],
+                  );
+                  }));
+               ***/
             },
-            child: SizedBox(
-              height: 350,
-              child: Image.network(exhibitions[i].poster),
-            ),
+
+            child: Container(
+                height: 350, width: 280,
+                child: Image.network(exhibitions[i].poster,fit: BoxFit.fitHeight,),
+              ),
+
           ),
           Container(
-            padding: const EdgeInsets.fromLTRB(8, 10, 0, 0),
+            padding: const EdgeInsets.fromLTRB(10, 8, 0, 0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -88,6 +81,7 @@ List<Widget> makeBoxImages(BuildContext context, List<Exhibition> exhibitions) {
                   exhibitions[i].title,
                   style: const TextStyle(
                       fontSize: 14, fontWeight: FontWeight.w600),
+
                 ),
                 const SizedBox(
                   height: 4,

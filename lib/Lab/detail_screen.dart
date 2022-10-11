@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'model_exhibitions.dart';
 
 class DetailScreen extends StatefulWidget {
@@ -11,75 +13,164 @@ class DetailScreen extends StatefulWidget {
 
 class _DetailScreenState extends State<DetailScreen> {
   bool bookmark = false;
-  late final TabController _tabController;
+  bool havebeen = false;
+  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+  var information = '';
 
   @override
   void initState() {
     super.initState();
     bookmark = widget.exhibition.bookmark;
+    havebeen = widget.exhibition.havebeen;
+    asyncInitState();
+  }
+
+  void asyncInitState() async {
+    DocumentSnapshot placeinfodata = await firebaseFirestore
+        .collection('placeinfo')
+        .doc(widget.exhibition.place)
+        .get();
+    setState(() {
+      information = placeinfodata['info'];
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: CustomScrollView(
-      slivers: <Widget>[
-        SliverAppBar( //헤더 영역
-          pinned: false, //축소시 상단에 AppBar가 고정되는지 설정
-          expandedHeight: 60, //헤더의 최대 높이
-          flexibleSpace: FlexibleSpaceBar( //늘어나는 영역의 UI 정의
-            title: Text(''),
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            //헤더 영역
+            pinned: false, //축소시 상단에 AppBar가 고정되는지 설정
+            expandedHeight: 60, //헤더의 최대 높이
+            flexibleSpace: FlexibleSpaceBar(
+              //늘어나는 영역의 UI 정의
+              title: Text(''),
+            ),
           ),
-        ),
-         SliverFillRemaining(//내용 영역
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          SliverFillRemaining(
+            //내용 영역
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: EdgeInsets.fromLTRB(15,0,15,0),
-                  child:
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                  padding: const EdgeInsets.only(left: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Column(
-                        children: [
-                          SizedBox(
-                            child: Image.network(widget.exhibition.poster),
-                            width: MediaQuery.of(context).size.width * 0.3,
-                          ),
-                          InkWell(
-                            child: bookmark
-                                ? const Icon(Icons.check)
-                                : const Icon(Icons.add),
-                            onTap: () {},
-                          )
-                        ],
+                      SizedBox(
+                        child: Image.network(widget.exhibition.poster),
+                        width: MediaQuery.of(context).size.width * 0.35,
                       ),
                       Container(
-                        padding:  EdgeInsets.fromLTRB(10, 0, 0, 0),
+                        width: MediaQuery.of(context).size.width * 0.6,
+                        height: 200,
+                        padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               widget.exhibition.title,
-                              style:  TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w600),
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w600),
+                              overflow: TextOverflow.visible,
+                              maxLines: 2,
                             ),
-                             SizedBox(height: 4),
+                            SizedBox(height: 4),
                             Text(
                               widget.exhibition.date,
-                              style:  TextStyle(fontSize: 13),
+                              style: TextStyle(fontSize: 13),
                             ),
-                             SizedBox(height: 3),
+                            SizedBox(height: 8),
                             Text(
                               widget.exhibition.place,
-                              style:  TextStyle(fontSize: 13),
                             ),
-                             SizedBox(height: 1),
+                            SizedBox(height: 1),
+                            Text(information.replaceAll("\\n", "\n"),
+                                style: TextStyle(height: 1.5)),
+                            SizedBox(height: 1),
                             Text(
-                              widget.exhibition.placeinfo,
-                              style:  TextStyle(fontSize: 11, height: 1.3),
+                                widget.exhibition.admission
+                                    .replaceAll("\\n", "\n"),
+                                style: TextStyle(height: 1.5)),
+                            Container(
+                              padding: EdgeInsets.all(5),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  bookmark
+                                      ? InkWell(
+                                          child: SvgPicture.asset(
+                                            "assets/onheart.svg",
+                                            width: 40,
+                                            height: 40,
+                                            color: Colors.red,
+                                          ),
+                                          onTap: () {
+                                            setState(() {
+                                              bookmark = !bookmark;
+                                              firebaseFirestore
+                                                  .collection('exhibition')
+                                                  .doc(widget.exhibition.title)
+                                                  .update({'bookmark': bookmark});
+                                            });
+                                          },
+                                        )
+                                      : InkWell(
+                                          child: SvgPicture.asset(
+                                            "assets/offheart.svg",
+                                            width: 40,
+                                            height: 40,
+                                            color: Colors.red,
+                                          ),
+                                          onTap: () {
+                                            setState(() {
+                                              bookmark = !bookmark;
+                                              firebaseFirestore
+                                                  .collection('exhibition')
+                                                  .doc(widget.exhibition.title)
+                                                  .update({'bookmark': bookmark});
+                                            });
+                                          },
+                                        ),
+                                  havebeen
+                                      ? InkWell(
+                                    child: SvgPicture.asset(
+                                      "assets/oncheck.svg",
+
+                                      width: 40,
+                                      height: 40,
+                                    ),
+                                    onTap: () {
+                                      setState(() {
+                                        havebeen = !havebeen;
+                                        firebaseFirestore
+                                            .collection('exhibition')
+                                            .doc(widget.exhibition.title)
+                                            .update({'havebeen': havebeen});
+                                      });
+                                    },
+                                  )
+                                      : InkWell(
+                                    child: SvgPicture.asset(
+                                      "assets/offcheck.svg",
+                                      width: 30,
+                                      height: 30,
+                                    ),
+                                    onTap: () {
+                                      setState(() {
+                                        havebeen = !havebeen;
+                                        firebaseFirestore
+                                            .collection('exhibition')
+                                            .doc(widget.exhibition.title)
+                                            .update({'havebeen': havebeen});
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
                             )
                           ],
                         ),
@@ -87,81 +178,48 @@ class _DetailScreenState extends State<DetailScreen> {
                     ],
                   ),
                 ),
-                Opacity(child: Divider(height: 20, thickness: 10,), opacity: 0.4,),
-                Text('전시소개'),
-                Text(widget.exhibition.explanation),
-                Text('추천칼럼'),
-
-              ],
-            ),
-
-        )
-      ],
-    ),
-
-//        appBar: AppBar(),
-
-        /***
-        SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    width: 5,
+                Opacity(
+                  child: Divider(
+                    height: 20,
+                    thickness: 10,
                   ),
-                  Column(
-                    children: [
-                      SizedBox(
-                        child: Image.asset(widget.exhibition.poster),
-                        width: MediaQuery.of(context).size.width * 0.3,
-                      ),
-                      InkWell(
-                        child: bookmark
-                            ? const Icon(Icons.check)
-                            : const Icon(Icons.add),
-                        onTap: () {},
-                      )
-                    ],
-                  ),
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                  opacity: 0.4,
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.exhibition.title,
-                          style: const TextStyle(
+                          '전시 소개',
+                          style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.w600),
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          widget.exhibition.date,
-                          style: const TextStyle(fontSize: 13),
+                        SizedBox(
+                          height: 15,
                         ),
-                        const SizedBox(height: 3),
                         Text(
-                          widget.exhibition.place,
-                          style: const TextStyle(fontSize: 13),
+                          widget.exhibition.explanation.replaceAll("\\n", "\n"),
+                          style: TextStyle(height: 1.4),
                         ),
-                        const SizedBox(height: 1),
+                        SizedBox(
+                          height: 40,
+                        ),
                         Text(
-                          widget.exhibition.placeinfo,
-                          style: const TextStyle(fontSize: 11, height: 1.3),
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              Opacity(child: Divider(height: 20, thickness: 10,), opacity: 0.4,)
-            ],
+                          '추천 칼럼',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w600),
+                        ),
+                      ]),
+                )
+              ],
+            ),
           ),
-        ),
-            ***/
-      );
+        ],
+      ),
+
+//        appBar: AppBar(),
+    );
   }
 }

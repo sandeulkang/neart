@@ -1,15 +1,24 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:neart/homepage.dart';
-import 'package:neart/loginpage.dart';
+import 'package:neart/authentificationpage.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-
+import 'dart:io';
 import 'Page/page5.dart';
+
+class MyHttpOverrides extends HttpOverrides{
+  @override
+  HttpClient createHttpClient(SecurityContext? context){
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
+  }
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
   );
+  HttpOverrides.global = MyHttpOverrides();
   runApp(MyApp());
 }
 
@@ -35,7 +44,7 @@ class _MyAppState extends State<MyApp> {
       ),
       title: 'Neart',
       routes: {
-        '/LoginPage': (context) => const LoginPage(),
+        '/Authentification': (context) => const Authentification(),
       },
       home: const HomePage(),
     );
