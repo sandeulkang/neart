@@ -5,9 +5,13 @@ import 'package:neart/Page/Ppagee1.dart';
 import 'package:neart/Page/page2.dart';
 import 'package:neart/Page/page3.dart';
 import 'package:neart/Page/page4.dart';
-import 'package:neart/Page/page5.dart';
+import 'package:neart/Page/page5_on.dart';
 import 'package:neart/Page/ppage1.dart';
-import 'package:neart/authentificationpage.dart';
+import 'package:neart/authenticationpage.dart';
+import 'package:neart/search_screen.dart';
+
+import 'Page/page5.dart';
+import 'Page/page5_null.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -21,14 +25,14 @@ class _HomePageState extends State<HomePage> {
   var _index = 0;
   final _pages = [
     Ppage1(),
-    const Page2(),
-    Authentification(),
+    Page2(),
     const Page4(),
     const Page5(),
   ];
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback;
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -38,7 +42,9 @@ class _HomePageState extends State<HomePage> {
               Opacity(
                 opacity: 0,
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+
+                  },
                   icon: const Icon(
                     Icons.search,
                   ),
@@ -46,7 +52,7 @@ class _HomePageState extends State<HomePage> {
               ),
               const Text('NeArt'),
               IconButton(
-                onPressed: () {},
+                onPressed: () {Navigator.pushNamed(context, "/SearchScreen");},
                 icon: const Icon(
                   Icons.search,
                 ),
@@ -72,22 +78,9 @@ class _HomePageState extends State<HomePage> {
             label: 'home',
           ),
           BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                "assets/glass.svg",
-                color: Colors.black38,
-                width: 22,
-                height: 22,
-              ),
+              icon: Icon(Icons.search) ,
               label: 'Exhibit'),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              "assets/other.svg",
-              color: Colors.black38,
-              width: 22,
-              height: 22,
-            ),
-            label: 'Other',
-          ),
+
           const BottomNavigationBarItem(
               icon: Icon(Icons.account_balance), label: 'Curator'),
           const BottomNavigationBarItem(icon: Icon(Icons.person), label: 'My'),

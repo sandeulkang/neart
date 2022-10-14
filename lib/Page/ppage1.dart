@@ -5,6 +5,8 @@ import 'package:neart/Lab/box_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+import '../Lab/popular_exhibit.dart';
+
 class Ppage1 extends StatefulWidget {
   @override
   State<Ppage1> createState() => _Ppage1State();
@@ -49,7 +51,7 @@ class _Ppage1State extends State<Ppage1> {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 10),
-          BoxSlider(exhibitions: exhibitions),
+          PopularExhibit(),
           SizedBox(height: 60,),
           const Text(
             '지역별 전시',

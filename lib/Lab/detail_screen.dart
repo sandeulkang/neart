@@ -155,9 +155,9 @@ class _DetailScreenState extends State<DetailScreen> {
                                   )
                                       : InkWell(
                                     child: SvgPicture.asset(
-                                      "assets/offcheck.svg",
-                                      width: 30,
-                                      height: 30,
+                                      "assets/off_check.svg",
+                                      width: 40,
+                                      height: 40,
                                     ),
                                     onTap: () {
                                       setState(() {

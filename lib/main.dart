@@ -1,10 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:neart/homepage.dart';
-import 'package:neart/authentificationpage.dart';
+import 'package:neart/authenticationpage.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:neart/search_screen.dart';
 import 'dart:io';
-import 'Page/page5.dart';
+import 'Page/page5_null.dart';
+import 'Page/page5_on.dart';
 
 class MyHttpOverrides extends HttpOverrides{
   @override
@@ -44,7 +46,10 @@ class _MyAppState extends State<MyApp> {
       ),
       title: 'Neart',
       routes: {
-        '/Authentification': (context) => const Authentification(),
+        '/Authentication': (context) => const Authentication(),
+        '/Page5_on': (context) => const Page5_on(),
+        '/Page5_null': (context) => const Page5_null(),
+        '/SearchScreen' :(context) => SearchScreen()
       },
       home: const HomePage(),
     );
