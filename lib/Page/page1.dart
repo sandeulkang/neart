@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:neart/Lab/model_exhibitions.dart';
+import 'package:neart/Model/model_exhibitions.dart';
 import 'package:neart/Lab/Listvew_builder.dart';
 import 'package:neart/Lab/box_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+import '../Lab/hotkeyword_exhibit.dart';
 import '../Lab/popular_exhibit.dart';
+import '../Lab/review_screen.dart';
 
 class Ppage1 extends StatefulWidget {
   @override
@@ -24,7 +26,7 @@ class _Ppage1State extends State<Ppage1> {
 
   Widget _fetchData(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection('exhibition').snapshots(),
+      stream: streamData,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Center(
@@ -32,7 +34,7 @@ class _Ppage1State extends State<Ppage1> {
           );
         }
         if (snapshot.hasData) {
-          return _buildBody(context, snapshot.data!.docs);
+          return _buildBody(context, snapshot.data!.docs); //snapshot 전체를 다루는 게 아니라 snapshot.data!.docs만 국한적으로 다룸
         }
         return LinearProgressIndicator();}
     );
@@ -47,140 +49,28 @@ class _Ppage1State extends State<Ppage1> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            '지금 인기 있는',
+            '요즘 인기 있는',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 10),
           PopularExhibit(),
-          SizedBox(height: 60,),
+          SizedBox(height: 40,),
           const Text(
-            '지역별 전시',
+            '지금 뜨고 있는 키워드 #인천',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 10),
-          Container(
-            // 배경색 넣어줄 거 아니면 컨테이너 지워도 된다
-            child: Table(
-              border: TableBorder.all(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.black45),
-              children: [
-                TableRow(
-                  children: [
-                    InkWell(
-                      child: const SizedBox(
-                        height: 45,
-                        child: Center(child: Text('서울')),
-                      ),
-                      onTap: () {setState(() {
-
-                      });},
-                    ),
-                    InkWell(
-                      child: const SizedBox(
-                        height: 45,
-                        child: Center(child: Text('강원')),
-                      ),
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-                TableRow(
-                  children: [
-                    InkWell(
-                      child: const SizedBox(
-                        height: 45,
-                        child: Center(child: Text('광주,전라')),
-                      ),
-                      onTap: () {},
-                    ),
-                    InkWell(
-                      child: const SizedBox(
-                        height: 45,
-                        child: Center(child: Text('대구,경북')),
-                      ),
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-                TableRow(
-                  children: [
-                    InkWell(
-                      child: const SizedBox(
-                        height: 45,
-                        child: Center(child: Text('대전,충청,세종')),
-                      ),
-                      onTap: () {},
-                    ),
-                    InkWell(
-                      child: const SizedBox(
-                        height: 45,
-                        child: Center(child: Text('부산,울산,경북')),
-                      ),
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-                TableRow(
-                  children: [
-                    InkWell(
-                      child: const SizedBox(
-                        height: 45,
-                        child: Center(child: Text('인천,경기')),
-                      ),
-                      onTap: () {},
-                    ),
-                    InkWell(
-                      child: const SizedBox(
-                        height: 45,
-                        child: Center(child: Text('제주')),
-                      ),
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-              ],
-            ),
+          HotKeywordExhibit(),
+          const SizedBox(height: 60),
+          const Text(
+            '최근 올라온 리뷰',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
           ),
+          Container(child: Reviews(), height: 200,),
           const SizedBox(
-            height: 60,
+            height: 10,
           ),
-          const Text(
-            '분야별 전시', //종류? 장르?
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
-          ),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              CircleButton(
-                onTap: () {},
-                text: '평면',
-                child: Image.asset("assets/에곤실레.jpg"),
-              ),
-              CircleButton(
-                onTap: () {},
-                text: '영상',
-                child: Image.asset("assets/영상.png"),
-              ),
-              CircleButton(
-                onTap: () {},
-                text: '입체',
-                child: Image.asset("assets/조각.jpg"),
-              ),
-              CircleButton(
-                onTap: () {},
-                text: '체험',
-                child: Image.asset("assets/체험.jpg"),
-              ),
-              CircleButton(
-                onTap: () {},
-                text: '대학',
-                child: Image.asset("assets/대하.jpg"),
-              ),
-            ],
-          ),
+
           const SizedBox(
             height: 60,
           ),
@@ -240,52 +130,6 @@ class _Ppage1State extends State<Ppage1> {
 }
 
 
-//서클 버튼 만들기
-class CircleButton extends StatelessWidget {
-  CircleButton({
-    //생성자를 한번 적어주고 가야한다. 여기서 기본값 지정 가능. 아래에 변수를 먼저 만들어주고 생성자를 적어주어야 당연히 에러가 안나겠지!
-    Key? key,
-    this.onTap,
-    this.child,
-    this.width,
-    this.height,
-    this.text,
-  }) : super(key: key);
-
-  dynamic
-  onTap; //final로 하면 Prefer typing uninitialized variables and fields.이라는 경고가 떠서 dynamic으로 함
-  dynamic
-  child; //근데 dynamic으로 하면 This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: 어쩌고 경고 뜸
-  dynamic width;
-  dynamic height;
-  dynamic text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        GestureDetector(
-          child: SizedBox(
-            width: 50,
-            height: 50,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(100),
-              child: child,
-            ),
-          ),
-          onTap: () {
-            if (onTap != null) onTap();
-          },
-        ),
-        const SizedBox(
-          height: 7,
-        ),
-        Text('$text'),
-      ],
-    );
-  }
-}
-
 class MainColumn extends StatelessWidget {
   MainColumn({Key? key, this.child, this.title, this.explanation, this.onTap})
       : super(key: key);
@@ -332,3 +176,170 @@ class MainColumn extends StatelessWidget {
     );
   }
 }
+
+
+// Container(
+// // 배경색 넣어줄 거 아니면 컨테이너 지워도 된다
+// child: Table(
+// border: TableBorder.all(
+// borderRadius: BorderRadius.circular(10),
+// color: Colors.black45),
+// children: [
+// TableRow(
+// children: [
+// InkWell(
+// child: const SizedBox(
+// height: 45,
+// child: Center(child: Text('서울')),
+// ),
+// onTap: () {setState(() {
+//
+// });},
+// ),
+// InkWell(
+// child: const SizedBox(
+// height: 45,
+// child: Center(child: Text('강원')),
+// ),
+// onTap: () {},
+// ),
+// ],
+// ),
+// TableRow(
+// children: [
+// InkWell(
+// child: const SizedBox(
+// height: 45,
+// child: Center(child: Text('광주,전라')),
+// ),
+// onTap: () {},
+// ),
+// InkWell(
+// child: const SizedBox(
+// height: 45,
+// child: Center(child: Text('대구,경북')),
+// ),
+// onTap: () {},
+// ),
+// ],
+// ),
+// TableRow(
+// children: [
+// InkWell(
+// child: const SizedBox(
+// height: 45,
+// child: Center(child: Text('대전,충청,세종')),
+// ),
+// onTap: () {},
+// ),
+// InkWell(
+// child: const SizedBox(
+// height: 45,
+// child: Center(child: Text('부산,울산,경북')),
+// ),
+// onTap: () {},
+// ),
+// ],
+// ),
+// TableRow(
+// children: [
+// InkWell(
+// child: const SizedBox(
+// height: 45,
+// child: Center(child: Text('인천,경기')),
+// ),
+// onTap: () {},
+// ),
+// InkWell(
+// child: const SizedBox(
+// height: 45,
+// child: Center(child: Text('제주')),
+// ),
+// onTap: () {},
+// ),
+// ],
+// ),
+// ],
+// ),
+// ),
+
+// const Text(
+// '분야별 전시', //종류? 장르?
+// style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+// ),
+// const SizedBox(height: 10),
+// Row(
+// mainAxisAlignment: MainAxisAlignment.spaceAround,
+// mainAxisSize: MainAxisSize.max,
+// children: [
+// CircleButton(
+// onTap: () {},
+// text: '평면',
+// child: Image.asset("assets/에곤실레.jpg"),
+// ),
+// CircleButton(
+// onTap: () {},
+// text: '영상',
+// child: Image.asset("assets/영상.png"),
+// ),
+// CircleButton(
+// onTap: () {},
+// text: '입체',
+// child: Image.asset("assets/조각.jpg"),
+// ),
+// CircleButton(
+// onTap: () {},
+// text: '체험',
+// child: Image.asset("assets/체험.jpg"),
+// ),
+// CircleButton(
+// onTap: () {},
+// text: '대학',
+// child: Image.asset("assets/대하.jpg"),
+// ),
+// ],
+// ),
+
+//서클 버튼 만들기
+// class CircleButton extends StatelessWidget {
+//   CircleButton({
+//     //생성자를 한번 적어주고 가야한다. 여기서 기본값 지정 가능. 아래에 변수를 먼저 만들어주고 생성자를 적어주어야 당연히 에러가 안나겠지!
+//     Key? key,
+//     this.onTap,
+//     this.child,
+//     this.width,
+//     this.height,
+//     this.text,
+//   }) : super(key: key);
+//
+//   dynamic onTap; //final로 하면 Prefer typing uninitialized variables and fields.이라는 경고가 떠서 dynamic으로 함
+//   dynamic child; //근데 dynamic으로 하면 This class (or a class that this class inherits from) is marked as '@immutable', but one or more of its instance fields aren't final: 어쩌고 경고 뜸
+//   dynamic width;
+//   dynamic height;
+//   dynamic text;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(
+//       children: [
+//         GestureDetector(
+//           child: SizedBox(
+//             width: 50,
+//             height: 50,
+//             child: ClipRRect(
+//               borderRadius: BorderRadius.circular(100),
+//               child: child,
+//             ),
+//           ),
+//           onTap: () {
+//             if (onTap != null) onTap();
+//           },
+//         ),
+//         const SizedBox(
+//           height: 7,
+//         ),
+//         Text('$text'),
+//       ],
+//     );
+//   }
+// }

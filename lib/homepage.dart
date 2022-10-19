@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:neart/Page/Ppagee1.dart';
-
 import 'package:neart/Page/page2.dart';
-import 'package:neart/Page/page3.dart';
 import 'package:neart/Page/page4.dart';
-import 'package:neart/Page/page5_on.dart';
-import 'package:neart/Page/ppage1.dart';
+import 'package:neart/Page/page1.dart';
 import 'package:neart/authenticationpage.dart';
 import 'package:neart/search_screen.dart';
 
@@ -26,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   final _pages = [
     Ppage1(),
     Page2(),
-    const Page4(),
+    Page4(),
     const Page5(),
   ];
 
@@ -36,29 +32,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Opacity(
-                opacity: 0,
-                child: IconButton(
-                  onPressed: () {
-
-                  },
-                  icon: const Icon(
-                    Icons.search,
-                  ),
-                ),
-              ),
-              const Text('NeArt'),
-              IconButton(
-                onPressed: () {Navigator.pushNamed(context, "/SearchScreen");},
-                icon: const Icon(
-                  Icons.search,
-                ),
-              ),
-            ],
-          ),
+          child: const Text('NeArt'),
         ),
       ),
       body:_pages[_index],

@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:neart/Lab/model_exhibitions.dart';
+import 'package:neart/Model/model_exhibitions.dart';
 import 'package:neart/Lab/detail_screen.dart';
 
-class SearchScreen extends StatefulWidget {
-  _SearchScreenState createState() => _SearchScreenState();
+class SearchScreenExhibit extends StatefulWidget {
+  _SearchScreenExhibitState createState() => _SearchScreenExhibitState();
 }
 
-class _SearchScreenState extends State<SearchScreen> {
+class _SearchScreenExhibitState extends State<SearchScreenExhibit> {
   // *검색 위젯을 컨트롤 하는 위젯 선언
   final TextEditingController _filter = TextEditingController();
 
@@ -18,7 +18,7 @@ class _SearchScreenState extends State<SearchScreen> {
   String _searchText = "";
 
   // * 검색 위젯을 컨트롤하는 _filter가 변화를 감지하여 _searchText의 상태를 변화시키는 코드
-  _SearchScreenState() {
+  _SearchScreenExhibitState() {
     _filter.addListener(() {
       setState(() {
         _searchText = _filter.text;
@@ -26,23 +26,21 @@ class _SearchScreenState extends State<SearchScreen> {
     });
   }
 
-  // * _buildBody를 통해 스트림데이터를 가져와 _buildList 호출
+  // 스트림데이터를 가져와 _buildList 호출
   Widget _buildBody(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      // FireStore 인스턴스의 movie 컬렉션의 snapshot을 가져옴
       stream: FirebaseFirestore.instance.collection('exhibition').snapshots(),
       builder: (context, snapshot) {
-        // snapshot의 데이터가 없는 경우 Linear~ 생성
         if (!snapshot.hasData) return LinearProgressIndicator();
         return _buildList(context, snapshot.data!.docs);
       },
     );
   }
 
-  // *buildlist에서는 검색 결과에 따라 데이터를 처리해 GridView 생성해줌
+  //  검색 결과에 따라 데이터를 처리해 GridView 생성해줌
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
     List<DocumentSnapshot> searchResults = [];
-    // *데이터에 searchText가 포함되는지 필터링 진행
+    // *데이터에 searchText가 포함되는지 필터링
     for (DocumentSnapshot d in snapshot) {
       // *string.contains()를 활용해 searchText를 포함한 snapshot을 리스트에 추가
       // * 주의!) data.toString()해도 실행은 되지만 검색 결과가 안 나옴!

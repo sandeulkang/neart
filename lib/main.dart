@@ -49,7 +49,7 @@ class _MyAppState extends State<MyApp> {
         '/Authentication': (context) => const Authentication(),
         '/Page5_on': (context) => const Page5_on(),
         '/Page5_null': (context) => const Page5_null(),
-        '/SearchScreen' :(context) => SearchScreen()
+        '/SearchScreenExhibit' :(context) => SearchScreenExhibit()
       },
       home: const HomePage(),
     );

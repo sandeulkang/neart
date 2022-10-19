@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:neart/Lab/like_screen.dart';
 import 'package:neart/Page/page5.dart';
 import 'package:neart/authenticationpage.dart';
 import 'package:flutterfire_ui/auth.dart';
@@ -65,7 +66,13 @@ class _Page5_onState extends State<Page5_on> {
                           )
                         ],
                       ),
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute<Null>(
+                            builder: (BuildContext context) {
+                              // * 클릭한 영화의 DetailScreen 출력
+                              return LikeScreen(); //navigatior은 그곳으로 이동한다가 개념, build return은 그곳에 그리는 것, 즉 불러 오는 것.
+                            }));
+                      },
                     ),
                     InkWell(
                       child: Column(

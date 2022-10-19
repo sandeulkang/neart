@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:neart/Lab/model_exhibitions.dart';
+import 'package:neart/Model/model_exhibitions.dart';
 
 class Listviewtype extends StatefulWidget {
   final List<Exhibition> exhibitions;
@@ -17,7 +17,7 @@ class _ListviewtypeState extends State<Listviewtype> {
   late List<String> titles;
   late List<String> places;
   late List<String> dates;
-  late List<bool> bookmarks;
+  late List<bool> heart;
   int _currentPage = 0;
 
 
@@ -28,7 +28,7 @@ class _ListviewtypeState extends State<Listviewtype> {
     posters =
         exhibitions.map((m) => Image.asset(m.poster)).toList();
     keywords = exhibitions.map((m) => m.keyword).toList();
-    bookmarks = exhibitions.map((m) => m.bookmark).toList();
+    heart = exhibitions.map((m) => m.heart).toList();
     titles = exhibitions.map((m)=>m.title).toList();
     places = exhibitions.map((m) => m.place).toList();
     dates = exhibitions.map((m) => m.date).toList();
