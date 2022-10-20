@@ -5,6 +5,7 @@ import 'package:neart/authenticationpage.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:neart/search_screen.dart';
 import 'dart:io';
+import 'Lab/ssearch_screen.dart';
 import 'Page/page5_null.dart';
 import 'Page/page5_on.dart';
 
@@ -49,7 +50,9 @@ class _MyAppState extends State<MyApp> {
         '/Authentication': (context) => const Authentication(),
         '/Page5_on': (context) => const Page5_on(),
         '/Page5_null': (context) => const Page5_null(),
-        '/SearchScreenExhibit' :(context) => SearchScreenExhibit()
+        '/SearchScreenExhibit' :(context) => SearchScreenExhibit(),
+        '/SsearchScreenExhibit' :(context) => SsearchScreenExhibit()
+
       },
       home: const HomePage(),
     );
