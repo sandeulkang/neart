@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../Model/model_exhibitions.dart';
-import 'detail_screen.dart';
+import '../DetailscreenFolder/detail_screen.dart';
 
 class LikeScreen extends StatefulWidget {
   // *상태 관리 및 상태 선언

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:neart/Model/model_exhibitions.dart';
 import 'package:neart/Lab/Listvew_builder.dart';
-import 'package:neart/Lab/box_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -53,7 +52,7 @@ class _Ppage1State extends State<Ppage1> {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 10),
-          PopularExhibit(),
+          PopularExhibit(word: '인천'),
           SizedBox(height: 40,),
           const Text(
             '지금 뜨고 있는 키워드 #인천',
@@ -75,11 +74,11 @@ class _Ppage1State extends State<Ppage1> {
             height: 60,
           ),
           const Text(
-            '최근에 시작한',
+            '곧 끝나는',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 10),
-          BoxSlider(exhibitions: exhibitions),
+          HotKeywordExhibit(),
           const SizedBox(
             height: 60,
           ),

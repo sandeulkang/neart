@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:neart/Model/model_exhibitions.dart';
 import 'package:neart/Lab/Listvew_builder.dart';
-import 'package:neart/Lab/box_slider.dart';
+import 'package:neart/trash/box_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-import '../Lab/detail_screen.dart';
+import '../DetailscreenFolder/detail_screen.dart';
 
 // class Page4 extends StatefulWidget {
 //   @override

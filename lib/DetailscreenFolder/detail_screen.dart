@@ -76,7 +76,8 @@ class _DetailScreenState extends State<DetailScreen> {
                                 Text(
                                   widget.exhibition.title,
                                   style: TextStyle(
-                                      fontSize: 16, fontWeight: FontWeight.w600),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600),
                                   overflow: TextOverflow.visible,
                                   maxLines: 2,
                                 ),
@@ -116,10 +117,9 @@ class _DetailScreenState extends State<DetailScreen> {
                                                   heart = !heart;
                                                   firebaseFirestore
                                                       .collection('exhibition')
-                                                      .doc(
-                                                          widget.exhibition.title)
-                                                      .update(
-                                                          {'heart': heart});
+                                                      .doc(widget
+                                                          .exhibition.title)
+                                                      .update({'heart': heart});
                                                 });
                                               },
                                             )
@@ -135,10 +135,9 @@ class _DetailScreenState extends State<DetailScreen> {
                                                   heart = !heart;
                                                   firebaseFirestore
                                                       .collection('exhibition')
-                                                      .doc(
-                                                          widget.exhibition.title)
-                                                      .update(
-                                                          {'heart': heart});
+                                                      .doc(widget
+                                                          .exhibition.title)
+                                                      .update({'heart': heart});
                                                 });
                                               },
                                             ),
@@ -154,10 +153,11 @@ class _DetailScreenState extends State<DetailScreen> {
                                                   havebeen = !havebeen;
                                                   firebaseFirestore
                                                       .collection('exhibition')
-                                                      .doc(
-                                                          widget.exhibition.title)
-                                                      .update(
-                                                          {'havebeen': havebeen});
+                                                      .doc(widget
+                                                          .exhibition.title)
+                                                      .update({
+                                                    'havebeen': havebeen
+                                                  });
                                                 });
                                               },
                                             )
@@ -172,10 +172,11 @@ class _DetailScreenState extends State<DetailScreen> {
                                                   havebeen = !havebeen;
                                                   firebaseFirestore
                                                       .collection('exhibition')
-                                                      .doc(
-                                                          widget.exhibition.title)
-                                                      .update(
-                                                          {'havebeen': havebeen});
+                                                      .doc(widget
+                                                          .exhibition.title)
+                                                      .update({
+                                                    'havebeen': havebeen
+                                                  });
                                                 });
                                                 print('daf');
                                               },
@@ -223,6 +224,19 @@ class _DetailScreenState extends State<DetailScreen> {
                             '추천 칼럼',
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.w600),
+                          ),
+                          RichText(
+                            text: TextSpan(
+                                text: widget.exhibition.place,
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.w600),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: '에서 진행하는 다른 전시',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600))
+                                ]),
                           ),
                         ]),
                   )

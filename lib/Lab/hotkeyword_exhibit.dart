@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import 'detail_screen.dart';
+import '../DetailscreenFolder/detail_screen.dart';
 import '../Model/model_exhibitions.dart';
 
 class HotKeywordExhibit extends StatefulWidget {

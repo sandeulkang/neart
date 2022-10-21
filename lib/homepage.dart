@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:neart/Lab/ssearch_screen.dart';
 import 'package:neart/Page/page2.dart';
 import 'package:neart/Page/page4.dart';
 import 'package:neart/Page/page1.dart';
 import 'package:neart/authenticationpage.dart';
-import 'package:neart/search_screen.dart';
+import 'package:neart/trash/search_screen.dart';
 
 import 'Page/page5.dart';
 import 'Page/page5_null.dart';
@@ -22,7 +21,7 @@ class _HomePageState extends State<HomePage> {
   var _index = 0;
   final _pages = [
     Ppage1(),
-    SsearchScreenExhibit(),
+    Page2(),
     Page4(),
     const Page5(),
   ];

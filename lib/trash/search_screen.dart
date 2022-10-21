@@ -1,17 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:neart/Model/model_exhibitions.dart';
+import 'package:neart/DetailscreenFolder/detail_screen.dart';
 
-import '../Model/model_exhibitions.dart';
-import 'detail_screen.dart';
-
-class SsearchScreenExhibit extends StatefulWidget {
-  const SsearchScreenExhibit({Key? key}) : super(key: key);
-
-  @override
-  State<SsearchScreenExhibit> createState() => _SsearchScreenExhibitState();
+class SearchScreenExhibit extends StatefulWidget {
+  _SearchScreenExhibitState createState() => _SearchScreenExhibitState();
 }
 
-class _SsearchScreenExhibitState extends State<SsearchScreenExhibit> {
+class _SearchScreenExhibitState extends State<SearchScreenExhibit> {
+  // *검색 위젯을 컨트롤 하는 위젯 선언
   final TextEditingController _filter = TextEditingController();
 
   // *현재 검색 위젯에 커서가 있는지에 대한 상태 등을 가지고 있는 위젯
@@ -21,7 +18,7 @@ class _SsearchScreenExhibitState extends State<SsearchScreenExhibit> {
   String _searchText = "";
 
   // * 검색 위젯을 컨트롤하는 _filter가 변화를 감지하여 _searchText의 상태를 변화시키는 코드
-  _SsearchScreenExhibitState() {
+  _SearchScreenExhibitState() {
     _filter.addListener(() {
       setState(() {
         _searchText = _filter.text;
@@ -29,12 +26,13 @@ class _SsearchScreenExhibitState extends State<SsearchScreenExhibit> {
     });
   }
 
+  // 스트림데이터를 가져와 _buildList 호출
   Widget _buildBody(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection('exhibition')
           .orderBy('time', descending: true)
-          .snapshots(), //QuerySnapshot 타입임
+          .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return LinearProgressIndicator();
         return _buildList(context, snapshot.data!.docs);
@@ -42,88 +40,60 @@ class _SsearchScreenExhibitState extends State<SsearchScreenExhibit> {
     );
   }
 
-  //현재 snapshot이 어떤 상태인지 파악이 필요함 Querysnapshot의 모든 데이터, 즉 모든 docs를 가지고 있는 상태, 즉 doc들의 집합인 list
-  Widget _buildList(
-      BuildContext context, List<QueryDocumentSnapshot> snapshot) {
-    //documentSnapshot이 아닌 QueryDocumentSnapshot이다
-    List<QueryDocumentSnapshot> searchResults = [];
-
-    for (QueryDocumentSnapshot d in snapshot) {
+  //  검색 결과에 따라 데이터를 처리해 GridView 생성해줌
+  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
+    List<DocumentSnapshot> searchResults = [];
+    // *데이터에 searchText가 포함되는지 필터링
+    for (DocumentSnapshot d in snapshot) {
       // *string.contains()를 활용해 searchText를 포함한 snapshot을 리스트에 추가
       // * 주의!) data.toString()해도 실행은 되지만 검색 결과가 안 나옴!
       if (d.data().toString().contains(_searchText)) {
-        searchResults.add(d); //이로써 searchResults는 선별되어진 docs 들로 구성된 list이다
+        searchResults.add(d);
       }
     }
-
+    // * GridView 생성
     return Expanded(
-      child: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisSpacing: 10, //수평 Padding
-            crossAxisSpacing: 10,
-            childAspectRatio: 0.5 //수직 Padding
-            ),
-        itemCount: searchResults.length,
-        itemBuilder: (BuildContext context, int i) {
-          //itembuilder의 대상은 list이다. 리스트 1부터 차례대로 아래에 들어가는 거다. 다만 Exhibition의 리스트여야 한다.
-          //이 exhibition은 Exhibition 타입이다. 즉 나는 searchResult라는 리스트를 exhibitions라는 이름을 가진 Exhibition타입의 리스트로 바꿔주어야 한다
-          //그리고 나서 itemcount도 exhibitions.length로 바꿔주면 된다
-
-          List<Exhibition> exhibitions = searchResults
-              .map((data) => Exhibition.fromSnapshot(data))
-              .toList();
-          // snapshot.map((data) => Exhibition.fromSnapshot(data)).toList();
-          // //exhibitions 라는 리스트는 들어온 snapshot이라는 list 안의 map들을 Exhibition화 시켜준 리스트이다.
-          // final exhibition = Exhibition.fromSnapshot(data);
-
-          return InkWell(
-            child: Image.network(exhibitions[i].poster),
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute<Null>(
-                  fullscreenDialog: true,
-                  builder: (BuildContext context) {
-                    // * 클릭한 영화의 DetailScreen 출력
-                    return DetailScreen(exhibition: exhibitions[i]);
-                  }));
-            },
-          );
-        },
+      child: GridView.count(
+        crossAxisCount: 2,
+        childAspectRatio: 1 / 1.5,
+        padding: EdgeInsets.all(3),
+        // * map()함수를 통해 각 아이템을 buildListItem 함수로 넣고 호출
+        children:
+            searchResults.map((d) => _buildListItem(context, d)).toList(), //이거 리스트임
+        //서치리저트리스트의 아이들을 각각 하나의 data로 취급하고 이를 _buildlistitem에 넣겠다. 그러면
+        //각각의 data들은 그곳에서 Exhibition모델에 들어가 제대로 map 처리 돼서 ( justdata가 아닌 mapdata가 되고 ) to.list를 구성한다.
+        //이렇게 Exhibition 맵 형식의 리스트로 구성된 리스트 searchResults는 gridview를 작성한다.
       ),
     );
   }
 
-  /***
-      Gridview.count(
-      children:
-      searchResults.map((data) => _buildListItem(context, data)).toList(),
-      searchResults의 아이들을 각각 하나의 data로 취급하고 이를 _buildlistitem에 넣겠다. 그러면
-      각각의 data들은 그곳에서 Exhibition모델에 들어가 제대로 map 처리 돼서 ( justdata가 아닌 mapdata가 되고 ) to.list를 구성한다.
-      이렇게 map화된 아이들로 구성된 searchResults 리스트로 gridview를 작성한다. (그리드 뷰의 확실한 자식임)
-
-      Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
-      final exhibition = Exhibition.fromSnapshot(data);
-      return InkWell(
+  // * buildListItem으로 만들어 각각 detailScreen을 띄울 수 있도록 함.
+  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
+    final exhibition = Exhibition.fromSnapshot(data);
+    // * 각각을 누를 수 있도록 InkWell() 사용
+    return InkWell(
       child: Image.network(exhibition.poster),
       onTap: () {
-      Navigator.of(context).push(MaterialPageRoute<Null>(
-      builder: (BuildContext context) {
-      return DetailScreen(exhibition: exhibition);
-      }));
+        Navigator.of(context).push(MaterialPageRoute<Null>(
+            fullscreenDialog: true,
+            builder: (BuildContext context) {
+              // * 클릭한 영화의 DetailScreen 출력
+              return DetailScreen(exhibition: exhibition);
+            }));
       },
-      );
-      }
-   ***/
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    // 검색창 만들기
     return Scaffold(
       body: Container(
         child: Column(
           children: [
             Container(
-              color: Colors.white,
-              padding: EdgeInsets.fromLTRB(10, 5, 5, 10),
+              color: Colors.black,
+              padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
               child: Row(
                 children: [
                   Expanded(
@@ -137,11 +107,11 @@ class _SsearchScreenExhibitState extends State<SsearchScreenExhibit> {
                       decoration: InputDecoration(
                         // * 검색창 디자인
                         filled: true,
-                        fillColor: Colors.white,
+                        fillColor: Colors.white12,
                         // * 좌측 아이콘 추가
                         prefixIcon: Icon(
                           Icons.search,
-                          color: Colors.black38,
+                          color: Colors.white60,
                           size: 20,
                         ),
                         // * 우측 아이콘 추가
@@ -149,7 +119,7 @@ class _SsearchScreenExhibitState extends State<SsearchScreenExhibit> {
                             ? IconButton(
                                 icon: Icon(
                                   Icons.cancel,
-                                  color: Colors.black38,
+                                  color: Colors.white60,
                                   size: 20,
                                 ),
                                 // * cancle 아이콘 누르면 _filter와 _searchText 초기화
@@ -162,21 +132,21 @@ class _SsearchScreenExhibitState extends State<SsearchScreenExhibit> {
                               )
                             : Container(),
                         // *힌트 텍스트 출력
-                        hintText: "지역, 장소, 장르 등 키워드를 검색해 보세요!",
-                        labelStyle: TextStyle(color: Colors.black38),
+                        hintText: "검색",
+                        labelStyle: TextStyle(color: Colors.white),
                         // * 검색창 디자인(테두리, 테두리 색상 등)
                         focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black26),
+                            borderSide: BorderSide(color: Colors.transparent),
                             borderRadius:
-                                BorderRadius.all(Radius.circular(20))),
+                                BorderRadius.all(Radius.circular(10))),
                         enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black26),
+                            borderSide: BorderSide(color: Colors.transparent),
                             borderRadius:
-                                BorderRadius.all(Radius.circular(20))),
+                                BorderRadius.all(Radius.circular(10))),
                         border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black26),
+                            borderSide: BorderSide(color: Colors.transparent),
                             borderRadius:
-                                BorderRadius.all(Radius.circular(20))),
+                                BorderRadius.all(Radius.circular(10))),
                       ),
                     ),
                   ),
@@ -186,7 +156,7 @@ class _SsearchScreenExhibitState extends State<SsearchScreenExhibit> {
                           child: TextButton(
                             child: Text(
                               "취소",
-                              style: TextStyle(color: Colors.black38),
+                              style: TextStyle(color: Colors.white60),
                             ),
                             onPressed: () {
                               setState(() {
