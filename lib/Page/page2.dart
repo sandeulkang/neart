@@ -21,7 +21,7 @@ class _Page2State extends State<Page2> {
   String _searchText = ""; //searchText가 null이 아닌 빈 값을 줘서 모든 전시가 다 나올 수 있는 것
 
   // * 검색 위젯을 컨트롤하는 _filter가 변화를 감지하여 _searchText의 상태를 변화시키는 코드
-  _SsearchScreenExhibitState() {
+  _Page2State() {
     _filter.addListener(() {
       setState(() {
         _searchText = _filter.text;
@@ -64,7 +64,7 @@ class _Page2State extends State<Page2> {
             mainAxisSpacing: 5, //수평 Padding
             crossAxisSpacing: 1,
             childAspectRatio: 0.5
-            ),
+        ),
         itemCount: searchResults.length, //이거 exhibition.length로 바꿔도 ㄱㅊ나 봐보기
         itemBuilder: (BuildContext context, int i) {
           //itembuilder의 대상은 list이다. 리스트 1부터 차례대로 아래에 들어가는 거다. 다만 Exhibition의 리스트여야 한다.
@@ -131,7 +131,6 @@ class _Page2State extends State<Page2> {
       searchResults의 아이들을 각각 하나의 data로 취급하고 이를 _buildlistitem에 넣겠다. 그러면
       각각의 data들은 그곳에서 Exhibition모델에 들어가 제대로 map 처리 돼서 ( justdata가 아닌 mapdata가 되고 ) to.list를 구성한다.
       이렇게 map화된 아이들로 구성된 searchResults 리스트로 gridview를 작성한다. (그리드 뷰의 확실한 자식임)
-
       Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
       final exhibition = Exhibition.fromSnapshot(data);
       return InkWell(
@@ -161,7 +160,7 @@ class _Page2State extends State<Page2> {
                     // * 검색 입력 필드 만들기
                     child: TextField(
                       focusNode: focusNode,
-                      style: TextStyle(fontSize: 15),
+                      style: TextStyle(fontSize: 15,color: Colors.black),
                       autofocus: false,
                       controller: _filter,
                       decoration: InputDecoration(
@@ -180,58 +179,57 @@ class _Page2State extends State<Page2> {
                         // * 우측 아이콘 추가
                         suffixIcon: focusNode.hasFocus
                             ? IconButton(
-                                icon: Icon(
-                                  Icons.cancel,
-                                  color: Colors.black38,
-                                  size: 20,
-                                ),
-                                // * cancle 아이콘 누르면 _filter와 _searchText 초기화
-                                onPressed: () {
-                                  setState(() {
-                                    _filter.clear();
-                                    _searchText = "";
-                                  });
-                                },
-                              )
+                          icon: Icon(
+                            Icons.cancel,
+                            color: Colors.black38,
+                            size: 20,
+                          ),
+                          // * cancle 아이콘 누르면 _filter와 _searchText 초기화
+                          onPressed: () {
+                            setState(() {
+                              _filter.clear();
+                              _searchText = "";
+                            });
+                          },
+                        )
                             : Container(),
-
                         // * 검색창 디자인(테두리, 테두리 색상 등)
                         focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.black26),
                             borderRadius:
-                                BorderRadius.all(Radius.circular(20))),
+                            BorderRadius.all(Radius.circular(20))),
                         enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.black26),
                             borderRadius:
-                                BorderRadius.all(Radius.circular(20))),
+                            BorderRadius.all(Radius.circular(20))),
                         border: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.black26),
                             borderRadius:
-                                BorderRadius.all(Radius.circular(20))),
+                            BorderRadius.all(Radius.circular(20))),
                       ),
                     ),
                   ),
                   // * 검색바 클릭시 취소 버튼 생겼다가 취소 누르면 없어지게 만들기
                   focusNode.hasFocus
                       ? Expanded(
-                          child: TextButton(
-                            child: Text(
-                              "취소",
-                              style: TextStyle(color: Colors.black38),
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _filter.clear();
-                                _searchText = "";
-                                focusNode.unfocus();
-                              });
-                            },
-                          ),
-                        )
+                    child: TextButton(
+                      child: Text(
+                        "취소",
+                        style: TextStyle(color: Colors.black38),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _filter.clear();
+                          _searchText = "";
+                          focusNode.unfocus();
+                        });
+                      },
+                    ),
+                  )
                       : Expanded(
-                          flex: 0,
-                          child: Container(),
-                        )
+                    flex: 0,
+                    child: Container(),
+                  )
                 ],
               ),
             ),

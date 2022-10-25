@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:neart/Model/model_exhibitions.dart';
-import 'package:neart/Lab/Listvew_builder.dart';
+import 'package:neart/trash/Listvew_builder.dart';
 import 'package:neart/trash/box_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';

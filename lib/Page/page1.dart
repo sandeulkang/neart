@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:neart/Model/model_exhibitions.dart';
-import 'package:neart/Lab/Listvew_builder.dart';
+import 'package:neart/trash/Listvew_builder.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+import '../Lab/finishing_exhibit.dart';
 import '../Lab/hotkeyword_exhibit.dart';
 import '../Lab/popular_exhibit.dart';
 import '../Lab/review_screen.dart';
@@ -48,7 +49,7 @@ class _Ppage1State extends State<Ppage1> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            '요즘 인기 있는',
+            '요즘 인기 있는 전시',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 10),
@@ -74,11 +75,11 @@ class _Ppage1State extends State<Ppage1> {
             height: 60,
           ),
           const Text(
-            '곧 끝나는',
+            '곧 끝나는 전시',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 10),
-          HotKeywordExhibit(),
+          FinishingExhibit(),
           const SizedBox(
             height: 60,
           ),

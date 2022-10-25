@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:neart/DetailscreenFolder/together_exhibiit.dart';
 import 'package:neart/Lab/review_screen.dart';
 import '../Model/model_exhibitions.dart';
+import 'main_info.dart';
 
 class DetailScreen extends StatefulWidget {
   final Exhibition exhibition;
@@ -34,7 +36,10 @@ class _DetailScreenState extends State<DetailScreen> {
     setState(() {
       information = placeinfodata['info'];
     });
+    QuerySnapshot together = await FirebaseFirestore.instance.collection('exhibition').where('place',isEqualTo: 'widget.exhibition.place').get();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -225,19 +230,13 @@ class _DetailScreenState extends State<DetailScreen> {
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.w600),
                           ),
-                          RichText(
-                            text: TextSpan(
-                                text: widget.exhibition.place,
-                                style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.w600),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                      text: '에서 진행하는 다른 전시',
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w600))
-                                ]),
-                          ),
+                          SizedBox(height: 40,),
+                          Text('같이 진행하는 다른 전시',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black)),
+                          TogetherExhibit(exhibition: widget.exhibition)
                         ]),
                   )
                 ],

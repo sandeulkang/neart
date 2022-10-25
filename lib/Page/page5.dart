@@ -1,3 +1,4 @@
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -15,6 +16,9 @@ class Page5 extends StatefulWidget {
 
 class _Page5State extends State<Page5> {
   final providerConfigs = [EmailProviderConfiguration()];
+
+
+
 
   @override
   Widget build(BuildContext context) {

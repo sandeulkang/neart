@@ -4,19 +4,19 @@ import 'package:flutter/material.dart';
 import '../DetailscreenFolder/detail_screen.dart';
 import '../Model/model_exhibitions.dart';
 
-class PopularExhibit extends StatefulWidget {
-  PopularExhibit({Key? key, this.word})
-      : super(key: key);
+class TogetherExhibit extends StatefulWidget {
 
-  String? word; //'인기'말고 '지금 뜨고 있는', '곧 끝나는' 등등을 넣을 수 있게 하고 싶은데 어떻게 할지 모르겟다.
+  final Exhibition exhibition;
+
+  TogetherExhibit({required this.exhibition});
 
   @override
-  State<PopularExhibit> createState() => _PopularExhibitState();
+  State<TogetherExhibit> createState() => _TogetherExhibitState();
 }
 
-class _PopularExhibitState extends State<PopularExhibit> {
+class _TogetherExhibitState extends State<TogetherExhibit> {
 
-  String? word;
+  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
   Widget _buildBody(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -38,11 +38,11 @@ class _PopularExhibitState extends State<PopularExhibit> {
     for (DocumentSnapshot d in snapshot) {
       // *string.contains()를 활용해 searchText를 포함한 snapshot을 리스트에 추가
       // * 주의!) data.toString()해도 실행은 되지만 검색 결과가 안 나옴!
-      if (d.data().toString().contains('인기')) {
-        print(word);
+      if (d.data().toString().contains('exhibition.place')) {
         searchResults.add(d);
       }
     }
+
 
     // * listView 생성
     return Container(
