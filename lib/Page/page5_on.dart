@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
@@ -29,16 +30,22 @@ class _Page5_onState extends State<Page5_on> {
 
   Future pickImage() async {
     try {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      final image = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 75,
+      );
 
       if (image == null) return;
+
+      //image는 xFile 타입이고 ㅇ여기에 .path를 붙이고 File로 감싸 imageTemp에 넣어준다. 결국 imageTemp는 File 타입이다
 
       final imageTemp =
           File(image.path); //imagetemp라는 파이널(변경될수없는) 변수를 만들어 그 file(불특정함)을 넣어줌.
 
       setState(() {
-        this.image = imageTemp; // ()=>this.image 구조를 (){this.image...} 구조로 바꿈
-      }); //그 file을 다시 image에 넣어줌. 한 함수에서 같은 변수가 두 개가 있으면 에러나니 this.붙여서 구분(?)
+        // ()=>this.image 구조를 (){this.image...} 구조로 바꿈
+        this.image = imageTemp; //그 file을 다시 image에 넣어줌. 한 함수에서 같은 변수가 두 개가 있으면 에러나니 this.붙여서 구분(?)
+      });
     } catch (e) {
       print('Failed to pick image: $e');
     }
