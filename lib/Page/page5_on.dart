@@ -10,6 +10,7 @@ import 'package:neart/Page/page5.dart';
 import 'package:neart/Page/page5_null.dart';
 import 'package:neart/authenticationpage.dart';
 import 'package:flutterfire_ui/auth.dart';
+import '../Model/model_user.dart';
 
 class Page5_on extends StatefulWidget {
   Page5_on({Key? key}) : super(key: key);
@@ -24,35 +25,65 @@ class _Page5_onState extends State<Page5_on> {
         .collection('member')
         .doc(FirebaseAuth.instance.currentUser!.email!)
         .set({'email': FirebaseAuth.instance.currentUser!.email!});
-  }
+
+
+  } //현재 로그인한 유저의 email을 member의 email로 등록하게 함 근데 이러면 매번 갱신됨 씹;; 어카노
 
   File? image;
+  String imageUrl = " ";
+
+  var userData = FirebaseFirestore.instance
+        .collection('member')
+        .doc(FirebaseAuth.instance.currentUser!.email!)
+        .get();
+  //.get()이 아닌 .snapshot()을 하면 doc전체의 흐름이 불러와진다. 실질적인 data가 아니라 ㅇㅇ 그리고 get()으로 불러와지는 data는 map형태일 것이다
+
 
   Future pickImage() async {
-    try {
-      final image = await ImagePicker().pickImage(
-        source: ImageSource.gallery,
-        imageQuality: 75,
-      );
+    final image = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      maxHeight: 400,
+      maxWidth: 400,
+      imageQuality: 75,
+    );
 
-      if (image == null) return;
+    final ref = FirebaseStorage.instance
+        .ref()
+        .child(FirebaseAuth.instance.currentUser!.email!);
+    //없으면 만듦 ㅇㅇ 걱정 ㄴㄴ
 
-      //image는 xFile 타입이고 ㅇ여기에 .path를 붙이고 File로 감싸 imageTemp에 넣어준다. 결국 imageTemp는 File 타입이다
-
-      final imageTemp =
-          File(image.path); //imagetemp라는 파이널(변경될수없는) 변수를 만들어 그 file(불특정함)을 넣어줌.
-
+    await ref.putFile(File(image!.path)); //userId를 가진
+    ref.getDownloadURL().then((value) {
+      print(value);
       setState(() {
-        // ()=>this.image 구조를 (){this.image...} 구조로 바꿈
-        this.image = imageTemp; //그 file을 다시 image에 넣어줌. 한 함수에서 같은 변수가 두 개가 있으면 에러나니 this.붙여서 구분(?)
+        imageUrl = value;
+        FirebaseFirestore.instance
+            .collection('member')
+            .doc(FirebaseAuth.instance.currentUser!.email!)
+            .update(
+                {'profileUrl': imageUrl}); //imageurl 지우고 value로 바로 가능한지 테스트 해보기
+        //update안 하고 set 하면 기존의 field인 email은 지워짐 안 ㅣㅈ워지게 하려면 여기서 email도 다시 set해줘야되는 거 ㅇㅇ
       });
-    } catch (e) {
-      print('Failed to pick image: $e');
-    }
+    });
   }
+
+  Widget _buildBody(BuildContext context) {
+
+    return StreamBuilder<QuerySnapshot>(
+      // FireStore 인스턴스의 exhibition 컬렉션의 snapshot을 가져옴
+      stream: FirebaseFirestore.instance.collection('member').where('email', isEqualTo: FirebaseAuth.instance.currentUser!.email!).snapshots(),
+      builder: (context, snapshot) {
+        // snapshot의 데이터가 없는 경우 Linear~ 생성
+        if (!snapshot.hasData) return LinearProgressIndicator();
+        return _build(context, snapshot.data!.docs);
+      },
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.fromLTRB(10, 30, 10, 0),
@@ -61,9 +92,8 @@ class _Page5_onState extends State<Page5_on> {
           children: [
             Column(
               children: [
-                image != null
-                    ? Image.file(image!)
-                    : Stack(children: [
+                imageUrl == ""
+                    ? Stack(children: [
                         CircleAvatar(
                             radius: 50,
                             backgroundImage:
@@ -72,13 +102,40 @@ class _Page5_onState extends State<Page5_on> {
                             //안되면 child를 backgroundimage로
                             ),
                         Positioned(
-                          left: 60,
-                          top: 60,
-                          child: IconButton(
-                              onPressed: () {
-                                pickImage();
-                              },
-                              icon: Icon(Icons.add)),
+                          left: 70,
+                          top: 70,
+                          child: InkWell(
+                            onTap: () {
+                              pickImage();
+                            },
+                            child: Image.asset(
+                              'assets/추가 버튼.png',
+                              height: 25,
+                              width: 25,
+                            ),
+                          ),
+                        )
+                      ])
+                    : Stack(children: [
+                        CircleAvatar(
+                            radius: 50,
+                            backgroundImage: NetworkImage(
+                                imageUrl) //image.network하면 안 되고 networkimage해야 됨
+                            //imageUrl 대신 현재 로그인한 사람의 firebasefirestoredb에 'member'컬렉션에 현재 email docs에 'photourl' field 값 불러오기
+                            ),
+                        Positioned(
+                          left: 70,
+                          top: 70,
+                          child: InkWell(
+                            onTap: () {
+                              pickImage();
+                            },
+                            child: Image.asset(
+                              'assets/추가 버튼.png',
+                              height: 25,
+                              width: 25,
+                            ),
+                          ),
                         )
                       ]),
                 SizedBox(
@@ -106,7 +163,7 @@ class _Page5_onState extends State<Page5_on> {
                             "assets/onheart.svg",
                             width: 30,
                             height: 30,
-                            color: Colors.black,
+                            color: Colors.black87,
                           ),
                           SizedBox(height: 4),
                           Text(

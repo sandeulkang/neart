@@ -20,7 +20,7 @@ class _PopularExhibitState extends State<PopularExhibit> {
 
   Widget _buildBody(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      // FireStore 인스턴스의 movie 컬렉션의 snapshot을 가져옴
+      // FireStore 인스턴스의 exhibition 컬렉션의 snapshot을 가져옴
       stream: FirebaseFirestore.instance.collection('exhibition').snapshots(),
       builder: (context, snapshot) {
         // snapshot의 데이터가 없는 경우 Linear~ 생성

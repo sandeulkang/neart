@@ -32,11 +32,10 @@ class _DetailScreenState extends State<DetailScreen> {
     DocumentSnapshot placeinfodata = await firebaseFirestore
         .collection('placeinfo')
         .doc(widget.exhibition.place)
-        .get();
+        .get(); //placeinfodata는
     setState(() {
       information = placeinfodata['info'];
     });
-    QuerySnapshot together = await FirebaseFirestore.instance.collection('exhibition').where('place',isEqualTo: 'widget.exhibition.place').get();
   }
 
 
