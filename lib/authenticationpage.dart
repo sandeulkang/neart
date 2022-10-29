@@ -20,10 +20,10 @@ class Authentication extends StatelessWidget {
             providerConfigs: [EmailProviderConfiguration()],);
         }
         else {
-          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder:
-              (context) =>HomePage()), (Route<dynamic> route) => false);
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder:
+              (context) =>HomePage()),);
           WidgetsBinding.instance.addPostFrameCallback;
-          return Container();//로그인 하고 나면 그 위에 stack되며 return되는 화면, 또 로그아웃을 누르면 새로 return되는 화면
+          return Page5_on();//로그인 하고 나면 그 위에 stack되며 return되는 화면, 또 로그아웃을 누르면 새로 return되는 화면
       }}
     );
   }

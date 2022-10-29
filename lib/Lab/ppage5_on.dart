@@ -12,44 +12,23 @@ import 'package:neart/authenticationpage.dart';
 import 'package:flutterfire_ui/auth.dart';
 import '../Model/model_user.dart';
 
-class Page5_on extends StatefulWidget {
-  Page5_on({Key? key}) : super(key: key);
+class Ppage5_on extends StatefulWidget {
+  const Ppage5_on({Key? key}) : super(key: key);
 
   @override
-  State<Page5_on> createState() => _Page5_onState();
+  State<Ppage5_on> createState() => _Ppage5_onState();
 }
 
-class _Page5_onState extends State<Page5_on> {
+class _Ppage5_onState extends State<Ppage5_on> {
+  var userData;
+  var ProfileUrl = "";
+  final userQuery = FirebaseFirestore.instance
+      .collection('member')
+      .where('email', isEqualTo: FirebaseAuth.instance.currentUser!.email!)
+  ;
 
-  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-  File? image;
-  String profileUrl = "";
-
-  void initState() {
-    FirebaseFirestore.instance ///현재 로그인한 유저의 email을 member의 email로 등록하게 함 근데 이러면 매번 갱신됨 씹;; 어카노 나중에 빼자.
-        .collection('member')
-        .doc(FirebaseAuth.instance.currentUser!.email!)
-        .set({'email': FirebaseAuth.instance.currentUser!.email!});
-    asyncInitState();
-  }
-
-  void asyncInitState() async {
-    DocumentSnapshot userData = await firebaseFirestore
-        .collection('member')
-        .doc(FirebaseAuth.instance.currentUser!.email!)
-        .get();
-    //map형태의 userData에서 profileUrl이라는 key의 값을 찾으려는데 왜 안 되지? 아마 이게 <future>상태라서 안 되는 것 같다.
-    //아닌데 await 붙여서 <DocumentSnAPSHOT<MAP<STRING 어쩌구 상태인데
-    //근데 문제되는 [] 사용되는 부분이 여기밖에 없음
-    setState( () {
-      profileUrl = userData["profileUrl"];
-      print(profileUrl);
-
-    });
-  }
-
-  //이미지를 pick하기 전까지 파이어스토어에 profile url이 생기지를 않으니까 setstate을 미리해봤자 profileurl이 값을 못 가지는 거임
   Future pickImage() async {
+    //먼 미래에 pickImage가 실행됐을 때~
     final image = await ImagePicker().pickImage(
       source: ImageSource.gallery,
       maxHeight: 400,
@@ -57,32 +36,39 @@ class _Page5_onState extends State<Page5_on> {
       imageQuality: 75,
     );
 
+    //불러온 사진을 넣을 스토리지 변수 ref 를 만들었다. storage file(?) 타입이다. 현 user의 email의 이름의 파일을 불러오는데, 없다면 생성된다.
     final ref = await FirebaseStorage.instance
         .ref()
         .child(FirebaseAuth.instance.currentUser!.email!);
-    //없으면 만듦 ㅇㅇ 걱정 ㄴㄴ
 
-    await ref.putFile(File(image!.path)); //userId를 가진
+    //ref에 파일을 넣었다. 스토리지에 현 user의 email의 이름으로 프로필사진이 갱신된다.
+    await ref.putFile(File(image!.path));
+
+    //ref의 url(즉 갱신된 프로필 사진의 url)을 불러오고 그걸 파이어스토어 user의 profileUrl에 넣어준다. 정확히는 갱신인데, 없으면 만들어진다.
     ref.getDownloadURL().then((value) {
-      print(value);
       setState(() {
         FirebaseFirestore.instance
             .collection('member')
             .doc(FirebaseAuth.instance.currentUser!.email!)
-            .update(
-                {'profileUrl': value});
+            .update({'profileUrl': value});
         //update안 하고 set 하면 기존의 field인 email은 지워짐 안 ㅣㅈ워지게 하려면 여기서 email도 다시 set해줘야되는 거 ㅇㅇ
       });
     });
   }
 
   Widget _buildBody(BuildContext context) {
-
-    return StreamBuilder<QuerySnapshot>(
-      // FireStore 인스턴스의 exhibition 컬렉션의 snapshot을 가져옴
-      stream: FirebaseFirestore.instance.collection('member').where('email', isEqualTo: FirebaseAuth.instance.currentUser!.email!).snapshots(),
+    return StreamBuilder<QuerySnapshot> (
+      // 로그인한 user의 doc의 실시간 흐름을 반영한다. 이 stream이 아직 안들어오면 인디케이터 띄우고 들어오면 scaffold를 띄운다
+      stream: userQuery.snapshots(),
       builder: (context, snapshot) {
-        // snapshot의 데이터가 없는 경우 Linear~ 생성
+        userData = FirebaseFirestore.instance
+            .collection('member')
+            .doc(FirebaseAuth.instance.currentUser!.email!).get();
+        //map형태의 userData에서 profileUrl이라는 key의 값을 찾으려는데 왜 안 되지? 아마 이게 <future>상태라서 안 되는 것 같다.
+        // 문제되는 [] 사용되는 부분이 여기밖에 없음
+        setState(() {
+          ProfileUrl = userData['profileUrl'];
+        });
         if (!snapshot.hasData) return LinearProgressIndicator();
         return Scaffold(
           body: Padding(
@@ -92,51 +78,52 @@ class _Page5_onState extends State<Page5_on> {
               children: [
                 Column(
                   children: [
-                    profileUrl == ""
-                        ? Stack(children: [ //profileurl이 빈값이라면
-                      CircleAvatar(
-                          radius: 50,
-                          backgroundImage:
-                          // NetworkImage(FirebaseAuth.instance.currentUser!.photoURL!) 지금photourl없어서 안됨
-                          AssetImage('assets/프로필이미지.png')
-                        //안되면 child를 backgroundimage로
-                      ),
-                      Positioned(
-                        left: 70,
-                        top: 70,
-                        child: InkWell(
-                          onTap: () {
-                            pickImage();
-                          },
-                          child: Image.asset(
-                            'assets/추가 버튼.png',
-                            height: 25,
-                            width: 25,
-                          ),
-                        ),
-                      )
-                    ])
+                    ProfileUrl == ""
+                        ? Stack(children: [
+                            //profileurl이 빈값이라면
+                            CircleAvatar(
+                                radius: 50,
+                                backgroundImage:
+                                    // NetworkImage(FirebaseAuth.instance.currentUser!.photoURL!) 지금photourl없어서 안됨
+                                    AssetImage('assets/프로필이미지.png')
+                                //안되면 child를 backgroundimage로
+                                ),
+                            Positioned(
+                              left: 70,
+                              top: 70,
+                              child: InkWell(
+                                onTap: () {
+                                  pickImage();
+                                },
+                                child: Image.asset(
+                                  'assets/추가 버튼.png',
+                                  height: 25,
+                                  width: 25,
+                                ),
+                              ),
+                            )
+                          ])
                         : Stack(children: [
-                      CircleAvatar(
-                          radius: 50,
-                          backgroundImage: NetworkImage(
-                              profileUrl) //image.network하면 안 되고 networkimage해야 됨
-                      ),
-                      Positioned(
-                        left: 70,
-                        top: 70,
-                        child: InkWell(
-                          onTap: () {
-                            pickImage();
-                          },
-                          child: Image.asset(
-                            'assets/추가 버튼.png',
-                            height: 25,
-                            width: 25,
-                          ),
-                        ),
-                      )
-                    ]),
+                            CircleAvatar(
+                                radius: 50,
+                                backgroundImage: NetworkImage(
+                                    ProfileUrl) //image.network하면 안 되고 networkimage해야 됨
+                                ),
+                            Positioned(
+                              left: 70,
+                              top: 70,
+                              child: InkWell(
+                                onTap: () {
+                                  pickImage();
+                                },
+                                child: Image.asset(
+                                  'assets/추가 버튼.png',
+                                  height: 25,
+                                  width: 25,
+                                ),
+                              ),
+                            )
+                          ]),
                     SizedBox(
                       height: 15,
                     ),
@@ -174,9 +161,9 @@ class _Page5_onState extends State<Page5_on> {
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute<Null>(
                                 builder: (BuildContext context) {
-                                  // * 클릭한 영화의 DetailScreen 출력
-                                  return LikeScreen(); //navigatior은 그곳으로 이동한다가 개념, build return은 그곳에 그리는 것, 즉 불러 오는 것.
-                                }));
+                              // * 클릭한 영화의 DetailScreen 출력
+                              return LikeScreen(); //navigatior은 그곳으로 이동한다가 개념, build return은 그곳에 그리는 것, 즉 불러 오는 것.
+                            }));
                           },
                         ),
                         InkWell(
@@ -240,9 +227,8 @@ class _Page5_onState extends State<Page5_on> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return _buildBody(context);
+    return _buildBody(context); //scaffold하고 안에 bui
   }
 }
