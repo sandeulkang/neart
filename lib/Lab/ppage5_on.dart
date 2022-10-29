@@ -20,12 +20,20 @@ class Ppage5_on extends StatefulWidget {
 }
 
 class _Ppage5_onState extends State<Ppage5_on> {
+
+  @override
+  initState() {
+    userData = FirebaseFirestore.instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
+        .collection('member')
+        .doc(FirebaseAuth.instance.currentUser!.email!).get();
+    super.initState();
+  }
+
   var userData;
   var ProfileUrl = "";
   final userQuery = FirebaseFirestore.instance
       .collection('member')
-      .where('email', isEqualTo: FirebaseAuth.instance.currentUser!.email!)
-  ;
+      .where('email', isEqualTo: FirebaseAuth.instance.currentUser!.email!);
 
   Future pickImage() async {
     //먼 미래에 pickImage가 실행됐을 때~
@@ -56,6 +64,8 @@ class _Ppage5_onState extends State<Ppage5_on> {
     });
   }
 
+
+
   Widget _buildBody(BuildContext context) {
     return StreamBuilder<QuerySnapshot> (
       // 로그인한 user의 doc의 실시간 흐름을 반영한다. 이 stream이 아직 안들어오면 인디케이터 띄우고 들어오면 scaffold를 띄운다
@@ -63,11 +73,12 @@ class _Ppage5_onState extends State<Ppage5_on> {
       builder: (context, snapshot) {
         userData = FirebaseFirestore.instance
             .collection('member')
-            .doc(FirebaseAuth.instance.currentUser!.email!).get();
+            .doc(FirebaseAuth.instance.currentUser!.email!).get(); //얘 지워도 될 듯
         //map형태의 userData에서 profileUrl이라는 key의 값을 찾으려는데 왜 안 되지? 아마 이게 <future>상태라서 안 되는 것 같다.
         // 문제되는 [] 사용되는 부분이 여기밖에 없음
         setState(() {
-          ProfileUrl = userData['profileUrl'];
+          ProfileUrl = snapshot.data()['profileUrl'];
+
         });
         if (!snapshot.hasData) return LinearProgressIndicator();
         return Scaffold(
@@ -227,8 +238,13 @@ class _Ppage5_onState extends State<Ppage5_on> {
     );
   }
 
+
+
   @override
   Widget build(BuildContext context) {
-    return _buildBody(context); //scaffold하고 안에 bui
+    return Scaffold(
+
+      body: _buildBody(context)
+    ); //scaffold하고 안에 bui
   }
 }

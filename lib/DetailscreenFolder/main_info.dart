@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../Model/model_exhibitions.dart';
+
 class MainInfo extends StatelessWidget {
-  const MainInfo({Key? key}) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {

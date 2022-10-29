@@ -39,7 +39,7 @@ class _PopularExhibitState extends State<PopularExhibit> {
       // *string.contains()를 활용해 searchText를 포함한 snapshot을 리스트에 추가
       // * 주의!) data.toString()해도 실행은 되지만 검색 결과가 안 나옴!
       if (d.data().toString().contains('인기')) {
-        print(word);
+        // print(word);
         searchResults.add(d);
       }
     }

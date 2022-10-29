@@ -25,18 +25,19 @@ class _DetailScreenState extends State<DetailScreen> {
     super.initState();
     heart = widget.exhibition.heart;
     havebeen = widget.exhibition.havebeen;
-    asyncInitState();
+    // asyncInitState();
   }
 
-  void asyncInitState() async {
-    DocumentSnapshot placeinfodata = await firebaseFirestore
-        .collection('placeinfo')
-        .doc(widget.exhibition.place)
-        .get(); //placeinfodata는
-    setState(() {
-      information = placeinfodata['info'];
-    });
-  }
+  // 이거는 함께 전시중인 전시 띄울 때 필요한 거
+  // void asyncInitState() async {
+  //   DocumentSnapshot placeinfodata = await firebaseFirestore
+  //       .collection('placeinfo')
+  //       .doc(widget.exhibition.place)
+  //       .get(); //placeinfodata는
+  //   setState(() {
+  //     information = placeinfodata['info'];
+  //   });
+  // }
 
 
 
@@ -235,6 +236,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                   fontSize: 18,
                                   fontWeight: FontWeight.w600,
                                   color: Colors.black)),
+                          Image.network('https://postfiles.pstatic.net/MjAyMjEwMjlfMjAy/MDAxNjY3MDMwMzE5Mzk5.M7ykM_2llyU1pyzTSLGHUah-xjY0FTujiq-9fhNnqmog.ne6r45qqiLY3JGqgbHZzKa9Idzpepx4moqPIUnsCpmEg.PNG.tksemf0628/tt.png?type=w773'),
                           TogetherExhibit(exhibition: widget.exhibition)
                         ]),
                   )
