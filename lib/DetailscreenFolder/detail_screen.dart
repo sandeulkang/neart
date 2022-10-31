@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:neart/DetailscreenFolder/together_exhibiit.dart';
+import 'package:neart/DetailscreenFolder/recommend_column.dart';
+import 'package:neart/DetailscreenFolder/together_exhibit.dart';
 import 'package:neart/Lab/review_screen.dart';
 import '../Model/model_exhibitions.dart';
 import 'main_info.dart';
@@ -18,28 +19,29 @@ class _DetailScreenState extends State<DetailScreen> {
   bool heart = false;
   bool havebeen = false;
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-  var information = '';
+  var placeinformation = '';
+  var placeinformation2 = '';
 
   @override
   void initState() {
     super.initState();
     heart = widget.exhibition.heart;
     havebeen = widget.exhibition.havebeen;
-    // asyncInitState();
+    asyncInitState();
   }
 
-  // 이거는 함께 전시중인 전시 띄울 때 필요한 거
-  // void asyncInitState() async {
-  //   DocumentSnapshot placeinfodata = await firebaseFirestore
-  //       .collection('placeinfo')
-  //       .doc(widget.exhibition.place)
-  //       .get(); //placeinfodata는
-  //   setState(() {
-  //     information = placeinfodata['info'];
-  //   });
-  // }
-
-
+  void asyncInitState() async {
+    DocumentSnapshot placeinfodata = await firebaseFirestore
+        .collection('placeinfo')
+        .doc(widget.exhibition.place)
+        .get(); //placeinfodata는
+    setState(() {
+      // 여기보면 알 수 있다시피 get한 documentsnapshot에서 바로 map []찾을 수 있음, 물론 하나의 doc일 때 편하게 쓸 수 있는 거겠지?
+      // 이걸로 listview를 만든다든지 할 거면 당연히 for 반복문이 필요할 것임
+      placeinformation = placeinfodata['info'];
+      placeinformation2 = placeinfodata['info2'];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +98,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                   widget.exhibition.place,
                                 ),
                                 SizedBox(height: 1),
-                                Text(information.replaceAll("\\n", "\n"),
+                                Text(placeinformation.replaceAll("\\n", "\n"),
                                     style: TextStyle(height: 1.5)),
                                 SizedBox(height: 1),
                                 Text(
@@ -230,14 +232,48 @@ class _DetailScreenState extends State<DetailScreen> {
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.w600),
                           ),
-                          SizedBox(height: 40,),
-                          Text('같이 진행하는 다른 전시',
+                          SizedBox(
+                            height: 15,
+                          ),
+                          RecommendColumn(keyword: widget.exhibition.keyword),
+                          SizedBox(height: 40),
+                          Text.rich(
+                            TextSpan(
+                              text: widget.exhibition.place,
                               style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black)),
-                          Image.network('https://postfiles.pstatic.net/MjAyMjEwMjlfMjAy/MDAxNjY3MDMwMzE5Mzk5.M7ykM_2llyU1pyzTSLGHUah-xjY0FTujiq-9fhNnqmog.ne6r45qqiLY3JGqgbHZzKa9Idzpepx4moqPIUnsCpmEg.PNG.tksemf0628/tt.png?type=w773'),
-                          TogetherExhibit(exhibition: widget.exhibition)
+                                  fontSize: 18, fontWeight: FontWeight.w600),
+                              children: <TextSpan>[
+                                TextSpan(
+                                    text: '에서 진행 중인',
+                                    style: TextStyle(color: Colors.black)),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          TogetherExhibit(exhibition: widget.exhibition),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left : 5),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '운영 정보 확인',
+                                  style: TextStyle(
+                                      fontSize: 13, fontWeight: FontWeight.w600),
+                                ),
+                                Text(placeinformation2.replaceAll("\\n", "\n"),
+                                    style: TextStyle(height: 1.5,)),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 50),
+                          Image.network(
+                              'https://postfiles.pstatic.net/MjAyMjEwMjlfMjAy/MDAxNjY3MDMwMzE5Mzk5.M7ykM_2llyU1pyzTSLGHUah-xjY0FTujiq-9fhNnqmog.ne6r45qqiLY3JGqgbHZzKa9Idzpepx4moqPIUnsCpmEg.PNG.tksemf0628/tt.png?type=w773'),
                         ]),
                   )
                 ],

@@ -1,24 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Column {
+class Article {
   final String title;
   final String keyword;
   final String url;
   final String picture;
   final String content;
   final DocumentReference? reference;
+  final String poster;
 
-  Column.fromMap(Map<String, dynamic> map, {this.reference})
+  Article.fromMap(Map<String, dynamic> map, {this.reference})
       : title = map['title'],
         keyword = map['keyword'],
         url = map['url'],
         picture = map['picture'],
+  poster = map['poster'],
         content = map['content'];
 
-  Column.fromSnapshot(DocumentSnapshot snapshot)
+  Article.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data() as Map<String, dynamic>,
       reference: snapshot.reference);
 
   @override
-  String toString() => "Column<$title:$keyword>";
+  String toString() => "Article<$title:$keyword>";
 }

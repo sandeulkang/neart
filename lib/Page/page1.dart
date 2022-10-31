@@ -3,10 +3,7 @@ import 'package:neart/Model/model_exhibitions.dart';
 import 'package:neart/trash/Listvew_builder.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-
-import '../Lab/finishing_exhibit.dart';
-import '../Lab/hotkeyword_exhibit.dart';
-import '../Lab/popular_exhibit.dart';
+import '../Lab/certain_word_exhibit.dart';
 import '../Lab/review_screen.dart';
 
 class Ppage1 extends StatefulWidget {
@@ -53,14 +50,14 @@ class _Ppage1State extends State<Ppage1> {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 10),
-          PopularExhibit(word: '인천'),
+          CertainWordExhibit(word: '인기'),
           SizedBox(height: 40,),
           const Text(
             '지금 뜨고 있는 키워드 #인천',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 10),
-          HotKeywordExhibit(),
+        CertainWordExhibit(word: '인천'),
           const SizedBox(height: 60),
           const Text(
             '최근 올라온 리뷰',
@@ -79,7 +76,7 @@ class _Ppage1State extends State<Ppage1> {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 10),
-          FinishingExhibit(),
+          CertainWordExhibit(word: '곧 끝나는'),
           const SizedBox(
             height: 60,
           ),

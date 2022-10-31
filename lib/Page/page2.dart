@@ -51,13 +51,15 @@ class _Page2State extends State<Page2> {
     for (QueryDocumentSnapshot d in snapshot) {
       // *string.contains()를 활용해 searchText를 포함한 snapshot을 리스트에 추가
       // * 주의!) data.toString()해도 실행은 되지만 검색 결과가 안 나옴!
-      if (d.data().toString().contains(_searchText)) {
+      if (d.data().toString().contains(_searchText)) { //여기서는 Exhibition.toString에 포함된(즉 $title,keyword에 포함되어있나를 살펴보는 것 같다)
         searchResults.add(d); //이로써 searchResults는 선별되어진 docs 들로 구성된 list이다
       }
     }
 
     return Expanded(
       child: GridView.builder(
+        // physics: NeverScrollableScrollPhysics(),
+        // shrinkWrap: true, 이새끼 쓰면 안 되는 이유 : gridview.builder를 쓰는 이유가 없어짐 그냥 gridview와 같이 모든 데이터들을 한 번에 불러오는 셈이라 데이터 많이 읽게 됨 비쌈
         padding: EdgeInsets.fromLTRB(15, 5, 13, 0),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
@@ -148,7 +150,7 @@ class _Page2State extends State<Page2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: Container( //얘 singlechildscrollview로 하면 안 될만 한 게
         child: Column(
           children: [
             Container(
@@ -233,7 +235,7 @@ class _Page2State extends State<Page2> {
                 ],
               ),
             ),
-            _buildBody(context)
+             _buildBody(context)
           ],
         ),
       ),

@@ -1,26 +1,38 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../DetailscreenFolder/detail_screen.dart';
 import '../Model/model_exhibitions.dart';
+import 'detail_screen.dart';
 
-class HotKeywordExhibit extends StatefulWidget {
-  HotKeywordExhibit({Key? key, this.word})
-      : super(key: key);
+class TogetherExhibit extends StatefulWidget {
 
-  String? word; //'인기'말고 '지금 뜨고 있는', '곧 끝나는' 등등을 넣을 수 있게 하고 싶은데 어떻게 할지 모르겟다.
+  final Exhibition exhibition;
+
+  TogetherExhibit({required this.exhibition});
 
   @override
-  State<HotKeywordExhibit> createState() => _HotKeywordExhibitState();
+  State<TogetherExhibit> createState() => _TogetherExhibitState();
 }
 
-class _HotKeywordExhibitState extends State<HotKeywordExhibit> {
-  String? word;
+class _TogetherExhibitState extends State<TogetherExhibit> {
+
+  dynamic exhibitionInDetail;
+  dynamic placeExhibitQuery;
+
+  @override
+  void initState() {
+    super.initState();
+    exhibitionInDetail = widget.exhibition;
+    placeExhibitQuery = FirebaseFirestore.instance
+        .collection('exhibition')
+        .where('place', isEqualTo: exhibitionInDetail.place);  //Query<Map<String, dynamic>> 타입임.
+    //placeExhibitQuery를 스냅샷으로 builder로 굴려주고 listview 하면 되지 않을까? 이거랑 지금 비슷한 구조인 게
+  }
 
   Widget _buildBody(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      // FireStore 인스턴스의 movie 컬렉션의 snapshot을 가져옴
-      stream: FirebaseFirestore.instance.collection('exhibition').snapshots(),
+      // FireStore 인스턴스의 exhibition 컬렉션의 snapshot을 가져옴
+      stream: placeExhibitQuery.snapshots(),
       builder: (context, snapshot) {
         // snapshot의 데이터가 없는 경우 Linear~ 생성
         if (!snapshot.hasData) return LinearProgressIndicator();
@@ -29,34 +41,29 @@ class _HotKeywordExhibitState extends State<HotKeywordExhibit> {
     );
   }
 
-
-  // *buildlist에서는 검색 결과에 따라 데이터를 처리해 GridView 생성해줌
-  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
-    List<DocumentSnapshot> searchResults = [];
-    // *데이터에 searchText가 포함되는지 필터링 진행
+  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot){
+    List<DocumentSnapshot> placeExhibitList = [];
     for (DocumentSnapshot d in snapshot) {
-      // *string.contains()를 활용해 searchText를 포함한 snapshot을 리스트에 추가
-      // * 주의!) data.toString()해도 실행은 되지만 검색 결과가 안 나옴!
-      if (d.data().toString().contains('인천')) {
+      //이미 같은 이름의 장소를 가진 전시들의 query를 불러온 상황인데, 여기서 또 같은 이름의 장소를 contain하고 있는지 쭉 검사한다
+      //당연히 있겠지 ㅇㅇ 이 부분이 너무 비효율적인 것 같은데 placaeExhibitList에 바로 넣는 방법은 없나?
+      if (d.data().toString().contains(exhibitionInDetail.place)) {
         // print(word);
-        searchResults.add(d);
+        placeExhibitList.add(d);
       }
     }
 
-    // * listView 생성
     return Container(
       height: 430,
       child: ListView(
           scrollDirection: Axis.horizontal,
           padding: EdgeInsets.all(3),
           // * map()함수를 통해 각 아이템을 buildListItem 함수로 넣고 호출
-          children: searchResults
+          children: placeExhibitList
               .map((data) => _buildListItem(context, data))
               .toList()),
     );
   }
 
-  // * buildListItem으로 만들어 각각 detailScreen을 띄울 수 있도록 함.
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
     final exhibition = Exhibition.fromSnapshot(data);
     // * 각각을 누를 수 있도록 InkWell() 사용
@@ -103,6 +110,7 @@ class _HotKeywordExhibitState extends State<HotKeywordExhibit> {
 
   @override
   Widget build(BuildContext context) {
-    return _buildBody(context);
+    return  _buildBody(context);
   }
 }
+

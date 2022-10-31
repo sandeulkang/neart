@@ -4,19 +4,31 @@ import 'package:flutter/material.dart';
 import '../DetailscreenFolder/detail_screen.dart';
 import '../Model/model_exhibitions.dart';
 
-class PopularExhibit extends StatefulWidget {
-  PopularExhibit({Key? key, this.word})
-      : super(key: key);
+//특정한 word를 가진 exhibit 모두를 가져오는 certainwordexhibit은 당연히 page2에는 사용할 수 없다.
+//page2는 .builder로 구성되기 때문이다. 모두 불러오면 이건 데이터 읽는 비용이 많이 든다.
+//page4는 column들 모두 불러와도 데이터 읽는 비용 얼마 안 드니까 .builder아니고 이거로 할까 생각중이다.
+//너무많이 부러로아질것같으면 .count 추가하면 된다
 
-  String? word; //'인기'말고 '지금 뜨고 있는', '곧 끝나는' 등등을 넣을 수 있게 하고 싶은데 어떻게 할지 모르겟다.
+class CertainWordExhibit extends StatefulWidget {
+  final String word;
+
+  CertainWordExhibit({required this.word});
 
   @override
-  State<PopularExhibit> createState() => _PopularExhibitState();
+  State<CertainWordExhibit> createState() => _CertainWordExhibitState();
 }
 
-class _PopularExhibitState extends State<PopularExhibit> {
+class _CertainWordExhibitState extends State<CertainWordExhibit> {
 
-  String? word;
+  dynamic word;
+
+  @override
+  void initState() {
+    super.initState();
+    word = widget.word;//Query<Map<String, dynamic>> 타입임.
+    //placeExhibitQuery를 스냅샷으로 builder로 굴려주고 listview 하면 되지 않을까? 이거랑 지금 비슷한 구조인 게
+  }
+
 
   Widget _buildBody(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -38,8 +50,7 @@ class _PopularExhibitState extends State<PopularExhibit> {
     for (DocumentSnapshot d in snapshot) {
       // *string.contains()를 활용해 searchText를 포함한 snapshot을 리스트에 추가
       // * 주의!) data.toString()해도 실행은 되지만 검색 결과가 안 나옴!
-      if (d.data().toString().contains('인기')) {
-        // print(word);
+      if (d.data().toString().contains(word)) {
         searchResults.add(d);
       }
     }

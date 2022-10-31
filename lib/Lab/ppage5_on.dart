@@ -77,7 +77,7 @@ class _Ppage5_onState extends State<Ppage5_on> {
         //map형태의 userData에서 profileUrl이라는 key의 값을 찾으려는데 왜 안 되지? 아마 이게 <future>상태라서 안 되는 것 같다.
         // 문제되는 [] 사용되는 부분이 여기밖에 없음
         setState(() {
-          ProfileUrl = snapshot.data()['profileUrl'];
+          ProfileUrl = userData['profileUrl'];
 
         });
         if (!snapshot.hasData) return LinearProgressIndicator();
