@@ -206,76 +206,106 @@ class _DetailScreenState extends State<DetailScreen> {
                     opacity: 0.4,
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 15, vertical: 15),
+                    padding: const EdgeInsets.fromLTRB(15,15,15,20),
                     child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '전시 소개',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.w600),
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          Text(
-                            widget.exhibition.explanation
-                                .replaceAll("\\n", "\n"),
-                            style: TextStyle(height: 1.4),
-                          ),
-                          SizedBox(
-                            height: 40,
-                          ),
-                          Text(
-                            '추천 칼럼',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.w600),
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          RecommendColumn(keyword: widget.exhibition.keyword),
-                          SizedBox(height: 40),
-                          Text.rich(
-                            TextSpan(
-                              text: widget.exhibition.place,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '전시 소개',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w600),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Text(
+                          widget.exhibition.explanation.replaceAll("\\n", "\n"),
+                          style: TextStyle(height: 1.4),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Opacity(
+                    child: Divider(
+                      height: 20,
+                      thickness: 10,
+                    ),
+                    opacity: 0.4,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(15,15,15,20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '추천 칼럼',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w600),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        RecommendColumn(keyword: widget.exhibition.keyword),
+                      ],
+                    ),
+                  ),
+                  Opacity(
+                    child: Divider(
+                      height: 20,
+                      thickness: 10,
+                    ),
+                    opacity: 0.4,
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(15,15,15,20),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text.rich(
+                              TextSpan(
+                                text: widget.exhibition.place,
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.w600),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: '에서 진행 중인',
+                                      style: TextStyle(color: Colors.black)),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            TogetherExhibit(exhibition: widget.exhibition),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            Text(
+                              '운영 정보 확인',
                               style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w600),
-                              children: <TextSpan>[
-                                TextSpan(
-                                    text: '에서 진행 중인',
-                                    style: TextStyle(color: Colors.black)),
-                              ],
+                                  fontSize: 13, fontWeight: FontWeight.w600),
                             ),
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          TogetherExhibit(exhibition: widget.exhibition),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left : 5),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '운영 정보 확인',
-                                  style: TextStyle(
-                                      fontSize: 13, fontWeight: FontWeight.w600),
-                                ),
-                                Text(placeinformation2.replaceAll("\\n", "\n"),
-                                    style: TextStyle(height: 1.5,)),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 50),
-                          Image.network(
-                              'https://postfiles.pstatic.net/MjAyMjEwMjlfMjAy/MDAxNjY3MDMwMzE5Mzk5.M7ykM_2llyU1pyzTSLGHUah-xjY0FTujiq-9fhNnqmog.ne6r45qqiLY3JGqgbHZzKa9Idzpepx4moqPIUnsCpmEg.PNG.tksemf0628/tt.png?type=w773'),
-                        ]),
-                  )
+                            Text(placeinformation2.replaceAll("\\n", "\n"),
+                                style: TextStyle(
+                                  height: 1.5,
+                                ))
+                          ])),
+                  Opacity(
+                    child: Divider(
+                      height: 20,
+                      thickness: 10,
+                    ),
+                    opacity: 0.4,
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(15,15,15,20),
+                      child: Column(children: [
+                        Text(
+                          '감상평',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w600),
+                        )
+                      ]))
                 ],
               ),
             ),

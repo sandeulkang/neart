@@ -4,7 +4,6 @@ class Article {
   final String title;
   final String keyword;
   final String url;
-  final String picture;
   final String content;
   final DocumentReference? reference;
   final String poster;
@@ -13,7 +12,6 @@ class Article {
       : title = map['title'],
         keyword = map['keyword'],
         url = map['url'],
-        picture = map['picture'],
   poster = map['poster'],
         content = map['content'];
 
