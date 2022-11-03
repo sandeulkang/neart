@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:neart/Model/model_exhibitions.dart';
@@ -69,6 +70,7 @@ class _Page4State extends State<Page4> {
 
     return Container(
       child: ListView( //리스트 뷰와 싱글찰드스크롤뷰 안에서 for i 로 칼럼 찰드 만드는 거의 차이가 뭐일지
+        physics :NeverScrollableScrollPhysics(), //shinkwraptrue만 하고 이거 안 하면 안 돼요~
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
         padding: EdgeInsets.all(3),
