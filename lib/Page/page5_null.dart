@@ -43,7 +43,7 @@ class Page5_null extends StatelessWidget {
                   backgroundImage: AssetImage('assets/프로필이미지.png'),
                 ),
                 SizedBox(
-                  height: 15,
+                  height: 10,
                 ),
                 TextButton(
                     child: Container(
@@ -52,14 +52,14 @@ class Page5_null extends StatelessWidget {
                       ),
                       decoration: BoxDecoration(
                           border: Border(bottom: BorderSide(
-                            color: Colors.black,
-                            width: 1.0, // This would be the width of the underline
+                            color: Colors.black45,
+                            width: 0.8, // This would be the width of the underline
                           ))
                       ),
-                      child: Text('로그인해 주세요.',
+                      child: Text('로그인해 주세요',
                         style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
+                          color: Colors.black54,
+                          fontSize: 15,
                         ),
                       ),
                     ),

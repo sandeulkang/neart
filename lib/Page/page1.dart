@@ -3,44 +3,37 @@ import 'package:neart/Model/model_exhibitions.dart';
 import 'package:neart/trash/Listvew_builder.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import '../Lab/certain_word_article_list.dart';
+import '../Lab/article_screen.dart';
 import '../Lab/certain_word_exhibit.dart';
 import '../Lab/review_screen.dart';
+import 'package:neart/Model/model_article.dart';
 
-class Ppage1 extends StatefulWidget {
-  @override
-  State<Ppage1> createState() => _Ppage1State();
-}
-
-class _Ppage1State extends State<Ppage1> {
+class Ppage1 extends StatelessWidget {
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-  late Stream<QuerySnapshot> streamData;
-
-  @override
-  void initState() {
-    super.initState();
-    streamData = firebaseFirestore.collection('exhibition').snapshots();
-  }
 
   Widget _fetchData(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: streamData,
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Center(
-            child: Text('Some error occured: ${snapshot.error.toString()}'),
-          );
-        }
-        if (snapshot.hasData) {
-          return _buildBody(context, snapshot.data!.docs); //snapshot 전체를 다루는 게 아니라 snapshot.data!.docs만 국한적으로 다룸
-        }
-        return LinearProgressIndicator();}
-    );
+        stream: firebaseFirestore.collection('exhibition').snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Text('Some error occured: ${snapshot.error.toString()}'),
+            );
+          }
+          if (snapshot.hasData) {
+            return _buildBody(
+                context,
+                snapshot.data!
+                    .docs); //snapshot 전체를 다루는 게 아니라 snapshot.data!.docs만 국한적으로 다룸
+          }
+          return LinearProgressIndicator();
+        });
   }
 
   Widget _buildBody(BuildContext context, List<DocumentSnapshot> snapshot) {
     //실제적으로 movie들의 '리스트'가 생겨나는 타이밍
-    List<Exhibition> exhibitions = snapshot.map((d) => Exhibition.fromSnapshot(d)).toList();
+    List<Exhibition> exhibitions =
+        snapshot.map((d) => Exhibition.fromSnapshot(d)).toList();
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -52,23 +45,27 @@ class _Ppage1State extends State<Ppage1> {
           ),
           const SizedBox(height: 10),
           CertainWordExhibit(word: '인기'),
-          SizedBox(height: 40,),
+          SizedBox(
+            height: 40,
+          ),
           const Text(
             '지금 뜨고 있는 키워드 #인천',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 10),
-        CertainWordExhibit(word: '인천'),
+          CertainWordExhibit(word: '인천'),
           const SizedBox(height: 60),
           const Text(
             '최근 올라온 리뷰',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
           ),
-          Container(child: Reviews(), height: 200,),
+          Container(
+            child: Reviews(),
+            height: 200,
+          ),
           const SizedBox(
             height: 10,
           ),
-
           const SizedBox(
             height: 60,
           ),
@@ -88,8 +85,7 @@ class _Ppage1State extends State<Ppage1> {
           const SizedBox(
             height: 10,
           ),
-          CertainWordArticleList(word:""),
-        ],
+          blabla(),],
       ),
     );
   }
@@ -100,7 +96,92 @@ class _Ppage1State extends State<Ppage1> {
   }
 }
 
+Future getData() async {
+  QuerySnapshot b = await FirebaseFirestore.instance
+      .collection('Column')
+      .orderBy('time', descending: true)
+      .limit(4)
+      .get(); //Querysnapshot<Map<... 타입이다
+  List<QueryDocumentSnapshot> a = b.docs;
+  //b 뒤에 바로 .docs 붙여주면 The getter 'docs' isn't defined for the type 'Future<QuerySnapshot<Map<String, dynamic>>>'.
+  //라는 에러가 뜬다. await을 붙여줬다 해도 그 안에서는 아직 진행상태이니 당연히 future로 자기들끼리 인식한다.
+  //docs는 await가 끝난, future가 확실히 아닌 친구 뒤에 붙일 수 있는 것이다.
+  List<Article> articles = a.map((d) => Article.fromSnapshot(d)).toList();
 
+  return articles;
+}
+
+Widget blabla() {
+  return FutureBuilder(
+    future: getData(), //
+    builder: (BuildContext context, AsyncSnapshot snapshot) {
+      return Container(
+        height: 420,
+        child: ListView.builder(
+          physics: NeverScrollableScrollPhysics(),
+            // shrinkWrap: true,
+            itemCount: snapshot.data!.length,
+            itemBuilder: (BuildContext context, index) {
+              return
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute<Null>(
+                        builder: (BuildContext context) {
+                          // * 클릭한 영화의 DetailScreen 출력
+                          return ArticleScreen(article: snapshot.data![index]);
+                        },
+                      ),
+                    );
+                  },
+                  child: Container(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Image.network(
+                          snapshot.data![index].poster,
+                          height: 80,
+                          width: 110,
+                        ),
+                        Expanded(
+                          flex:5,
+                          child: Container(
+                            padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  snapshot.data![index].title,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  style: const TextStyle(
+                                      fontSize: 13, fontWeight: FontWeight.w600),
+                                ),
+                                const SizedBox(
+                                  height: 4,
+                                ),
+                                Text(
+                                    snapshot.data![index].content,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                    style: TextStyle(fontSize:11)
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }),
+      );
+    },
+  );
+}
 
 // const Text(
 // '분야별 전시', //종류? 장르?
