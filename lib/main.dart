@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:neart/homepage.dart';
 import 'package:neart/authenticationpage.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -17,6 +18,7 @@ class MyHttpOverrides extends HttpOverrides{
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  KakaoSdk.init(nativeAppKey: 'd1858bd6bb810fa8d1582b059e9986ac');
   await Firebase.initializeApp(
   );
   HttpOverrides.global = MyHttpOverrides();

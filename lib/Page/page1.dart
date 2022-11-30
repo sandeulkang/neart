@@ -120,7 +120,7 @@ Widget blabla() {
         child: ListView.builder(
           physics: NeverScrollableScrollPhysics(),
             // shrinkWrap: true,
-            itemCount: snapshot.data!.length,
+            itemCount: snapshot.data!.length, //data 뒤에 ! 붙이면 null check on nullablevalue라는 에러뜸
             itemBuilder: (BuildContext context, index) {
               return
               Padding(
