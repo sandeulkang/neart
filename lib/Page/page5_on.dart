@@ -26,6 +26,7 @@ class _Page5_onState extends State<Page5_on> {
   String profileUrl = "";
 
   void initState() {
+
     FirebaseFirestore.instance ///현재 로그인한 유저의 email을 member의 email로 등록하게 함 근데 이러면 매번 갱신됨 씹;; 어카노 나중에 빼자.
         .collection('member')
         .doc(FirebaseAuth.instance.currentUser!.email!)
