@@ -47,7 +47,7 @@ class _Ppage5_onState extends State<Ppage5_on> {
     //불러온 사진을 넣을 스토리지 변수 ref 를 만들었다. storage file(?) 타입이다. 현 user의 email의 이름의 파일을 불러오는데, 없다면 생성된다.
     final ref = await FirebaseStorage.instance
         .ref()
-        .child(FirebaseAuth.instance.currentUser!.email!);
+        .child(FirebaseAuth.instance.currentUser!.email!); //child()에서 괄호 안에 입력된 값이 파일 이름이다
 
     //ref에 파일을 넣었다. 스토리지에 현 user의 email의 이름으로 프로필사진이 갱신된다.
     await ref.putFile(File(image!.path));

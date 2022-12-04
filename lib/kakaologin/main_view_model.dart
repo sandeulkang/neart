@@ -2,6 +2,7 @@
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:neart/kakaologin/social_login.dart';
 
+
 class MainViewModel {
   final SocialLogin _socialLogin;
   bool isLogined = false;
