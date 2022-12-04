@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:image_picker/image_picker.dart';
 
 class LABLAB extends StatefulWidget {
   const LABLAB({Key? key}) : super(key: key);
@@ -23,6 +24,12 @@ class LABLAB extends StatefulWidget {
 
 class _LABLABState extends State<LABLAB> {
 
+  final FirebaseAuth _auth = FirebaseAuth.instance; //FirebaseAuth.instance 계속 쳐주기 귀찮으니까~~~!
+
+  var userDoc = FirebaseFirestore.instance
+      .collection('member')
+      .doc(FirebaseAuth.instance.currentUser!.email!);
+
   Future signInWithGoogle() async {
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -36,13 +43,22 @@ class _LABLABState extends State<LABLAB> {
       idToken: googleAuth?.idToken,
     );
 
-    // Once signed in, return the UserCredential
-    return
-      await FirebaseAuth.instance.signInWithCredential(credential);
+    await _auth.signInWithCredential(credential);
+    //여기서 구글 로그인의 계정은 바로 _auth.currentUser로 사용 가능한 듯 하다
+    //여전히 구글로그인이라는 시스템과 연결이 되어 있는 듯 하다 그러니 photoURL이라는 것을 사용할 수 있는 거겠지
+
     await FirebaseFirestore.instance
         .collection('member')
-        .doc(FirebaseAuth.instance.currentUser!.email!)
-        .set({'email': FirebaseAuth.instance.currentUser!.email!}); // 이거 Future<Void>
+        .doc(_auth.currentUser!.email!)
+        .update({'email': _auth.currentUser!.email!});
+    //이거는 파이어스토어
+
+    //구글 auth에 등록된 이미지를 스토리지에 저장해서(pickimage 참고) 다시 그걸 파이어베이스의 email의 profile url 필드 생성하여 넣기
+    // Once signed in, return the UserCredential
+    return await FirebaseFirestore.instance
+        .collection('member')
+        .doc(_auth.currentUser!.email!)
+        .update({'profileUrl': _auth.currentUser!.photoURL}); // 이거 Future<Void>
 
   }
 
@@ -59,16 +75,16 @@ class _LABLABState extends State<LABLAB> {
                 CircleAvatar(
                   radius: 50,
                   backgroundImage: NetworkImage(
-                      FirebaseAuth.instance.currentUser != null
+                      _auth.currentUser != null
                       ? 'https://postfiles.pstatic.net/MjAyMjExMjlfMjIw/MDAxNjY5NjkwODAyOTA0.hBaCQdiQmrJuIQa4XPjOlMl4yIDMLIEIwmZ74ExgMLIg.YPflARRlDyNkK4PpCUHb7lxZawo-L8odKPM2XXjwxp8g.JPEG.tksemf0628/KakaoTalk_20221129_115903842.jpg?type=w773'
                       : 'https://postfiles.pstatic.net/MjAyMjExMjdfMTIw/MDAxNjY5NTUxMjg2OTQ4.LRuMV7Ike0UJuxyqAcxuFQ-W5DNkTcmziHjVnRAlbMEg.O-qz3HVtnQmNABwzqk-cWW93XSXTPbCt4U0FbZmLp5Ig.PNG.tksemf0628/%ED%94%84%EB%A1%9C%ED%95%84%EC%9D%B4%EB%AF%B8%EC%A7%80.png?type=w773'
                   )),
                 SizedBox(
                   height: 10,
                 ),
-                FirebaseAuth.instance.currentUser != null
+                _auth.currentUser != null
                     ? Text(
-                        FirebaseAuth.instance.currentUser!.email!,
+                  _auth.currentUser!.email!,
                         style: TextStyle(
                           color: Colors.black54,
                           fontSize: 15,
@@ -169,7 +185,7 @@ class _LABLABState extends State<LABLAB> {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    await FirebaseAuth.instance.signOut(); //disconnect는 계정 삭제다
+                    await _auth.signOut(); //disconnect는 계정 삭제다
                     setState(() {
                     });
                   },
