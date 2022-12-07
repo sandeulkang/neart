@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:neart/DetailscreenFolder/recommend_column.dart';
@@ -46,6 +47,7 @@ class _DetailScreenState extends State<DetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white70,
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
@@ -58,12 +60,16 @@ class _DetailScreenState extends State<DetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 10,
-                    ),
-                    child: Container(
-                      height: 220,
+                  // Padding(
+                  //   padding: const EdgeInsets.only(
+                  //     left: 10,
+                  //   ),
+                  //   child:
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                          borderRadius: BorderRadius.vertical(bottom: Radius.circular(20))),
+                      height: 250,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -111,14 +117,22 @@ class _DetailScreenState extends State<DetailScreen> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceAround,
                                     children: [
-                                      heart
+                                      FirebaseAuth.instance.currentUser != null
                                           ? InkWell(
-                                              child: SvgPicture.asset(
+                                              child:
+                                              FirebaseAuth.instance.currentUser != null
+                                    ?SvgPicture.asset(
                                                 "assets/onheart.svg",
                                                 width: 40,
                                                 height: 40,
                                                 color: Colors.red,
-                                              ),
+                                              )
+                                              :SvgPicture.asset(
+                                "assets/onheart.svg",
+                                width: 40,
+                                height: 40,
+                                color: Colors.red,
+                                ),
                                               onTap: () {
                                                 setState(() {
                                                   heart = !heart;
@@ -197,7 +211,7 @@ class _DetailScreenState extends State<DetailScreen> {
                         ],
                       ),
                     ),
-                  ),
+                  // ),
                   Opacity(
                     child: Divider(
                       height: 20,

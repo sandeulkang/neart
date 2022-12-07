@@ -4,10 +4,6 @@ import 'package:neart/Page/page2.dart';
 import 'package:neart/Page/page4.dart';
 import 'package:neart/Page/page1.dart';
 import 'package:neart/aauthenticationpage.dart';
-import 'package:neart/authenticationpage.dart';
-import 'package:neart/kakaologin/login_page.dart';
-import 'package:neart/trash/search_screen.dart';
-
 import 'Page/page5.dart';
 import 'Page/page5_null.dart';
 
@@ -25,7 +21,7 @@ class _HomePageState extends State<HomePage> {
     Ppage1(),
     Page2(),
     Page4(),
-    LABLAB(),
+    Page5(),
   ];
 
   @override

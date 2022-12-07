@@ -30,41 +30,14 @@ class _LABLABState extends State<LABLAB> {
       .collection('member')
       .doc(FirebaseAuth.instance.currentUser!.email!);
 
-  var userData = FirebaseFirestore.instance
+  Future<DocumentSnapshot> userData = FirebaseFirestore.instance
       .collection('member')
       .doc(FirebaseAuth.instance.currentUser!.email!).get();
 
-  Future signInWithGoogle() async {
-    // Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
-
-    // Create a new credential
-    final credential = await GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
-
-    await _auth.signInWithCredential(credential);
-    //여기서 구글 로그인의 계정은 바로 _auth.currentUser로 사용 가능한 듯 하다
-    //여전히 구글로그인이라는 시스템과 연결이 되어 있는 듯 하다 그러니 photoURL이라는 것을 사용할 수 있는 거겠지
-
-    await userDoc
-        .update({'email': _auth.currentUser!.email!});
-    //이거는 파이어스토어
-
-    //구글 auth에 등록된 이미지를 스토리지에 저장해서(pickimage 참고) 다시 그걸 파이어베이스의 email의 profile url 필드 생성하여 넣기
-    // Once signed in, return the UserCredential
-    return await userDoc
-        .update({'profileUrl': _auth.currentUser!.photoURL}); // 이거 Future<Void>
-
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return
+      Scaffold(
       body: Padding(
         padding: const EdgeInsets.fromLTRB(10, 30, 10, 0),
         child: Column(
@@ -75,48 +48,17 @@ class _LABLABState extends State<LABLAB> {
                 CircleAvatar(
                   radius: 50,
                   backgroundImage: NetworkImage(
-                      _auth.currentUser != null
-                      ? userData["profileUrl"]
-                          : 'https://postfiles.pstatic.net/MjAyMjExMjdfMTIw/MDAxNjY5NTUxMjg2OTQ4.LRuMV7Ike0UJuxyqAcxuFQ-W5DNkTcmziHjVnRAlbMEg.O-qz3HVtnQmNABwzqk-cWW93XSXTPbCt4U0FbZmLp5Ig.PNG.tksemf0628/%ED%94%84%EB%A1%9C%ED%95%84%EC%9D%B4%EB%AF%B8%EC%A7%80.png?type=w773'
-                  )),
+                      ''
+                          )),
                 SizedBox(
                   height: 10,
                 ),
-                _auth.currentUser != null
-                    ? Text(
-                  _auth.currentUser!.email!,
+                Text(
+                  'a',
                         style: TextStyle(
                           color: Colors.black54,
                           fontSize: 15,
                         ),
-                      )
-                    : TextButton(
-                        child: Container(
-                          padding: EdgeInsets.only(
-                            bottom:
-                                3, // This can be the space you need between text and underline
-                          ),
-                          decoration: BoxDecoration(
-                              border: Border(
-                                  bottom: BorderSide(
-                            color: Colors.black45,
-                            width:
-                                0.8, // This would be the width of the underline
-                          ))),
-                          child: Text(
-                            '구글 로그인을 해 주세요',
-                            style: TextStyle(
-                              color: Colors.black54,
-                              fontSize: 15,
-                            ),
-                          ),
-                        ),
-                        onPressed: () async {
-                          // await signInWithGoogle();
-                          await signInWithGoogle();
-                          setState(() {
-                          });
-                        },
                       ),
                 SizedBox(
                   height: 30,
@@ -192,6 +134,7 @@ class _LABLABState extends State<LABLAB> {
                   child: const Text('Logout'),
                 ),
 
+
               ],
             ),
           ],
@@ -200,9 +143,3 @@ class _LABLABState extends State<LABLAB> {
     );
   }
 }
-
-class buildBody{
-  @override
-  Widget build(BuildContext context) {
-  return Container();
-}}

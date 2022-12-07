@@ -1,56 +1,25 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:neart/Lab/like_screen.dart';
-import 'package:neart/Page/page5.dart';
-import 'package:neart/Page/page5_null.dart';
-import 'package:neart/authenticationpage.dart';
-import 'package:flutterfire_ui/auth.dart';
-import '../Model/model_user.dart';
 
 class Page5_on extends StatefulWidget {
-  Page5_on({Key? key}) : super(key: key);
+  const Page5_on({Key? key}) : super(key: key);
 
   @override
   State<Page5_on> createState() => _Page5_onState();
 }
 
 class _Page5_onState extends State<Page5_on> {
+  final FirebaseAuth _auth =
+      FirebaseAuth.instance; //FirebaseAuth.instance 계속 쳐주기 귀찮으니까~~~!
 
-  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-  File? image;
-  String profileUrl = "";
-
-  void initState() {
-
-    FirebaseFirestore.instance ///현재 로그인한 유저의 email을 member의 email로 등록하게 함 근데 이러면 매번 갱신됨 씹;; 어카노 나중에 빼자.
-        .collection('member')
-        .doc(FirebaseAuth.instance.currentUser!.email!)
-        .set({'email': FirebaseAuth.instance.currentUser!.email!});
-    asyncInitState();
-  }
-
-  void asyncInitState() async {
-    DocumentSnapshot userData = await firebaseFirestore
-        .collection('member')
-        .doc(FirebaseAuth.instance.currentUser!.email!)
-        .get();
-    //map형태의 userData에서 profileUrl이라는 key의 값을 찾으려는데 왜 안 되지? 아마 이게 <future>상태라서 안 되는 것 같다.
-    //아닌데 await 붙여서 <DocumentSnAPSHOT<MAP<STRING 어쩌구 상태인데
-    //근데 문제되는 [] 사용되는 부분이 여기밖에 없음
-    setState( () {
-      profileUrl = userData["profileUrl"];
-      print(profileUrl);
-
-    });
-  }
-
-  //이미지를 pick하기 전까지 파이어스토어에 profile url이 생기지를 않으니까 setstate을 미리해봤자 profileurl이 값을 못 가지는 거임
   Future pickImage() async {
+    //먼 미래에 pickImage가 실행됐을 때~
     final image = await ImagePicker().pickImage(
       source: ImageSource.gallery,
       maxHeight: 400,
@@ -58,192 +27,168 @@ class _Page5_onState extends State<Page5_on> {
       imageQuality: 75,
     );
 
-    final ref = await FirebaseStorage.instance
-        .ref()
-        .child(FirebaseAuth.instance.currentUser!.email!);
-    //없으면 만듦 ㅇㅇ 걱정 ㄴㄴ
+    //불러온 사진을 넣을 스토리지 변수 ref 를 만들었다. storage file(?) 타입이다. 현 user의 email의 이름의 파일을 불러오는데, 없다면 생성된다.
+    final ref = await FirebaseStorage.instance.ref().child(FirebaseAuth
+        .instance.currentUser!.email!); //child()에서 괄호 안에 입력된 값이 파일 이름이다
 
-    await ref.putFile(File(image!.path)); //userId를 가진
+    //ref에 파일을 넣었다. 스토리지에 현 user의 email의 이름으로 프로필사진이 갱신된다.
+    await ref.putFile(File(image!.path));
+
+    //ref의 url(즉 갱신된 프로필 사진의 url)을 불러오고 그걸 파이어스토어 user의 profileUrl에 넣어준다. 정확히는 갱신인데, 없으면 만들어진다.
     ref.getDownloadURL().then((value) {
-      print(value);
       setState(() {
         FirebaseFirestore.instance
             .collection('member')
             .doc(FirebaseAuth.instance.currentUser!.email!)
-            .update(
-                {'profileUrl': value});
-        //update안 하고 set 하면 기존의 field인 email은 지워짐 안 ㅣㅈ워지게 하려면 여기서 email도 다시 set해줘야되는 거 ㅇㅇ
+            .update({'profileUrl': value});
       });
     });
   }
 
-  Widget _buildBody(BuildContext context) {
-
-    return StreamBuilder<QuerySnapshot>(
-      // FireStore 인스턴스의 exhibition 컬렉션의 snapshot을 가져옴
-      stream: FirebaseFirestore.instance.collection('member').where('email', isEqualTo: FirebaseAuth.instance.currentUser!.email!).snapshots(),
-      builder: (context, snapshot) {
-        // snapshot의 데이터가 없는 경우 Linear~ 생성
-        if (!snapshot.hasData) return LinearProgressIndicator();
-        return Scaffold(
-          body: Padding(
-            padding: const EdgeInsets.fromLTRB(10, 30, 10, 0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Column(
-                  children: [
-                    profileUrl == ""
-                        ? Stack(children: [ //profileurl이 빈값이라면
-                      CircleAvatar(
-                          radius: 50,
-                          backgroundImage:
-                          // NetworkImage(FirebaseAuth.instance.currentUser!.photoURL!) 지금photourl없어서 안됨
-                          AssetImage('assets/프로필이미지.png')
-                        //안되면 child를 backgroundimage로
-                      ),
-                      Positioned(
-                        left: 70,
-                        top: 70,
-                        child: InkWell(
-                          onTap: () {
-                            pickImage();
-                          },
-                          child: Image.asset(
-                            'assets/추가 버튼.png',
-                            height: 25,
-                            width: 25,
-                          ),
-                        ),
-                      )
-                    ])
-                        : Stack(children: [
-                      CircleAvatar(
-                          radius: 50,
-                          backgroundImage: NetworkImage(
-                              profileUrl) //image.network하면 안 되고 networkimage해야 됨
-                      ),
-                      Positioned(
-                        left: 70,
-                        top: 70,
-                        child: InkWell(
-                          onTap: () {
-                            pickImage();
-                          },
-                          child: Image.asset(
-                            'assets/추가 버튼.png',
-                            height: 25,
-                            width: 25,
-                          ),
-                        ),
-                      )
-                    ]),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Container(
-                      child: Text(
-                        FirebaseAuth.instance.currentUser!.email!,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        InkWell(
-                          child: Column(
-                            children: [
-                              SvgPicture.asset(
-                                "assets/onheart.svg",
-                                width: 30,
-                                height: 30,
-                                color: Colors.black87,
-                              ),
-                              SizedBox(height: 4),
-                              Text(
-                                '좋아요 한\n전시',
-                                textAlign: TextAlign.center,
-                              )
-                            ],
-                          ),
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute<Null>(
-                                builder: (BuildContext context) {
-                                  // * 클릭한 영화의 DetailScreen 출력
-                                  return LikeScreen(); //navigatior은 그곳으로 이동한다가 개념, build return은 그곳에 그리는 것, 즉 불러 오는 것.
-                                }));
-                          },
-                        ),
-                        InkWell(
-                          child: Column(
-                            children: [
-                              SvgPicture.asset(
-                                "assets/oncheck.svg",
-                                width: 30,
-                                height: 30,
-                                color: Colors.black,
-                              ),
-                              SizedBox(height: 4),
-                              Text(
-                                '보고 온\n전시',
-                                textAlign: TextAlign.center,
-                              )
-                            ],
-                          ),
-                          onTap: () {},
-                        ),
-                        InkWell(
-                          child: Column(
-                            children: [
-                              SvgPicture.asset(
-                                "assets/onscrap.svg",
-                                width: 30,
-                                height: 30,
-                                color: Colors.black,
-                              ),
-                              SizedBox(height: 4),
-                              Text(
-                                '스크랩한\n칼럼',
-                                textAlign: TextAlign.center,
-                              )
-                            ],
-                          ),
-                          onTap: () {},
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 70,
-                ),
-                Text(
-                  'the Others',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-                ),
-                IconButton(
-                    onPressed: () async {
-                      await FirebaseAuth.instance.signOut();
-                      Page5_null();
-                    },
-                    icon: Icon(Icons.logout, size: 80)),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-
   @override
   Widget build(BuildContext context) {
-    return _buildBody(context);
+    return Scaffold(
+      body: FutureBuilder<DocumentSnapshot>(
+          future: FirebaseFirestore.instance
+              .collection('member')
+              .doc(FirebaseAuth.instance.currentUser!.email!)
+              .get(),
+          builder: (context, snapshot) {
+            //snapshot이란 들어온 Future의 데이터를 말하는 것. snapshot이 아닌 다른 단어여도 됨
+            if (snapshot.hasData == true) {
+              return Padding(
+                padding: const EdgeInsets.fromLTRB(10, 30, 10, 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      children: [
+                        Stack(
+                          clipBehavior: Clip.none,
+                            children: [
+                          CircleAvatar(
+                              radius: 60,
+                              backgroundImage: NetworkImage(snapshot.data?[
+                                  'profileUrl']) //image.network하면 안 되고 networkimage해야 됨
+                              ),
+                          Positioned(
+                              left: 85,
+                              top: 85,
+                              child: CircleAvatar(
+                                radius:20,
+                                backgroundColor: Colors.black54,
+                                child: IconButton(
+                                    onPressed: () {
+                                      pickImage();
+                                    },
+                                    icon: Icon(Icons.camera_alt),iconSize: 22, color: Colors.white,),
+                              ))
+                        ]),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Opacity(child: SizedBox(width: 24,),opacity: 0,),
+                            Text(
+                              snapshot.data?['name'],
+                              style: TextStyle(
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15,
+                              ),
+                            ),
+                            SizedBox(width: 5,),
+                            GestureDetector(
+                              onTap: (){},
+                                child: CircleAvatar(
+                                  radius: 12,
+                                  backgroundColor: Colors.black54,
+                                    child: Image.asset('assets/pen.png', height: 17)),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 35,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            InkWell(
+                              child: Column(
+                                children: [
+                                  SvgPicture.asset(
+                                    "assets/onheart.svg",
+                                    width: 30,
+                                    height: 30,
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    '좋아요 한\n전시',
+                                    textAlign: TextAlign.center,
+                                  )
+                                ],
+                              ),
+                              onTap: () {},
+                            ),
+                            InkWell(
+                              child: Column(
+                                children: [
+                                  SvgPicture.asset(
+                                    "assets/oncheck.svg",
+                                    width: 30,
+                                    height: 30,
+                                    color: Colors.black,
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    '보고 온\n전시',
+                                    textAlign: TextAlign.center,
+                                  )
+                                ],
+                              ),
+                              onTap: () {},
+                            ),
+                            InkWell(
+                              child: Column(
+                                children: [
+                                  SvgPicture.asset(
+                                    "assets/onscrap.svg",
+                                    width: 30,
+                                    height: 30,
+                                    color: Colors.black,
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    '스크랩한\n칼럼',
+                                    textAlign: TextAlign.center,
+                                  )
+                                ],
+                              ),
+                              onTap: () {},
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 50,
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            await _auth.signOut(); //disconnect는 계정 삭제다
+                            setState(() {});
+                          },
+                          child: const Text('Logout'),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              );
+            } else {
+              return CircularProgressIndicator();
+            }
+          }),
+    );
   }
 }

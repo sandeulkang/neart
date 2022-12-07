@@ -1,12 +1,44 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutterfire_ui/auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:neart/Page/page5.dart';
 import 'package:neart/authenticationpage.dart';
 
 class Page5_null extends StatelessWidget {
-  const Page5_null({Key? key}) : super(key: key);
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  Future signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = await GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    await _auth.signInWithCredential(credential);
+    //여기서 구글 로그인의 계정은 바로 _auth.currentUser로 사용 가능한 듯 하다
+    //여전히 구글로그인이라는 시스템과 연결이 되어 있는 듯 하다 그러니 photoURL이라는 것을 사용할 수 있는 거겠지
+
+
+    //구글 auth에 등록된 이미지를 스토리지에 저장해서(pickimage 참고) 다시 그걸 파이어베이스의 email의 profile url 필드 생성하여 넣기
+    // Once signed in, return the UserCredential
+    return await FirebaseFirestore.instance
+        .collection('member')
+        .doc(FirebaseAuth.instance.currentUser?.email)
+        .set({'profileUrl': _auth.currentUser?.photoURL,
+    'name' : _auth.currentUser?.email,
+    'email' : _auth.currentUser?.email}); // 이거 Future<Void>
+
+  }
 
   void showPopup(context) {
     showDialog(
@@ -39,31 +71,38 @@ class Page5_null extends StatelessWidget {
             Column(
               children: [
                 CircleAvatar(
-                  radius: 50,
-                  backgroundImage: AssetImage('assets/프로필이미지.png'),
-                ),
+                    radius: 50,
+                    backgroundImage: NetworkImage('https://postfiles.pstatic.net/MjAyMjExMjdfMTIw/MDAxNjY5NTUxMjg2OTQ4.LRuMV7Ike0UJuxyqAcxuFQ-W5DNkTcmziHjVnRAlbMEg.O-qz3HVtnQmNABwzqk-cWW93XSXTPbCt4U0FbZmLp5Ig.PNG.tksemf0628/%ED%94%84%EB%A1%9C%ED%95%84%EC%9D%B4%EB%AF%B8%EC%A7%80.png?type=w773'
+                    )),
                 SizedBox(
                   height: 10,
                 ),
                 TextButton(
-                    child: Container(
-                      padding: EdgeInsets.only(
-                        bottom: 3, // This can be the space you need between text and underline
-                      ),
-                      decoration: BoxDecoration(
-                          border: Border(bottom: BorderSide(
-                            color: Colors.black45,
-                            width: 0.8, // This would be the width of the underline
-                          ))
-                      ),
-                      child: Text('로그인해 주세요',
-                        style: TextStyle(
-                          color: Colors.black54,
-                          fontSize: 15,
-                        ),
+                  child: Container(
+                    padding: EdgeInsets.only(
+                      bottom:
+                      3, // This can be the space you need between text and underline
+                    ),
+                    decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(
+                              color: Colors.black45,
+                              width:
+                              0.8, // This would be the width of the underline
+                            ))),
+                    child: Text(
+                      '로그인을 해 주세요',
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: 15,
                       ),
                     ),
-                  onPressed: (){Navigator.pushNamed(context, "/Authentication");},
+                  ),
+                  onPressed: () async {
+                    // await signInWithGoogle();
+                    await signInWithGoogle();
+                    Page5();
+                  },
                 ),
                 SizedBox(
                   height: 30,
@@ -127,24 +166,11 @@ class Page5_null extends StatelessWidget {
                     ),
                   ],
                 ),
+                SizedBox(
+                  height: 50,
+                ),
               ],
             ),
-            SizedBox(
-              height: 70,
-            ),
-            Text(
-              'the Others',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-            ),
-            SizedBox(
-              height: 50,
-            ),
-            IconButton(
-                onPressed: () async{
-                  await FirebaseAuth.instance.signOut();
-                  Page5();
-                },
-                icon: Icon(Icons.logout, size: 80)),
           ],
         ),
       ),
