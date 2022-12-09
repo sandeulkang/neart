@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutterfire_ui/auth.dart';
-import 'package:neart/Page/page3.dart';
 import 'package:neart/Page/page5_on.dart';
-import 'Page/page5.dart';
-import 'homepage.dart';
+import '../Page/page5.dart';
+import '../homepage.dart';
 
 class Authentication extends StatelessWidget {
   const Authentication({Key? key}) : super(key: key);

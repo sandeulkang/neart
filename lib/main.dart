@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:neart/homepage.dart';
-import 'package:neart/authenticationpage.dart';
+import 'package:neart/trash/authenticationpage.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'dart:io';
 import 'Page/page5_null.dart';

@@ -5,10 +5,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:neart/Page/page5_null.dart';
 import 'package:neart/Page/page5_on.dart';
-import 'package:neart/authenticationpage.dart';
+import 'package:neart/trash/authenticationpage.dart';
 
-import '../Lab/ppage5_on.dart';
-import '../aauthenticationpage.dart';
 
 class Page5 extends StatelessWidget {
   const Page5({Key? key}) : super(key: key);

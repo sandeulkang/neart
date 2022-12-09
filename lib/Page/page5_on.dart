@@ -81,25 +81,25 @@ class _Page5_onState extends State<Page5_on> {
                                     onPressed: () {
                                       pickImage();
                                     },
-                                    icon: Icon(Icons.camera_alt),iconSize: 22, color: Colors.white,),
+                                    icon: const Icon(Icons.camera_alt),iconSize: 22, color: Colors.white,),
                               ))
                         ]),
-                        SizedBox(
+                        const SizedBox(
                           height: 15,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Opacity(child: SizedBox(width: 24,),opacity: 0,),
+                            const Opacity(child: SizedBox(width: 24,),opacity: 0,),
                             Text(
                               snapshot.data?['name'],
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.black87,
                                 fontWeight: FontWeight.w500,
                                 fontSize: 15,
                               ),
                             ),
-                            SizedBox(width: 5,),
+                            const SizedBox(width: 5,),
                             GestureDetector(
                               onTap: (){},
                                 child: CircleAvatar(
@@ -109,7 +109,7 @@ class _Page5_onState extends State<Page5_on> {
                             )
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 35,
                         ),
                         Row(
@@ -123,8 +123,8 @@ class _Page5_onState extends State<Page5_on> {
                                     width: 30,
                                     height: 30,
                                   ),
-                                  SizedBox(height: 4),
-                                  Text(
+                                  const SizedBox(height: 4),
+                                  const Text(
                                     '좋아요 한\n전시',
                                     textAlign: TextAlign.center,
                                   )
@@ -141,8 +141,8 @@ class _Page5_onState extends State<Page5_on> {
                                     height: 30,
                                     color: Colors.black,
                                   ),
-                                  SizedBox(height: 4),
-                                  Text(
+                                  const SizedBox(height: 4),
+                                  const Text(
                                     '보고 온\n전시',
                                     textAlign: TextAlign.center,
                                   )
@@ -159,8 +159,8 @@ class _Page5_onState extends State<Page5_on> {
                                     height: 30,
                                     color: Colors.black,
                                   ),
-                                  SizedBox(height: 4),
-                                  Text(
+                                  const SizedBox(height: 4),
+                                  const Text(
                                     '스크랩한\n칼럼',
                                     textAlign: TextAlign.center,
                                   )
@@ -170,7 +170,7 @@ class _Page5_onState extends State<Page5_on> {
                             ),
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 50,
                         ),
                         ElevatedButton(
@@ -186,7 +186,7 @@ class _Page5_onState extends State<Page5_on> {
                 ),
               );
             } else {
-              return CircularProgressIndicator();
+              return const Center(child: CircularProgressIndicator());
             }
           }),
     );

@@ -36,7 +36,7 @@ class _Page2State extends State<Page2> {
           .orderBy('time', descending: true)
           .snapshots(), //QuerySnapshot 타입임
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return LinearProgressIndicator();
+        if (!snapshot.hasData) return const LinearProgressIndicator();
         return _buildList(context, snapshot.data!.docs);
       },
     );
@@ -51,7 +51,8 @@ class _Page2State extends State<Page2> {
     for (QueryDocumentSnapshot d in snapshot) {
       // *string.contains()를 활용해 searchText를 포함한 snapshot을 리스트에 추가
       // * 주의!) data.toString()해도 실행은 되지만 검색 결과가 안 나옴!
-      if (d.data().toString().contains(_searchText)) { //여기서는 Exhㅓibition.toString에 포함된(즉 $title,keyword에 포함되어있나를 살펴보는 것 같다)
+      if (d.data().toString().contains(_searchText)) {
+        //여기서는 Exhㅓibition.toString에 포함된(즉 $title,keyword에 포함되어있나를 살펴보는 것 같다)
         searchResults.add(d); //이로써 searchResults는 선별되어진 docs 들로 구성된 list이다
       }
     }
@@ -60,13 +61,12 @@ class _Page2State extends State<Page2> {
       child: GridView.builder(
         // physics: NeverScrollableScrollPhysics(),
         // shrinkWrap: true 쓰면 안 되는 이유 : gridview.builder를 쓰는 이유가 없어짐 그냥 gridview와 같이 모든 데이터들을 한 번에 불러오는 셈이라 데이터 많이 읽게 됨 비쌈
-        padding: EdgeInsets.fromLTRB(15, 5, 13, 0),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        padding: const EdgeInsets.fromLTRB(15, 5, 13, 0),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             mainAxisSpacing: 5, //수평 Padding
             crossAxisSpacing: 1,
-            childAspectRatio: 0.5
-        ),
+            childAspectRatio: 0.5),
         itemCount: searchResults.length, //이거 exhibition.length로 바꿔도 ㄱㅊ나 봐보기
         itemBuilder: (BuildContext context, int i) {
           //itembuilder의 대상은 list이다. 리스트 1부터 차례대로 아래에 들어가는 거다. 다만 Exhibition의 리스트여야 한다.
@@ -91,7 +91,7 @@ class _Page2State extends State<Page2> {
                             DetailScreen(exhibition: exhibitions[i])),
                   );
                 },
-                child: Container(
+                child: SizedBox(
                   height: 250,
                   width: 180,
                   child: Image.network(
@@ -150,11 +150,12 @@ class _Page2State extends State<Page2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container( //얘 singlechildscrollview로 하면 안 될만 한 게
+      body: Container(
+        //얘 singlechildscrollview로 하면 안 될만 한 게
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.fromLTRB(10, 5, 5, 10),
+              padding: const EdgeInsets.fromLTRB(10, 5, 5, 10),
               child: Row(
                 children: [
                   Expanded(
@@ -162,18 +163,18 @@ class _Page2State extends State<Page2> {
                     // * 검색 입력 필드 만들기
                     child: TextField(
                       focusNode: focusNode,
-                      style: TextStyle(fontSize: 15,color: Colors.black),
+                      style: const TextStyle(fontSize: 15, color: Colors.black),
                       autofocus: false,
                       controller: _filter,
                       decoration: InputDecoration(
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                         labelText: '지역, 장소, 장르 등 키워드를 검색해 보세요!',
-                        labelStyle: TextStyle(color: Colors.black),
+                        labelStyle: const TextStyle(color: Colors.black),
                         // * 검색창 디자인
                         filled: true,
                         fillColor: Colors.white54,
                         // * 좌측 아이콘 추가
-                        prefixIcon: Icon(
+                        prefixIcon: const Icon(
                           Icons.search,
                           color: Colors.black38,
                           size: 20,
@@ -181,61 +182,61 @@ class _Page2State extends State<Page2> {
                         // * 우측 아이콘 추가
                         suffixIcon: focusNode.hasFocus
                             ? IconButton(
-                          icon: Icon(
-                            Icons.cancel,
-                            color: Colors.black38,
-                            size: 20,
-                          ),
-                          // * cancle 아이콘 누르면 _filter와 _searchText 초기화
-                          onPressed: () {
-                            setState(() {
-                              _filter.clear();
-                              _searchText = "";
-                            });
-                          },
-                        )
+                                icon: const Icon(
+                                  Icons.cancel,
+                                  color: Colors.black38,
+                                  size: 20,
+                                ),
+                                // * cancle 아이콘 누르면 _filter와 _searchText 초기화
+                                onPressed: () {
+                                  setState(() {
+                                    _filter.clear();
+                                    _searchText = "";
+                                  });
+                                },
+                              )
                             : Container(),
                         // * 검색창 디자인(테두리, 테두리 색상 등)
-                        focusedBorder: OutlineInputBorder(
+                        focusedBorder: const OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.black26),
                             borderRadius:
-                            BorderRadius.all(Radius.circular(20))),
-                        enabledBorder: OutlineInputBorder(
+                                BorderRadius.all(Radius.circular(20))),
+                        enabledBorder: const OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.black26),
                             borderRadius:
-                            BorderRadius.all(Radius.circular(20))),
-                        border: OutlineInputBorder(
+                                BorderRadius.all(Radius.circular(20))),
+                        border: const OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.black26),
                             borderRadius:
-                            BorderRadius.all(Radius.circular(20))),
+                                BorderRadius.all(Radius.circular(20))),
                       ),
                     ),
                   ),
                   // * 검색바 클릭시 취소 버튼 생겼다가 취소 누르면 없어지게 만들기
                   focusNode.hasFocus
                       ? Expanded(
-                    child: TextButton(
-                      child: Text(
-                        "취소",
-                        style: TextStyle(color: Colors.black38),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _filter.clear();
-                          _searchText = "";
-                          focusNode.unfocus();
-                        });
-                      },
-                    ),
-                  )
+                          child: TextButton(
+                            child: const Text(
+                              "취소",
+                              style: TextStyle(color: Colors.black38),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _filter.clear();
+                                _searchText = "";
+                                focusNode.unfocus();
+                              });
+                            },
+                          ),
+                        )
                       : Expanded(
-                    flex: 0,
-                    child: Container(),
-                  )
+                          flex: 0,
+                          child: Container(),
+                        )
                 ],
               ),
             ),
-             _buildBody(context)
+            _buildBody(context)
           ],
         ),
       ),

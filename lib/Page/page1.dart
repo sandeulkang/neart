@@ -26,7 +26,7 @@ class Ppage1 extends StatelessWidget {
                 snapshot.data!
                     .docs); //snapshot 전체를 다루는 게 아니라 snapshot.data!.docs만 국한적으로 다룸
           }
-          return LinearProgressIndicator();
+          return const LinearProgressIndicator();
         });
   }
 
@@ -45,7 +45,7 @@ class Ppage1 extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           CertainWordExhibit(word: '인기'),
-          SizedBox(
+          const SizedBox(
             height: 40,
           ),
           const Text(
@@ -59,7 +59,7 @@ class Ppage1 extends StatelessWidget {
             '최근 올라온 리뷰',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
           ),
-          Container(
+          SizedBox(
             child: Reviews(),
             height: 200,
           ),
@@ -115,10 +115,10 @@ Widget blabla() {
   return FutureBuilder(
     future: getData(), //
     builder: (BuildContext context, AsyncSnapshot snapshot) {
-      return Container(
+      return SizedBox(
         height: 420,
         child: ListView.builder(
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
             // shrinkWrap: true,
             itemCount: snapshot.data!.length, //data 뒤에 ! 붙이면 null check on nullablevalue라는 에러뜸
             itemBuilder: (BuildContext context, index) {
@@ -148,7 +148,7 @@ Widget blabla() {
                         Expanded(
                           flex:5,
                           child: Container(
-                            padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
+                            padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -166,7 +166,7 @@ Widget blabla() {
                                     snapshot.data![index].content,
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 2,
-                                    style: TextStyle(fontSize:11)
+                                    style: const TextStyle(fontSize:11)
                                 ),
                               ],
                             ),

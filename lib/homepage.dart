@@ -3,7 +3,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:neart/Page/page2.dart';
 import 'package:neart/Page/page4.dart';
 import 'package:neart/Page/page1.dart';
-import 'package:neart/aauthenticationpage.dart';
 import 'Page/page5.dart';
 import 'Page/page5_null.dart';
 
@@ -19,9 +18,9 @@ class _HomePageState extends State<HomePage> {
   var _index = 0;
   final _pages = [
     Ppage1(),
-    Page2(),
-    Page4(),
-    Page5(),
+    const Page2(),
+    const Page4(),
+    const Page5(),
   ];
 
   @override
@@ -29,8 +28,8 @@ class _HomePageState extends State<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback;
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-          child: const Text('NeArt'),
+        title: const Center(
+          child: Text('NeArt'),
         ),
       ),
       body:_pages[_index],
@@ -49,7 +48,7 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.home),
             label: 'home',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
               icon: Icon(Icons.search) ,
               label: 'Exhibit'),
 
