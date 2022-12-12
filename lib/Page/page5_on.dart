@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../Lab/changename.dart';
+
 class Page5_on extends StatefulWidget {
   const Page5_on({Key? key}) : super(key: key);
 
@@ -37,158 +39,201 @@ class _Page5_onState extends State<Page5_on> {
     //ref의 url(즉 갱신된 프로필 사진의 url)을 불러오고 그걸 파이어스토어 user의 profileUrl에 넣어준다. 정확히는 갱신인데, 없으면 만들어진다.
     ref.getDownloadURL().then((value) {
       setState(() {
+        print('value is $value');
         FirebaseFirestore.instance
             .collection('member')
             .doc(FirebaseAuth.instance.currentUser!.email!)
             .update({'profileUrl': value});
-      });
+      }); //////////이거 반영이 안 됨
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<DocumentSnapshot>(
-          future: FirebaseFirestore.instance
-              .collection('member')
-              .doc(FirebaseAuth.instance.currentUser!.email!)
-              .get(),
-          builder: (context, snapshot) {
-            //snapshot이란 들어온 Future의 데이터를 말하는 것. snapshot이 아닌 다른 단어여도 됨
-            if (snapshot.hasData == true) {
-              return Padding(
-                padding: const EdgeInsets.fromLTRB(10, 30, 10, 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      children: [
-                        Stack(
-                          clipBehavior: Clip.none,
-                            children: [
-                          CircleAvatar(
-                              radius: 60,
-                              backgroundImage: NetworkImage(snapshot.data?[
-                                  'profileUrl']) //image.network하면 안 되고 networkimage해야 됨
-                              ),
-                          Positioned(
-                              left: 85,
-                              top: 85,
-                              child: CircleAvatar(
-                                radius:20,
-                                backgroundColor: Colors.black54,
-                                child: IconButton(
+      body: SingleChildScrollView(
+        child: StreamBuilder<DocumentSnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('member')
+                .doc(FirebaseAuth.instance.currentUser!.email!)
+                .snapshots(),
+            builder: (context, snapshot) {
+              //snapshot이란 들어온 Future의 데이터를 말하는 것. snapshot이 아닌 다른 단어여도 됨
+              if (snapshot.hasData == true) {
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 30, 10, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        children: [
+                          Stack(clipBehavior: Clip.none, children: [
+                            CircleAvatar(
+                                radius: 60,
+                                backgroundImage: NetworkImage(snapshot.data?[
+                                'profileUrl']) //image.network하면 안 되고 networkimage해야 됨
+                            ),
+                            Positioned(
+                                left: 87,
+                                top: 87,
+                                child: CircleAvatar(
+                                  radius: 18,
+                                  backgroundColor: Colors.black54,
+                                  child: IconButton(
                                     onPressed: () {
                                       pickImage();
                                     },
-                                    icon: const Icon(Icons.camera_alt),iconSize: 22, color: Colors.white,),
-                              ))
-                        ]),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Opacity(child: SizedBox(width: 24,),opacity: 0,),
-                            Text(
-                              snapshot.data?['name'],
-                              style: const TextStyle(
-                                color: Colors.black87,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 15,
+                                    icon: const Icon(Icons.camera_alt),
+                                    iconSize: 20,
+                                    color: Colors.white,
+                                  ),
+                                ))
+                          ]),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Opacity(
+                                child: SizedBox(
+                                  width: 24,
+                                ),
+                                opacity: 0,
                               ),
-                            ),
-                            const SizedBox(width: 5,),
-                            GestureDetector(
-                              onTap: (){},
+                              Text(
+                                snapshot.data?['name'],
+                                style: const TextStyle(
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 15,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return Stack(
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                children: [
+                                                  TextButton(child: Text('취소', style: TextStyle(color:Colors.white),),
+                                                    onPressed: () {Navigator.pop(context);},),
+                                                  SizedBox(width:90),
+                                                  TextButton(child: Text('설정', style: TextStyle(color:Colors.white),),
+                                                    onPressed: () {},),
+                                                ],
+                                              ),
+                                              Dialog(
+                                                backgroundColor: Colors.white10,
+                                                child: TextFormField(
+                                                  textAlign: TextAlign.center,
+                                                  initialValue: snapshot
+                                                      .data?['name'],
+                                                  autofocus: true,
+                                                  decoration: InputDecoration(
+                                                    filled: false
+                                                  ),
+                                                ),
+                                              ),
+                                            ]
+                                        );
+                                      });
+                                },
                                 child: CircleAvatar(
-                                  radius: 12,
-                                  backgroundColor: Colors.black54,
-                                    child: Image.asset('assets/pen.png', height: 17)),
-                            )
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 35,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            InkWell(
-                              child: Column(
-                                children: [
-                                  SvgPicture.asset(
-                                    "assets/onheart.svg",
-                                    width: 30,
-                                    height: 30,
-                                  ),
-                                  const SizedBox(height: 4),
-                                  const Text(
-                                    '좋아요 한\n전시',
-                                    textAlign: TextAlign.center,
-                                  )
-                                ],
+                                    radius: 12,
+                                    backgroundColor: Colors.black54,
+                                    child: Image.asset('assets/pen.png',
+                                        height: 17)),
+                              )
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 35,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              InkWell(
+                                child: Column(
+                                  children: [
+                                    SvgPicture.asset(
+                                      "assets/onheart.svg",
+                                      width: 30,
+                                      height: 30,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    const Text(
+                                      '좋아요 한\n전시',
+                                      textAlign: TextAlign.center,
+                                    )
+                                  ],
+                                ),
+                                onTap: () {},
                               ),
-                              onTap: () {},
-                            ),
-                            InkWell(
-                              child: Column(
-                                children: [
-                                  SvgPicture.asset(
-                                    "assets/oncheck.svg",
-                                    width: 30,
-                                    height: 30,
-                                    color: Colors.black,
-                                  ),
-                                  const SizedBox(height: 4),
-                                  const Text(
-                                    '보고 온\n전시',
-                                    textAlign: TextAlign.center,
-                                  )
-                                ],
+                              InkWell(
+                                child: Column(
+                                  children: [
+                                    SvgPicture.asset(
+                                      "assets/oncheck.svg",
+                                      width: 30,
+                                      height: 30,
+                                      color: Colors.black,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    const Text(
+                                      '보고 온\n전시',
+                                      textAlign: TextAlign.center,
+                                    )
+                                  ],
+                                ),
+                                onTap: () {},
                               ),
-                              onTap: () {},
-                            ),
-                            InkWell(
-                              child: Column(
-                                children: [
-                                  SvgPicture.asset(
-                                    "assets/onscrap.svg",
-                                    width: 30,
-                                    height: 30,
-                                    color: Colors.black,
-                                  ),
-                                  const SizedBox(height: 4),
-                                  const Text(
-                                    '스크랩한\n칼럼',
-                                    textAlign: TextAlign.center,
-                                  )
-                                ],
+                              InkWell(
+                                child: Column(
+                                  children: [
+                                    SvgPicture.asset(
+                                      "assets/onscrap.svg",
+                                      width: 30,
+                                      height: 30,
+                                      color: Colors.black,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    const Text(
+                                      '스크랩한\n칼럼',
+                                      textAlign: TextAlign.center,
+                                    )
+                                  ],
+                                ),
+                                onTap: () {},
                               ),
-                              onTap: () {},
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 50,
-                        ),
-                        ElevatedButton(
-                          onPressed: () async {
-                            await _auth.signOut(); //disconnect는 계정 삭제다
-                            setState(() {});
-                          },
-                          child: const Text('Logout'),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              );
-            } else {
-              return const Center(child: CircularProgressIndicator());
-            }
-          }),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 50,
+                          ),
+                          ElevatedButton(
+                            onPressed: () async {
+                              await _auth.signOut(); //disconnect는 계정 삭제다
+                              setState(() {});
+                            },
+                            child: const Text('Logout'),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                );
+              } else {
+                return const Center(child: CircularProgressIndicator());
+              }
+            }),
+      ),
     );
   }
 }

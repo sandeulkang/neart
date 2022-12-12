@@ -5,6 +5,7 @@ import 'package:neart/homepage.dart';
 import 'package:neart/trash/authenticationpage.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'dart:io';
+import 'Lab/changename.dart';
 import 'Page/page5_null.dart';
 import 'Page/page5_on.dart';
 
@@ -50,6 +51,7 @@ class _MyAppState extends State<MyApp> {
         '/Authentication': (context) => const Authentication(),
         '/Page5_on': (context) => Page5_on(),
         '/Page5_null': (context) => Page5_null(),
+        '/ChangeNameSt' : (context) => ChangeNameSt()
       },
       home: const HomePage(),
     );
