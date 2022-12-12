@@ -18,7 +18,6 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
-  bool havebeen = false;
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   var placeinformation = '';
   var placeinformation2 = '';
@@ -26,7 +25,6 @@ class _DetailScreenState extends State<DetailScreen> {
   @override
   void initState() {
     super.initState();
-    havebeen = widget.exhibition.havebeen;
     asyncInitState();
   }
 
@@ -38,10 +36,10 @@ class _DetailScreenState extends State<DetailScreen> {
         .collection('placeinfo')
         .doc(widget.exhibition.place)
         .get(); //placeinfodata는
-      // 여기보면 알 수 있다시피 get한 documentsnapshot에서 바로 map []찾을 수 있음, 물론 하나의 doc일 때 편하게 쓸 수 있는 거겠지?
-      // 이걸로 listview를 만든다든지 할 거면 당연히 for 반복문이 필요할 것임
-      placeinformation = placeinfodata['info'];
-      placeinformation2 = placeinfodata['info2'];
+    // 여기보면 알 수 있다시피 get한 documentsnapshot에서 바로 map []찾을 수 있음, 물론 하나의 doc일 때 편하게 쓸 수 있는 거겠지?
+    // 이걸로 listview를 만든다든지 할 거면 당연히 for 반복문이 필요할 것임
+    placeinformation = placeinfodata['info'];
+    placeinformation2 = placeinfodata['info2'];
   }
 
   @override
@@ -103,7 +101,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                   widget.exhibition.place,
                                 ),
                                 const SizedBox(height: 1),
-                                Text(placeinformation.replaceAll("\\n", "\n"),
+                                Text(placeinformation,
                                     style: const TextStyle(height: 1.5)),
                                 const SizedBox(height: 1),
                                 Text(
@@ -113,99 +111,84 @@ class _DetailScreenState extends State<DetailScreen> {
                                 Container(
                                   padding: const EdgeInsets.all(5),
                                   child: FutureBuilder<DocumentSnapshot>(
-                                    future: FirebaseFirestore.instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
-                                        .collection('member')
-                                        .doc(FirebaseAuth.instance.currentUser?.email)
-                                        .collection('heart')
-                                        .doc(widget.exhibition.title)
-                                        .get(), //이자식이 heartdoc
-                                    builder: (context, snapshot)
-                                    {return Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        snapshot.data!.exists //heartdoc.exists() //data가 텅 빈 것이 아닌, null로서 들어오는 경우 hasData는 true를 반환한다.
-                                            ? InkWell( //맞으면
-                                                //true 일 때 결과
-                                                child: SvgPicture.asset(
-                                                  "assets/onheart.svg",
-                                                  width: 40,
-                                                  height: 40,
-                                                  color: Colors.red,
-                                                ),
-                                                onTap: () {
-                                                  setState(() {
-                                                    FirebaseFirestore.instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
-                                                        .collection('member')
-                                                        .doc(FirebaseAuth.instance.currentUser?.email)
-                                                        .collection('heart')
-                                                        .doc(widget.exhibition.title).delete();
-                                                    //정상적으로 삭제된다. 그런데 왜 하트가 변하지 않을까?
-                                                    //futurebuilder는 future를 한 번만 데려와서?
-                                                    //근데 setState 하면 이 클래스가 다시 그려지면서
-                                                    //futurebuilder 가 한 번 더 그려지잖아 그럼 바뀐 상태로 다시 그려져야 되는 거 아닌가?
-                                                  });
-                                                },
-                                              )
-                                            : InkWell(
-                                                child: SvgPicture.asset(
-                                                  "assets/offheart.svg",
-                                                  width: 40,
-                                                  height: 40,
-                                                  color: Colors.red,
-                                                ),
-                                                onTap: () {
-                                                  setState(() {
-                                                    FirebaseFirestore.instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
-                                                        .collection('member')
-                                                        .doc(FirebaseAuth.instance.currentUser?.email)
-                                                        .collection('heart')
-                                                        .doc(widget.exhibition.title).set({'heart':'on'});
-                                                  });
-                                                },
-                                              ),
-                                        havebeen
-                                            ? InkWell(
-                                                child: SvgPicture.asset(
-                                                  "assets/oncheck.svg",
-                                                  width: 40,
-                                                  height: 40,
-                                                ),
-                                                onTap: () {
-                                                  setState(() {
-                                                    havebeen = !havebeen;
-                                                    firebaseFirestore
-                                                        .collection('exhibition')
-                                                        .doc(widget
-                                                            .exhibition.title)
-                                                        .update({
-                                                      'havebeen': havebeen
-                                                    });
-                                                  });
-                                                },
-                                              )
-                                            : InkWell(
-                                                child: SvgPicture.asset(
-                                                  "assets/off_check.svg",
-                                                  width: 40,
-                                                  height: 40,
-                                                ),
-                                                onTap: () {
-                                                  setState(() {
-                                                    havebeen = !havebeen;
-                                                    firebaseFirestore
-                                                        .collection('exhibition')
-                                                        .doc(widget
-                                                            .exhibition.title)
-                                                        .update({
-                                                      'havebeen': havebeen
-                                                    });
-                                                  });
-                                                },
-                                              ),
-                                      ],
-                                    );}
-                                  ),
+                                      future: FirebaseFirestore
+                                          .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
+                                          .collection('member')
+                                          .doc(FirebaseAuth
+                                              .instance.currentUser?.email)
+                                          .collection('heart')
+                                          .doc(widget.exhibition.title)
+                                          .get(), //이자식이 heartdoc
+                                      builder: (context, snapshot) {
+                                        return Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            snapshot.data!
+                                                    .exists //heartdoc.exists() //data가 텅 빈 것이 아닌, null로서 들어오는 경우 hasData는 true를 반환한다.
+                                                ? InkWell(
+                                                    //맞으면
+                                                    //true 일 때 결과
+                                                    child: SvgPicture.asset(
+                                                      "assets/onheart.svg",
+                                                      width: 40,
+                                                      height: 40,
+                                                      color: Colors.red,
+                                                    ),
+                                                    onTap: () {
+                                                      setState(() {
+                                                        FirebaseFirestore
+                                                            .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
+                                                            .collection(
+                                                                'member')
+                                                            .doc(FirebaseAuth
+                                                                .instance
+                                                                .currentUser
+                                                                ?.email)
+                                                            .collection('heart')
+                                                            .doc(widget
+                                                                .exhibition
+                                                                .title)
+                                                            .delete();
+                                                        //정상적으로 삭제된다. 그런데 왜 하트가 변하지 않을까?
+                                                        //futurebuilder는 future를 한 번만 데려와서?
+                                                        //근데 setState 하면 이 클래스가 다시 그려지면서
+                                                        //futurebuilder 가 한 번 더 그려지잖아 그럼 바뀐 상태로 다시 그려져야 되는 거 아닌가?
+                                                      });
+                                                    },
+                                                  )
+                                                : InkWell(
+                                                    child: SvgPicture.asset(
+                                                      "assets/offheart.svg",
+                                                      width: 40,
+                                                      height: 40,
+                                                      color: Colors.red,
+                                                    ),
+                                                    onTap: () {
+                                                      setState(() {
+                                                        FirebaseFirestore
+                                                            .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
+                                                            .collection(
+                                                                'member')
+                                                            .doc(FirebaseAuth
+                                                                .instance
+                                                                .currentUser
+                                                                ?.email)
+                                                            .collection('heart')
+                                                            .doc(widget
+                                                                .exhibition
+                                                                .title)
+                                                            .set({
+                                                          'heart': 'on'
+                                                        });
+                                                      });
+                                                    },
+                                                  ),
+
+
+                                          ],
+                                        );
+                                      }),
                                 )
                               ],
                             ),
@@ -330,7 +313,7 @@ class _DetailScreenState extends State<DetailScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text(
-                                '감상평',
+                                '후기',
                                 style: const TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.w600),
                               ),
