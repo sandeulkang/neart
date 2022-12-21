@@ -42,7 +42,7 @@ class _Page5_onState extends State<Page5_on> {
         print('value is $value');
         FirebaseFirestore.instance
             .collection('member')
-            .doc(FirebaseAuth.instance.currentUser!.email!)
+            .doc(_auth.currentUser!.email!)
             .update({'profileUrl': value});
       }); //////////이거 반영이 안 됨
     });
@@ -55,7 +55,7 @@ class _Page5_onState extends State<Page5_on> {
         child: StreamBuilder<DocumentSnapshot>(
             stream: FirebaseFirestore.instance
                 .collection('member')
-                .doc(FirebaseAuth.instance.currentUser!.email!)
+                .doc(_auth.currentUser!.email!)
                 .snapshots(),
             builder: (context, snapshot) {
               //snapshot이란 들어온 Future의 데이터를 말하는 것. snapshot이 아닌 다른 단어여도 됨
@@ -109,6 +109,9 @@ class _Page5_onState extends State<Page5_on> {
                                   fontSize: 15,
                                 ),
                               ),
+                              // TextFormField(
+                              //   initialValue: snapshot.data?['name'],
+                              // ),
                               const SizedBox(
                                 width: 5,
                               ),
@@ -130,7 +133,7 @@ class _Page5_onState extends State<Page5_on> {
                                                 ],
                                               ),
                                               Dialog(
-                                                backgroundColor: Colors.white10,
+                                                backgroundColor: Colors.white,
                                                 child: TextFormField(
                                                   textAlign: TextAlign.center,
                                                   initialValue: snapshot
