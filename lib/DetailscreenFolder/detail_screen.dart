@@ -8,6 +8,7 @@ import 'package:neart/DetailscreenFolder/recommend_column.dart';
 import 'package:neart/DetailscreenFolder/together_exhibit.dart';
 import 'package:neart/Lab/review_screen.dart';
 import 'package:neart/Lab/writing_screen.dart';
+import '../Lab/exhibition_reviews.dart';
 import '../Model/model_exhibitions.dart';
 import 'main_info.dart';
 
@@ -87,7 +88,7 @@ class _DetailScreenState extends State<DetailScreen> {
                               color: Colors.white,
                               borderRadius: BorderRadius.vertical(
                                   bottom: Radius.circular(15))),
-                          height: snapshot.data!.exists ? 280 : 220,
+                          height: snapshot.data!.exists ? 290 : 220,
                           //height 설정 안 하면 어떻게 되는지 확인
                           //너무 tight한 게 문제라면 패딩이나 margin값 주면 되니까
                           child: Padding(
@@ -103,6 +104,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                           widget.exhibition.poster),
                                       width: MediaQuery.of(context).size.width *
                                           0.35,
+                                      height: 195,
                                     ),
                                     Container(
                                       // height: 230,
@@ -311,62 +313,65 @@ class _DetailScreenState extends State<DetailScreen> {
                                     ),
                                   ],
                                 ),
+
                                 Visibility(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                    child: Column(
                                       children: [
-                                        Expanded(
-                                          flex: 7,
-                                          child: FutureBuilder<
-                                                  DocumentSnapshot>(
-                                              future: FirebaseFirestore
-                                                  .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
-                                                  .collection('member')
-                                                  .doc(FirebaseAuth.instance
-                                                      .currentUser?.email)
-                                                  .collection('review')
-                                                  .doc(widget.exhibition.title)
-                                                  .get(),
-                                              builder:
-                                                  (context, reviewsnapshot) {
-                                                return Container(
-                                                  child: Center(
-                                                    child: reviewsnapshot
-                                                            .data!.exists
-                                                        ? Text(reviewsnapshot
-                                                                .data!['content'])
-                                                        : Text('리뷰를 적어보세요'),
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.blue,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                  ),
-                                                );
-                                              }),
-                                        ),
-                                        Expanded(
-                                          child: InkWell(
-                                            child: Image.asset(
-                                              'assets/pen.png',
-                                              height: 30,
-                                              color: Colors.black,
+                                        SizedBox(height:15),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Expanded(
+                                              flex: 5,
+                                              child: FutureBuilder<
+                                                      DocumentSnapshot>(
+                                                  future: FirebaseFirestore
+                                                      .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
+                                                      .collection('member')
+                                                      .doc(FirebaseAuth.instance
+                                                          .currentUser?.email)
+                                                      .collection('review')
+                                                      .doc(widget.exhibition.title)
+                                                      .get(),
+                                                  builder:
+                                                      (context, reviewsnapshot) {
+                                                    return Container(
+                                                      margin: EdgeInsets.fromLTRB(10,0,10,0),
+                                                      height: 50,
+                                                      child: Center(
+                                                        child: reviewsnapshot
+                                                                .data!.exists
+                                                            ? Text(reviewsnapshot
+                                                                    .data!['content'])
+                                                            : Text('리뷰를 적어보세요!'),
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                        border: Border.all(color: Colors.black38),
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                                10),
+                                                      ),
+                                                    );
+                                                  }),
                                             ),
-                                            onTap: () {
-                                              Navigator.of(context).push(
-                                                  MaterialPageRoute<Null>(
-                                                      builder: (
-                                                          context) {
-                                                // * 클릭한 영화의 DetailScreen 출력
-                                                return WritingScreen(
-                                                    exhibition:
-                                                        widget.exhibition);
-                                              }));
-                                            },
-                                          ),
-                                        )
+                                            Expanded(
+                                              child: InkWell(
+                                                child: Image.asset(
+                                                  'assets/pen.png',
+                                                  height: 30,
+                                                  color: Colors.black,
+                                                ),
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(builder: (context) => WritingScreen(exhibition: widget.exhibition)),
+                                                  );
+                                                },
+                                              ),
+                                            )
+                                          ],
+                                        ),
                                       ],
                                     ),
                                     visible: snapshot
@@ -502,8 +507,8 @@ class _DetailScreenState extends State<DetailScreen> {
                               const SizedBox(
                                 height: 13,
                               ),
-                              RecommendColumn(
-                                  keyword: widget.exhibition.keyword),
+                              ExhibitionReviews(
+                                  title: widget.exhibition.title),
                             ])),
                   )
                 ],

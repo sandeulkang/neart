@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
+import 'package:neart/Lab/writing_screen.dart';
 import 'package:neart/homepage.dart';
 import 'package:neart/trash/authenticationpage.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -51,7 +52,6 @@ class _MyAppState extends State<MyApp> {
         '/Authentication': (context) => const Authentication(),
         '/Page5_on': (context) => Page5_on(),
         '/Page5_null': (context) => Page5_null(),
-        '/ChangeNameSt' : (context) => ChangeNameSt()
       },
       home: const HomePage(),
     );

@@ -60,7 +60,7 @@ class Ppage1 extends StatelessWidget {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
           ),
           SizedBox(
-            child: Reviews(),
+            // child: Reviews(title: ),
             height: 200,
           ),
           const SizedBox(

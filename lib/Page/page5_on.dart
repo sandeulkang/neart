@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../Lab/changename.dart';
-
 class Page5_on extends StatefulWidget {
   const Page5_on({Key? key}) : super(key: key);
 
@@ -19,6 +17,17 @@ class Page5_on extends StatefulWidget {
 class _Page5_onState extends State<Page5_on> {
   final FirebaseAuth _auth =
       FirebaseAuth.instance; //FirebaseAuth.instance 계속 쳐주기 귀찮으니까~~~!
+
+  TextEditingController nameController = TextEditingController(
+      text: FirebaseAuth.instance.currentUser!.email);
+  final _formKey = GlobalKey<FormState>();
+
+  void _tryValidation() {
+    final isValid = _formKey.currentState!.validate();
+    if (isValid) {
+      _formKey.currentState!.save();
+    }
+  }
 
   Future pickImage() async {
     //먼 미래에 pickImage가 실행됐을 때~
@@ -39,7 +48,6 @@ class _Page5_onState extends State<Page5_on> {
     //ref의 url(즉 갱신된 프로필 사진의 url)을 불러오고 그걸 파이어스토어 user의 profileUrl에 넣어준다. 정확히는 갱신인데, 없으면 만들어진다.
     ref.getDownloadURL().then((value) {
       setState(() {
-        print('value is $value');
         FirebaseFirestore.instance
             .collection('member')
             .doc(_auth.currentUser!.email!)
@@ -109,9 +117,6 @@ class _Page5_onState extends State<Page5_on> {
                                   fontSize: 15,
                                 ),
                               ),
-                              // TextFormField(
-                              //   initialValue: snapshot.data?['name'],
-                              // ),
                               const SizedBox(
                                 width: 5,
                               ),
@@ -120,32 +125,71 @@ class _Page5_onState extends State<Page5_on> {
                                   showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
-                                        return Stack(
+                                        return Stack(children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
                                             children: [
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                children: [
-                                                  TextButton(child: Text('취소', style: TextStyle(color:Colors.white),),
-                                                    onPressed: () {Navigator.pop(context);},),
-                                                  SizedBox(width:90),
-                                                  TextButton(child: Text('설정', style: TextStyle(color:Colors.white),),
-                                                    onPressed: () {},),
-                                                ],
-                                              ),
-                                              Dialog(
-                                                backgroundColor: Colors.white,
-                                                child: TextFormField(
-                                                  textAlign: TextAlign.center,
-                                                  initialValue: snapshot
-                                                      .data?['name'],
-                                                  autofocus: true,
-                                                  decoration: InputDecoration(
-                                                    filled: false
-                                                  ),
+                                              TextButton(
+                                                child: const Text(
+                                                  '취소',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
                                                 ),
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
                                               ),
-                                            ]
-                                        );
+                                              const SizedBox(width: 90),
+                                              TextButton(
+                                                  child: const Text(
+                                                    '설정',
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                  onPressed: () {
+                                                    _tryValidation();
+                                                    setState(
+                                                          () {
+                                                        FirebaseFirestore
+                                                            .instance
+                                                            .collection(
+                                                            'member')
+                                                            .doc(_auth
+                                                            .currentUser!
+                                                            .email!)
+                                                            .update({
+                                                          'name':
+                                                          nameController!
+                                                              .text,
+                                                        });
+                                                      },
+                                                    );
+                                                    Navigator.pop(context);
+                                                  })
+                                            ],
+                                          ),
+                                          Dialog(
+                                            backgroundColor: Colors.white,
+                                            child: Form(
+                                              key: _formKey,
+                                              child: TextFormField(
+                                                controller: nameController,
+                                                textAlign: TextAlign.center,
+                                                validator: (value) {
+                                                  if (value!.isEmpty) {
+                                                    return '한 글자 이상 입력해 주세요.';
+                                                  }
+                                                  return null;
+                                                },
+                                                // snapshot.data?['name'],
+                                                autofocus: true,
+                                                decoration: const InputDecoration(
+                                                    filled: false),
+                                              ),
+                                            ),
+                                          ),
+                                        ]);
                                       });
                                 },
                                 child: CircleAvatar(
