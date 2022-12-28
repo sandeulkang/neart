@@ -1,5 +1,5 @@
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
-import 'package:neart/kakaologin/social_login.dart';
+import 'package:neart/trash/kakaologin/social_login.dart';
 
 class KakaoLogin implements SocialLogin{
   @override

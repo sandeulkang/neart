@@ -6,10 +6,8 @@ class Exhibition {
   final String place;
   final String date;
   final String explanation;
-  final bool heart;
   final String poster;
   final String admission;
-  final bool havebeen;
   final DocumentReference? reference;
 
   Exhibition.fromMap(Map<String, dynamic> map, {this.reference})
@@ -18,9 +16,7 @@ class Exhibition {
         place = map['place'],
         explanation = map['explanation'],
         date = map['date'],
-        heart = map['heart'],
         poster = map['poster'],
-        havebeen = map['havebeen'],
         admission = map['admission'];
 
   Exhibition.fromSnapshot(DocumentSnapshot snapshot) //Exhibition이라는 클래스에서 Exhibition.fromSnapshot이라는 메소드를 만들었다. snapshot이라는 객체를 받아들인다.

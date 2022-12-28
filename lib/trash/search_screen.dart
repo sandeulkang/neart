@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:neart/Model/model_exhibitions.dart';
-import 'package:neart/DetailscreenFolder/detail_screen.dart';
+import 'package:neart/DetailscreenFolder/exhibition_detail_screen.dart';
 
 class SearchScreenExhibit extends StatefulWidget {
   _SearchScreenExhibitState createState() => _SearchScreenExhibitState();
@@ -78,7 +78,7 @@ class _SearchScreenExhibitState extends State<SearchScreenExhibit> {
             fullscreenDialog: true,
             builder: (BuildContext context) {
               // * 클릭한 영화의 DetailScreen 출력
-              return DetailScreen(exhibition: exhibition);
+              return ExhibitionDetailScreen(exhibition: exhibition);
             }));
       },
     );

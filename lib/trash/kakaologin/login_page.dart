@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
-
 import 'kakao_login.dart';
 import 'main_view_model.dart';
 

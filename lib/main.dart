@@ -6,7 +6,6 @@ import 'package:neart/homepage.dart';
 import 'package:neart/trash/authenticationpage.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'dart:io';
-import 'Lab/changename.dart';
 import 'Page/page5_null.dart';
 import 'Page/page5_on.dart';
 

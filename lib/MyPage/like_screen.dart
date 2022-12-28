@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../Model/model_exhibitions.dart';
-import '../DetailscreenFolder/detail_screen.dart';
+import '../DetailscreenFolder/exhibition_detail_screen.dart';
 
 class LikeScreen extends StatefulWidget {
   // *상태 관리 및 상태 선언
@@ -50,7 +50,7 @@ class _LikeScreenState extends State<LikeScreen> {
           onTap: () {
             Navigator.of(context)
                 .push(MaterialPageRoute<Null>(builder: (BuildContext context) {
-              return DetailScreen(exhibition: exhibition);
+              return ExhibitionDetailScreen(exhibition: exhibition);
             }));
           },
         ),

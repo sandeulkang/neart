@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../DetailscreenFolder/detail_screen.dart';
+import '../DetailscreenFolder/exhibition_detail_screen.dart';
 import '../Model/model_exhibitions.dart';
 
 //특정한 word를 가진 exhibit 모두를 가져오는 certainwordexhibit은 당연히 page2에는 사용할 수 없다.
@@ -83,7 +83,7 @@ class _CertainWordExhibitState extends State<CertainWordExhibit> {
               Navigator.of(context).push(MaterialPageRoute<Null>(
                   builder: (BuildContext context) {
                     // * 클릭한 영화의 DetailScreen 출력
-                    return DetailScreen(exhibition: exhibition);
+                    return ExhibitionDetailScreen(exhibition: exhibition);
                   }));
             },
           ),

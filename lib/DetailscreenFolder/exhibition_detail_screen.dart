@@ -6,22 +6,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:neart/DetailscreenFolder/recommend_column.dart';
 import 'package:neart/DetailscreenFolder/together_exhibit.dart';
-import 'package:neart/Lab/review_screen.dart';
+import 'package:neart/ListWidget/certain_reviews_screen.dart';
 import 'package:neart/Lab/writing_screen.dart';
 import '../Lab/exhibition_reviews.dart';
+import '../Lab/revise_screen.dart';
 import '../Model/model_exhibitions.dart';
-import 'main_info.dart';
 
-class DetailScreen extends StatefulWidget {
+class ExhibitionDetailScreen extends StatefulWidget {
   final Exhibition exhibition;
 
-  DetailScreen({required this.exhibition});
+  ExhibitionDetailScreen({required this.exhibition});
 
   @override
-  State<DetailScreen> createState() => _DetailScreenState();
+  State<ExhibitionDetailScreen> createState() => _ExhibitionDetailScreenState();
 }
 
-class _DetailScreenState extends State<DetailScreen> {
+class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   var placeinformation = '';
   var placeinformation2 = '';
@@ -32,19 +32,6 @@ class _DetailScreenState extends State<DetailScreen> {
     asyncInitState();
   }
 
-  //initstate에 check 넣으면 setstate해도 안됨 initstate이니까
-
-  // late var heartData = FirebaseFirestore
-  //     .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
-  //     .collection('member')
-  //     .doc(FirebaseAuth
-  //     .instance.currentUser?.email)
-  //     .collection('heart')
-  //     .doc(widget.exhibition.title)
-  //     .get();
-
-  // 아이디 생성할 때 review, heart, havebeen 이라는 하위 컬렉션도 생성되게 만들어야 함\
-  // 컬렉션 생성할 때는 첫번째 문서(doc)도 생성해주어야 함
 
   void asyncInitState() async {
     DocumentSnapshot placeinfodata = await firebaseFirestore
@@ -82,13 +69,14 @@ class _DetailScreenState extends State<DetailScreen> {
                           .collection('havebeen')
                           .doc(widget.exhibition.title)
                           .get(),
-                      builder: (context, snapshot) {
+                      builder: (context, havebeen) {
+                        if (!havebeen.hasData) return const SizedBox(width: 1,);
                         return Container(
                           decoration: const BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.vertical(
                                   bottom: Radius.circular(15))),
-                          height: snapshot.data!.exists ? 290 : 220,
+                          height: havebeen.data!.exists ? 290 : 220,
                           //height 설정 안 하면 어떻게 되는지 확인
                           //너무 tight한 게 문제라면 패딩이나 margin값 주면 되니까
                           child: Padding(
@@ -100,11 +88,11 @@ class _DetailScreenState extends State<DetailScreen> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     SizedBox(
-                                      child: Image.network(
-                                          widget.exhibition.poster),
                                       width: MediaQuery.of(context).size.width *
                                           0.35,
                                       height: 195,
+                                      child: Image.network(
+                                          widget.exhibition.poster),
                                     ),
                                     Container(
                                       // height: 230,
@@ -166,6 +154,8 @@ class _DetailScreenState extends State<DetailScreen> {
                                                           .get(),
                                                       builder:
                                                           (context, heart) {
+                                                        if (!heart.hasData){
+                                                          return const SizedBox(width:1);}
                                                         return heart.data!
                                                                 .exists //heartdoc.exists() //data가 텅 빈 것이 아닌, null로서 들어오는 경우 hasData는 true를 반환한다.
                                                             ? InkWell(
@@ -196,10 +186,6 @@ class _DetailScreenState extends State<DetailScreen> {
                                                                             .exhibition
                                                                             .title)
                                                                         .delete();
-                                                                    //정상적으로 삭제된다. 그런데 왜 하트가 변하지 않을까?
-                                                                    //futurebuilder는 future를 한 번만 데려와서?
-                                                                    //근데 setState 하면 이 클래스가 다시 그려지면서
-                                                                    //futurebuilder 가 한 번 더 그려지잖아 그럼 바뀐 상태로 다시 그려져야 되는 거 아닌가?
                                                                   });
                                                                 },
                                                               )
@@ -238,7 +224,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                                       }),
                                                 ),
                                                 Expanded(
-                                                    child: snapshot.data!
+                                                    child: havebeen.data!
                                                             .exists //heartdoc.exists() //data가 텅 빈 것이 아닌, null로서 들어오는 경우 hasData는 true를 반환한다.
                                                         ? InkWell(
                                                             //맞으면
@@ -267,10 +253,6 @@ class _DetailScreenState extends State<DetailScreen> {
                                                                         .exhibition
                                                                         .title)
                                                                     .delete();
-                                                                //정상적으로 삭제된다. 그런데 왜 하트가 변하지 않을까?
-                                                                //futurebuilder는 future를 한 번만 데려와서?
-                                                                //근데 setState 하면 이 클래스가 다시 그려지면서
-                                                                //futurebuilder 가 한 번 더 그려지잖아 그럼 바뀐 상태로 다시 그려져야 되는 거 아닌가?
                                                               });
                                                             },
                                                           )
@@ -313,71 +295,93 @@ class _DetailScreenState extends State<DetailScreen> {
                                     ),
                                   ],
                                 ),
-
                                 Visibility(
-                                    child: Column(
-                                      children: [
-                                        SizedBox(height:15),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Expanded(
-                                              flex: 5,
-                                              child: FutureBuilder<
-                                                      DocumentSnapshot>(
-                                                  future: FirebaseFirestore
-                                                      .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
-                                                      .collection('member')
-                                                      .doc(FirebaseAuth.instance
-                                                          .currentUser?.email)
-                                                      .collection('review')
-                                                      .doc(widget.exhibition.title)
-                                                      .get(),
-                                                  builder:
-                                                      (context, reviewsnapshot) {
-                                                    return Container(
-                                                      margin: EdgeInsets.fromLTRB(10,0,10,0),
+                                    visible: havebeen.data!.exists,
+                                    child: Container(
+                                      padding: const EdgeInsets.all(10),
+                                      height: 80,
+                                      child: FutureBuilder<DocumentSnapshot>(
+                                          future: FirebaseFirestore
+                                              .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
+                                              .collection('member')
+                                              .doc(FirebaseAuth
+                                                  .instance.currentUser?.email)
+                                              .collection('review')
+                                              .doc(widget.exhibition.title)
+                                              .get(),
+                                          builder: (context, reviewsnapshot) {
+                                            if (!reviewsnapshot.hasData)
+                                              {return const SizedBox(width:1);}
+                                            return reviewsnapshot.data!.exists
+                                                ? GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  ReviseScreen(
+                                                                      exhibition:
+                                                                          widget
+                                                                              .exhibition)));
+                                                    },
+                                                    child: Container(
+                                                      padding: const EdgeInsets.fromLTRB(20,0,20,0),
+                                                      margin:
+                                                          const EdgeInsets.fromLTRB(
+                                                              10, 0, 10, 0),
                                                       height: 50,
-                                                      child: Center(
-                                                        child: reviewsnapshot
-                                                                .data!.exists
-                                                            ? Text(reviewsnapshot
-                                                                    .data!['content'])
-                                                            : Text('리뷰를 적어보세요!'),
-                                                      ),
                                                       decoration: BoxDecoration(
-                                                        border: Border.all(color: Colors.black38),
+                                                        border: Border.all(
+                                                            color:
+                                                            Colors.black38),
                                                         borderRadius:
-                                                            BorderRadius.circular(
-                                                                10),
+                                                        BorderRadius
+                                                            .circular(30),),
+                                                      child: Center(
+                                                        child: Text(
+                                                          reviewsnapshot
+                                                          .data!['content'],
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow
+                                                          .ellipsis,
+                                                        ),
                                                       ),
-                                                    );
-                                                  }),
-                                            ),
-                                            Expanded(
-                                              child: InkWell(
-                                                child: Image.asset(
-                                                  'assets/pen.png',
-                                                  height: 30,
-                                                  color: Colors.black,
-                                                ),
-                                                onTap: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(builder: (context) => WritingScreen(exhibition: widget.exhibition)),
+                                                    ),
+                                                  )
+                                                : GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  WritingScreen(
+                                                                      exhibition:
+                                                                          widget
+                                                                              .exhibition)));
+                                                    },
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                            color:
+                                                            Colors.black38),
+                                                        borderRadius:
+                                                        BorderRadius
+                                                            .circular(30),
+                                                      ),
+                                                      margin:
+                                                          const EdgeInsets.fromLTRB(
+                                                              10, 0, 10, 0),
+                                                      height: 50,
+                                                      child: const Center(
+                                                        child: Text(
+                                                            '클릭하여 리뷰를 적어보세요!'),
+                                                      ),
+
+                                                    ),
                                                   );
-                                                },
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ],
+                                          }),
                                     ),
-                                    visible: snapshot
-                                            .data!.exists //havebeen에 이것이 있으면
-                                        ? true
-                                        : false)
+                                   )
                               ],
                             ),
                           ),
@@ -501,14 +505,13 @@ class _DetailScreenState extends State<DetailScreen> {
                             children: [
                               const Text(
                                 '후기',
-                                style: const TextStyle(
+                                style: TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.w600),
                               ),
                               const SizedBox(
                                 height: 13,
                               ),
-                              ExhibitionReviews(
-                                  title: widget.exhibition.title),
+                              ExhibitionReviews(title: widget.exhibition.title),
                             ])),
                   )
                 ],

@@ -2,14 +2,12 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:neart/Model/model_exhibitions.dart';
-import 'package:neart/trash/Listvew_builder.dart';
-import 'package:neart/trash/box_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-import '../DetailscreenFolder/detail_screen.dart';
+import '../DetailscreenFolder/exhibition_detail_screen.dart';
 import '../Lab/article_screen.dart';
-import '../Lab/certain_word_article.dart';
+import '../ListWidget/certain_word_article.dart';
 import '../Model/model_article.dart';
 
 //stl로 해도 되겠는데? 아니다 검색어 입력해서 사용자 상태 기억해야되니까 stful해야된다

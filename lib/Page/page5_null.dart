@@ -35,7 +35,7 @@ class Page5_null extends StatelessWidget {
         .doc(FirebaseAuth.instance.currentUser?.email)
         .set({
       'profileUrl': _auth.currentUser?.photoURL,
-      'name': _auth.currentUser?.email,
+      'name': _auth.currentUser?.displayName,
       'email': _auth.currentUser?.email
     }); // 이거 Future<Void>
   }

@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import '../Model/model_exhibitions.dart';
 
 class WritingScreen extends StatefulWidget {
   final Exhibition exhibition;
-  var now = new DateTime.now();
 
   WritingScreen({required this.exhibition});
 
@@ -40,24 +38,26 @@ class _WritingScreenState extends State<WritingScreen> {
               onPressed: () {
                 _tryValidation();
                 setState(() {
+                  // FirebaseFirestore
+                  //     .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
+                  //     .collection('member')
+                  //     .doc(FirebaseAuth.instance.currentUser?.email)
+                  //     .collection('review')
+                  //     .doc(widget.exhibition.title)
+                  //     .set({
+                  //   'content': reviewController.text,
+                  //   'time' : FieldValue.serverTimestamp()
+                  // });
                   FirebaseFirestore
                       .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
-                      .collection('member')
-                      .doc(FirebaseAuth.instance.currentUser?.email)
-                      .collection('review')
-                      .doc(widget.exhibition.title)
-                      .set({
-                    'content': reviewController.text,
-                  });
-                  FirebaseFirestore
-                      .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
-                      .collection('review')
+                      .collection('exhibition')
                       .doc(widget.exhibition.title)
                       .collection('reviews')
                       .doc(FirebaseAuth.instance.currentUser!.email!)
                       .set({
                     'useremail': FirebaseAuth.instance.currentUser!.email!,
                     'content': reviewController.text,
+                    'time' : FieldValue.serverTimestamp()
                   });
                 });
               },
@@ -81,7 +81,7 @@ class _WritingScreenState extends State<WritingScreen> {
               return Form(
                 key: _formKey,
                 child: TextFormField(
-                  style: TextStyle(fontSize: 13),
+                  style: TextStyle(fontSize: 13, letterSpacing: 0.7),
                   maxLines: null,
                   controller: reviewController,
                   autofocus: true,
@@ -92,15 +92,6 @@ class _WritingScreenState extends State<WritingScreen> {
                     return null;
                   },
                   decoration: InputDecoration(border: InputBorder.none),
-                  // decoration: InputDecoration(
-                  //   focusedBorder: OutlineInputBorder(
-                  //     borderSide: BorderSide(color: Colors.black26),
-                  //     gapPadding: 10,
-                  //     borderRadius: BorderRadius.all(
-                  //       Radius.circular(35),
-                  //     ),
-                  //   ),
-                  // ),
                 ),
               );
             }),

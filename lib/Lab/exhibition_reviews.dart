@@ -33,6 +33,9 @@ class ExhibitionReviews extends StatelessWidget {
           // * map()함수를 통해 각 아이템을 buildListItem 함수로 넣고 호출
           children:
               snapshot.map((data) => _buildListItem(context, data)).toList()),
+
+      //이 부분 뭔소린지 모ㅡ르겠다. 리스트뷰의 CHILDREN은 리스트인 것은 알겠다.
+      //
     );
   }
 

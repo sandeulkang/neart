@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../Model/model_exhibitions.dart';
-import 'detail_screen.dart';
+import 'exhibition_detail_screen.dart';
 
 class TogetherExhibit extends StatefulWidget {
 
@@ -78,7 +78,7 @@ class _TogetherExhibitState extends State<TogetherExhibit> {
               Navigator.of(context).push(MaterialPageRoute<Null>(
                   builder: (BuildContext context) {
                     // * 클릭한 영화의 DetailScreen 출력
-                    return DetailScreen(exhibition: exhibition);
+                    return ExhibitionDetailScreen(exhibition: exhibition);
                   }));
             },
           ),

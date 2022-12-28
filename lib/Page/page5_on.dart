@@ -17,9 +17,7 @@ class Page5_on extends StatefulWidget {
 class _Page5_onState extends State<Page5_on> {
   final FirebaseAuth _auth =
       FirebaseAuth.instance; //FirebaseAuth.instance 계속 쳐주기 귀찮으니까~~~!
-
-  TextEditingController nameController = TextEditingController(
-      text: FirebaseAuth.instance.currentUser!.email);
+  late TextEditingController nameController;
   final _formKey = GlobalKey<FormState>();
 
   void _tryValidation() {
@@ -68,6 +66,8 @@ class _Page5_onState extends State<Page5_on> {
             builder: (context, snapshot) {
               //snapshot이란 들어온 Future의 데이터를 말하는 것. snapshot이 아닌 다른 단어여도 됨
               if (snapshot.hasData == true) {
+                nameController = TextEditingController(
+                    text: snapshot.data!['name']);
                 return Padding(
                   padding: const EdgeInsets.fromLTRB(10, 30, 10, 0),
                   child: Column(
@@ -160,7 +160,7 @@ class _Page5_onState extends State<Page5_on> {
                                                             .email!)
                                                             .update({
                                                           'name':
-                                                          nameController!
+                                                          nameController
                                                               .text,
                                                         });
                                                       },

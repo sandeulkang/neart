@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../Model/model_exhibitions.dart';
-import '../DetailscreenFolder/detail_screen.dart';
+import '../DetailscreenFolder/exhibition_detail_screen.dart';
 
 class Page2 extends StatefulWidget {
   const Page2({Key? key}) : super(key: key);
@@ -88,7 +88,7 @@ class _Page2State extends State<Page2> {
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            DetailScreen(exhibition: exhibitions[i])),
+                            ExhibitionDetailScreen(exhibition: exhibitions[i])),
                   );
                 },
                 child: SizedBox(

@@ -2,7 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:neart/Model/model_article.dart';
-import 'article_screen.dart';
+import '../Lab/article_screen.dart';
 
 //popularexhibit 레이아웃처럼 옆으로 넘어가게.. 하고
 //검색바 아래에 나오는 exhibit은 아래로 내려가는 것이고 검색어 따라 stful이므로 클래스 재활용 불가능하다

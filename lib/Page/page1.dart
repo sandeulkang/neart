@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:neart/Model/model_exhibitions.dart';
-import 'package:neart/trash/Listvew_builder.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import '../Lab/article_screen.dart';
-import '../Lab/certain_word_exhibit.dart';
-import '../Lab/review_screen.dart';
+import '../ListWidget/certain_word_exhibit.dart';
+import '../ListWidget/certain_reviews_screen.dart';
 import 'package:neart/Model/model_article.dart';
 
 class Ppage1 extends StatelessWidget {
