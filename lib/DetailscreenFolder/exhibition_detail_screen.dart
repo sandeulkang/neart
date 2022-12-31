@@ -37,11 +37,12 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
     DocumentSnapshot placeinfodata = await firebaseFirestore
         .collection('placeinfo')
         .doc(widget.exhibition.place)
-        .get(); //placeinfodata는
+        .get();
+    //placeinfodata는
     // 여기보면 알 수 있다시피 get한 documentsnapshot에서 바로 map []찾을 수 있음, 물론 하나의 doc일 때 편하게 쓸 수 있는 거겠지?
     // 이걸로 listview를 만든다든지 할 거면 당연히 for 반복문이 필요할 것임
-    placeinformation = placeinfodata['info'];
-    placeinformation2 = placeinfodata['info2'];
+    placeinformation = await placeinfodata['info'];
+    placeinformation2 = await placeinfodata['info2'];
   }
 
   @override
@@ -80,7 +81,7 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
                           //height 설정 안 하면 어떻게 되는지 확인
                           //너무 tight한 게 문제라면 패딩이나 margin값 주면 되니까
                           child: Padding(
-                            padding: const EdgeInsets.fromLTRB(5, 10, 0, 0),
+                            padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
                             child: Column(
                               children: [
                                 Row(
@@ -97,7 +98,7 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
                                     Container(
                                       // height: 230,
                                       width: MediaQuery.of(context).size.width *
-                                          0.63,
+                                          0.6,
                                       padding: const EdgeInsets.fromLTRB(
                                           12, 0, 0, 0),
                                       child: Column(

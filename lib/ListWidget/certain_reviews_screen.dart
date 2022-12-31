@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 // 전시 컬렉션의 각각의 전시 doc에 review컬렉션을 만들고 담는 것이 효율적인지
 // 아니면 리뷰 컬렉션 자체를 따로 만드는 것이 효율적일지..
 // 최근 리뷰 목록 위젯을 사용하지 않으면 굳이 리뷰컬렉션을 따로 만들 필요는 없다.
-// 전시
+// !!!!!!!!전자로 결정!!!!!!!!!!
+
 class ReviewScreen extends StatelessWidget {
 
   final title;
@@ -16,21 +17,22 @@ class ReviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<DocumentSnapshot>(
-      future: FirebaseFirestore.instance.collection('review').doc(title).get(),
-        builder: (context, snapshot){ //document
-        if(snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
-        }
-        final reviewDocs = snapshot.data!;
-        return Container();
-        // return ListView.builder(
-        //   itemCount: reviewDocs.length,
-        //   itemBuilder: (context, index){
-        //     return Text(reviewDocs[index]['text']);
-        //   }
-        // );
-        }
-        );
+    // return FutureBuilder<DocumentSnapshot>(
+    //   future: FirebaseFirestore.instance.collection('review').doc(title).,
+    //     builder: (context, snapshot){ //document
+    //     if(snapshot.connectionState == ConnectionState.waiting) {
+    //       return CircularProgressIndicator();
+    //     }
+    //     final reviewDocs = snapshot.data!;
+    //     return Container();
+    //     // return ListView.builder(
+    //     //   itemCount: reviewDocs.length,
+    //     //   itemBuilder: (context, index){
+    //     //     return Text(reviewDocs[index]['text']);
+    //     //   }
+    //     // );
+    //     }
+    //     );
+ return Container();
   }
 }

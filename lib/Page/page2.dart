@@ -126,26 +126,6 @@ class _Page2State extends State<Page2> {
     );
   }
 
-  /***
-      Gridview.count(
-      children:
-      searchResults.map((data) => _buildListItem(context, data)).toList(),
-      searchResults의 아이들을 각각 하나의 data로 취급하고 이를 _buildlistitem에 넣겠다. 그러면
-      각각의 data들은 그곳에서 Exhibition모델에 들어가 제대로 map 처리 돼서 ( justdata가 아닌 mapdata가 되고 ) to.list를 구성한다.
-      이렇게 map화된 아이들로 구성된 searchResults 리스트로 gridview를 작성한다. (그리드 뷰의 확실한 자식임)
-      Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
-      final exhibition = Exhibition.fromSnapshot(data);
-      return InkWell(
-      child: Image.network(exhibition.poster),
-      onTap: () {
-      Navigator.of(context).push(MaterialPageRoute<Null>(
-      builder: (BuildContext context) {
-      return DetailScreen(exhibition: exhibition);
-      }));
-      },
-      );
-      }
-   ***/
 
   @override
   Widget build(BuildContext context) {
