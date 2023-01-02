@@ -30,9 +30,9 @@ class _ReviseScreenState extends State<ReviseScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:  AppBar(
+      appBar: AppBar(
           title: Text(
-            '리뷰',
+            '리뷰 작성',
             style: TextStyle(fontSize: 16),
           ),
           centerTitle: true,
@@ -40,28 +40,16 @@ class _ReviseScreenState extends State<ReviseScreen> {
             TextButton(
               onPressed: () {
                 _tryValidation();
-                setState(() {
-                  // FirebaseFirestore
-                  //     .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
-                  //     .collection('member')
-                  //     .doc(FirebaseAuth.instance.currentUser?.email)
-                  //     .collection('review')
-                  //     .doc(widget.exhibition.title)
-                  //     .update({
-                  //   'content': reviewController.text,
-                  //   'time' : FieldValue.serverTimestamp()
-                  // });
-                  FirebaseFirestore
-                      .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
-                      .collection('exhibition')
-                      .doc(widget.exhibition.title)
-                      .collection('reviews')
-                      .doc(FirebaseAuth.instance.currentUser!.email!)
-                      .update({
-                    'content': reviewController.text,
-                    'time' : FieldValue.serverTimestamp()
-                  });
+                FirebaseFirestore
+                    .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
+                    .collection('review')
+                    .doc(FirebaseAuth.instance.currentUser!.email! +
+                        widget.exhibition.title)
+                    .update({
+                  'content': reviewController.text,
+                  'time': FieldValue.serverTimestamp()
                 });
+                Navigator.pop(context);
               },
               child: Text(
                 '작성',
@@ -70,17 +58,17 @@ class _ReviseScreenState extends State<ReviseScreen> {
             )
           ]),
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(25,10,25,10),
+        padding: const EdgeInsets.fromLTRB(25, 10, 25, 10),
         child: FutureBuilder<DocumentSnapshot>(
             future: FirebaseFirestore
                 .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
-                .collection('member')
-                .doc(FirebaseAuth.instance.currentUser?.email)
                 .collection('review')
-                .doc(widget.exhibition.title)
+                .doc(FirebaseAuth.instance.currentUser!.email! +
+                    widget.exhibition.title)
                 .get(),
             builder: (context, snapshot) {
-              reviewController = TextEditingController(text: snapshot.data!['content']);
+              reviewController =
+                  TextEditingController(text: snapshot.data!['content']);
               return Form(
                 key: _formKey,
                 child: TextFormField(

@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
 import '../Model/model_exhibitions.dart';
 import '../DetailscreenFolder/exhibition_detail_screen.dart';
 
