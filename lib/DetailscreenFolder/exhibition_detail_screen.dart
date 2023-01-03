@@ -17,12 +17,11 @@ class ExhibitionDetailScreen extends StatefulWidget {
   ExhibitionDetailScreen({required this.exhibition});
 
   @override
-  State<ExhibitionDetailScreen> createState() =>
-      _ExhibitionDetailScreenState();
+  State<ExhibitionDetailScreen> createState() => _ExhibitionDetailScreenState();
 }
 
 class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
-  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+  FirebaseFirestore db = FirebaseFirestore.instance;
   var placeinformation = '';
   var placeinformation2 = '';
 
@@ -33,7 +32,7 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
   }
 
   void asyncInitState() async {
-    DocumentSnapshot placeinfodata = await firebaseFirestore
+    DocumentSnapshot placeinfodata = await db
         .collection('placeinfo')
         .doc(widget.exhibition.place)
         .get();
@@ -105,9 +104,9 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
                                           12, 0, 0, 0),
                                       child: Column(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.start,
+                                            MainAxisAlignment.start,
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             widget.exhibition.title,
@@ -121,7 +120,7 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
                                           Text(
                                             widget.exhibition.date,
                                             style:
-                                            const TextStyle(fontSize: 13),
+                                                const TextStyle(fontSize: 13),
                                           ),
                                           const SizedBox(height: 8),
                                           Text(
@@ -130,30 +129,30 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
                                           const SizedBox(height: 1),
                                           Text(placeinformation,
                                               style:
-                                              const TextStyle(height: 1.5)),
+                                                  const TextStyle(height: 1.5)),
                                           const SizedBox(height: 1),
                                           Text(
                                               widget.exhibition.admission
                                                   .replaceAll("\\n", "\n"),
                                               style:
-                                              const TextStyle(height: 1.5)),
+                                                  const TextStyle(height: 1.5)),
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: Row(
                                               children: [
                                                 Expanded(
                                                   child: FutureBuilder<
-                                                      DocumentSnapshot>(
+                                                          DocumentSnapshot>(
                                                       future: FirebaseFirestore
                                                           .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
                                                           .collection('member')
                                                           .doc(FirebaseAuth
-                                                          .instance
-                                                          .currentUser
-                                                          ?.email)
+                                                              .instance
+                                                              .currentUser
+                                                              ?.email)
                                                           .collection('heart')
                                                           .doc(widget
-                                                          .exhibition.title)
+                                                              .exhibition.title)
                                                           .get(),
                                                       builder:
                                                           (context, heart) {
@@ -162,136 +161,136 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
                                                               width: 1);
                                                         }
                                                         return heart.data!
-                                                            .exists //heartdoc.exists() //data가 텅 빈 것이 아닌, null로서 들어오는 경우 hasData는 true를 반환한다.
+                                                                .exists //heartdoc.exists() //data가 텅 빈 것이 아닌, null로서 들어오는 경우 hasData는 true를 반환한다.
                                                             ? InkWell(
-                                                          //맞으면
-                                                          //true 일 때 결과
-                                                          child:
-                                                          SvgPicture
-                                                              .asset(
-                                                            "assets/onheart.svg",
-                                                            width: 40,
-                                                            height: 40,
-                                                            color: Colors
-                                                                .red,
-                                                          ),
-                                                          onTap: () {
-                                                            setState(() {
-                                                              FirebaseFirestore
-                                                                  .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
-                                                                  .collection(
-                                                                  'member')
-                                                                  .doc(FirebaseAuth
-                                                                  .instance
-                                                                  .currentUser
-                                                                  ?.email)
-                                                                  .collection(
-                                                                  'heart')
-                                                                  .doc(widget
-                                                                  .exhibition
-                                                                  .title)
-                                                                  .delete();
-                                                            });
-                                                          },
-                                                        )
+                                                                //맞으면
+                                                                //true 일 때 결과
+                                                                child:
+                                                                    SvgPicture
+                                                                        .asset(
+                                                                  "assets/onheart.svg",
+                                                                  width: 40,
+                                                                  height: 40,
+                                                                  color: Colors
+                                                                      .red,
+                                                                ),
+                                                                onTap: () {
+                                                                  setState(() {
+                                                                    FirebaseFirestore
+                                                                        .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
+                                                                        .collection(
+                                                                            'member')
+                                                                        .doc(FirebaseAuth
+                                                                            .instance
+                                                                            .currentUser
+                                                                            ?.email)
+                                                                        .collection(
+                                                                            'heart')
+                                                                        .doc(widget
+                                                                            .exhibition
+                                                                            .title)
+                                                                        .delete();
+                                                                  });
+                                                                },
+                                                              )
                                                             : InkWell(
-                                                          child:
-                                                          SvgPicture
-                                                              .asset(
-                                                            "assets/offheart.svg",
-                                                            width: 40,
-                                                            height: 40,
-                                                            color: Colors
-                                                                .red,
-                                                          ),
-                                                          onTap: () {
-                                                            setState(() {
-                                                              FirebaseFirestore
-                                                                  .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
-                                                                  .collection(
-                                                                  'member')
-                                                                  .doc(FirebaseAuth
-                                                                  .instance
-                                                                  .currentUser
-                                                                  ?.email)
-                                                                  .collection(
-                                                                  'heart')
-                                                                  .doc(widget
-                                                                  .exhibition
-                                                                  .title)
-                                                                  .set({
-                                                                'heart':
-                                                                'on'
-                                                              });
-                                                            });
-                                                          },
-                                                        );
+                                                                child:
+                                                                    SvgPicture
+                                                                        .asset(
+                                                                  "assets/offheart.svg",
+                                                                  width: 40,
+                                                                  height: 40,
+                                                                  color: Colors
+                                                                      .red,
+                                                                ),
+                                                                onTap: () {
+                                                                  setState(() {
+                                                                    FirebaseFirestore
+                                                                        .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
+                                                                        .collection(
+                                                                            'member')
+                                                                        .doc(FirebaseAuth
+                                                                            .instance
+                                                                            .currentUser
+                                                                            ?.email)
+                                                                        .collection(
+                                                                            'heart')
+                                                                        .doc(widget
+                                                                            .exhibition
+                                                                            .title)
+                                                                        .set({
+                                                                      'title':
+                                                                          widget.exhibition.title
+                                                                    });
+                                                                  });
+                                                                },
+                                                              );
                                                       }),
                                                 ),
                                                 Expanded(
                                                     child: havebeen.data!
-                                                        .exists //heartdoc.exists() //data가 텅 빈 것이 아닌, null로서 들어오는 경우 hasData는 true를 반환한다.
+                                                            .exists //heartdoc.exists() //data가 텅 빈 것이 아닌, null로서 들어오는 경우 hasData는 true를 반환한다.
                                                         ? InkWell(
-                                                      //맞으면
-                                                      //true 일 때 결과
-                                                      child: SvgPicture
-                                                          .asset(
-                                                        "assets/oncheck.svg",
-                                                        width: 40,
-                                                        height: 40,
-                                                        color:
-                                                        Colors.black,
-                                                      ),
-                                                      onTap: () {
-                                                        setState(() {
-                                                          FirebaseFirestore
-                                                              .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
-                                                              .collection(
-                                                              'member')
-                                                              .doc(FirebaseAuth
-                                                              .instance
-                                                              .currentUser
-                                                              ?.email)
-                                                              .collection(
-                                                              'havebeen')
-                                                              .doc(widget
-                                                              .exhibition
-                                                              .title)
-                                                              .delete();
-                                                        });
-                                                      },
-                                                    )
+                                                            //맞으면
+                                                            //true 일 때 결과
+                                                            child: SvgPicture
+                                                                .asset(
+                                                              "assets/oncheck.svg",
+                                                              width: 40,
+                                                              height: 40,
+                                                              color:
+                                                                  Colors.black,
+                                                            ),
+                                                            onTap: () {
+                                                              setState(() {
+                                                                FirebaseFirestore
+                                                                    .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
+                                                                    .collection(
+                                                                        'member')
+                                                                    .doc(FirebaseAuth
+                                                                        .instance
+                                                                        .currentUser
+                                                                        ?.email)
+                                                                    .collection(
+                                                                        'havebeen')
+                                                                    .doc(widget
+                                                                        .exhibition
+                                                                        .title)
+                                                                    .delete();
+                                                              });
+                                                            },
+                                                          )
                                                         : InkWell(
-                                                      child: SvgPicture
-                                                          .asset(
-                                                        "assets/offcheck.svg",
-                                                        width: 40,
-                                                        height: 40,
-                                                        color:
-                                                        Colors.black,
-                                                      ),
-                                                      onTap: () {
-                                                        setState(() {
-                                                          FirebaseFirestore
-                                                              .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
-                                                              .collection(
-                                                              'member')
-                                                              .doc(FirebaseAuth
-                                                              .instance
-                                                              .currentUser
-                                                              ?.email)
-                                                              .collection(
-                                                              'havebeen')
-                                                              .doc(widget
-                                                              .exhibition
-                                                              .title)
-                                                              .set({
-                                                            'havebeen':
-                                                            'on'
-                                                          });
-                                                        });
-                                                      },
-                                                    )),
+                                                            child: SvgPicture
+                                                                .asset(
+                                                              "assets/offcheck.svg",
+                                                              width: 40,
+                                                              height: 40,
+                                                              color:
+                                                                  Colors.black,
+                                                            ),
+                                                            onTap: () {
+                                                              setState(() {
+                                                                FirebaseFirestore
+                                                                    .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
+                                                                    .collection(
+                                                                        'member')
+                                                                    .doc(FirebaseAuth
+                                                                        .instance
+                                                                        .currentUser
+                                                                        ?.email)
+                                                                    .collection(
+                                                                        'havebeen')
+                                                                    .doc(widget
+                                                                        .exhibition
+                                                                        .title)
+                                                                    .set({
+                                                                  'title':
+                                                                      widget.exhibition.title
+                                                                });
+                                                              });
+                                                            },
+                                                          )),
                                               ],
                                             ),
                                           ),
@@ -309,7 +308,9 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
                                         future: FirebaseFirestore
                                             .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
                                             .collection('review')
-                                            .doc(FirebaseAuth.instance.currentUser!.email!+widget.exhibition.title)
+                                            .doc(FirebaseAuth.instance
+                                                    .currentUser!.email! +
+                                                widget.exhibition.title)
                                             .get(),
                                         builder: (context, reviewsnapshot) {
                                           if (!reviewsnapshot.hasData) {
@@ -317,69 +318,69 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
                                           }
                                           return reviewsnapshot.data!.exists
                                               ? GestureDetector(
-                                            onTap: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          ReviseScreen(
-                                                              exhibition:
-                                                              widget
-                                                                  .exhibition)));
-                                            },
-                                            child: Container(
-                                              padding: const EdgeInsets
-                                                  .fromLTRB(20, 0, 20, 0),
-                                              margin: const EdgeInsets
-                                                  .fromLTRB(10, 0, 10, 0),
-                                              height: 50,
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                    color:
-                                                    Colors.black38),
-                                                borderRadius:
-                                                BorderRadius.circular(
-                                                    30),
-                                              ),
-                                              child: Center(
-                                                child: Text(
-                                                  reviewsnapshot.data!['content'],
-                                                  maxLines: 1,
-                                                  overflow: TextOverflow
-                                                      .ellipsis,
-                                                ),
-                                              ),
-                                            ),
-                                          )
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                ReviseScreen(
+                                                                    exhibition:
+                                                                        widget
+                                                                            .exhibition)));
+                                                  },
+                                                  child: Container(
+                                                    width: MediaQuery.of(context).size.width,
+                                                    padding: const EdgeInsets
+                                                        .all(20),
+                                                    margin: const EdgeInsets
+                                                        .fromLTRB(10, 0, 10, 0),
+                                                    height: 50,
+                                                    decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                          color:
+                                                              Colors.black38),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              30),
+                                                    ),
+                                                    child: Text(
+                                                      reviewsnapshot
+                                                          .data!['content'],
+                                                      maxLines: 1,
+                                                      overflow: TextOverflow
+                                                          .ellipsis,
+                                                    ),
+                                                  ),
+                                                )
                                               : GestureDetector(
-                                            onTap: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          WritingScreen(
-                                                              exhibition:
-                                                              widget
-                                                                  .exhibition)));
-                                            },
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                    color:
-                                                    Colors.black38),
-                                                borderRadius:
-                                                BorderRadius.circular(
-                                                    30),
-                                              ),
-                                              margin: const EdgeInsets
-                                                  .fromLTRB(10, 0, 10, 0),
-                                              height: 50,
-                                              child: const Center(
-                                                child: Text(
-                                                    '클릭하여 리뷰를 적어보세요!'),
-                                              ),
-                                            ),
-                                          );
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                WritingScreen(
+                                                                    exhibition:
+                                                                        widget
+                                                                            .exhibition)));
+                                                  },
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                          color:
+                                                              Colors.black38),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              30),
+                                                    ),
+                                                    margin: const EdgeInsets
+                                                        .fromLTRB(10, 0, 10, 0),
+                                                    height: 50,
+                                                    child: const Center(
+                                                      child: Text(
+                                                          '클릭하여 리뷰를 적어보세요!'),
+                                                    ),
+                                                  ),
+                                                );
                                         }),
                                   ),
                                 )
@@ -509,10 +510,11 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
                                 style: TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.w600),
                               ),
-                              const SizedBox(
-                                height: 13,
-                              ),
-                              CertainReviewsScreen(title: widget.exhibition.title),
+                              // const SizedBox(
+                              //   height: 13,
+                              // ),
+                              CertainReviewsScreen(
+                                  title: widget.exhibition.title),
                             ])),
                   )
                 ],
@@ -521,8 +523,6 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
           ),
         ],
       ),
-
-//        appBar: AppBar(),
     );
   }
 }

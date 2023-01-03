@@ -88,6 +88,7 @@ class _Page2State extends State<Page2> {
                     MaterialPageRoute(
                         builder: (context) =>
                             ExhibitionDetailScreen(exhibition: exhibitions[i])),
+                    //즉 Exhibition 타입의 아이를 넘기는 거임
                   );
                 },
                 child: SizedBox(

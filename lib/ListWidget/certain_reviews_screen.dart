@@ -38,10 +38,11 @@ class CertainReviewsScreen extends StatelessWidget {
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
     return Container(
-      height: 430,
       child: ListView(
+          physics :NeverScrollableScrollPhysics(), //shinkwraptrue만 하고 이거 안 하면 안 돼요~
+          shrinkWrap: true,
           scrollDirection: Axis.vertical,
-          padding: EdgeInsets.all(5),
+          // padding: EdgeInsets.all(5),
           // * map()함수를 통해 각 아이템을 buildListItem 함수로 넣고 호출
           children:
               snapshot.map((data) => _buildListItem(context, data)).toList()),
@@ -55,12 +56,11 @@ class CertainReviewsScreen extends StatelessWidget {
     final reviewdata = Review.fromSnapshot(data);
     // * 각각을 누를 수 있도록 InkWell() 사용
     return Padding(
-      padding: EdgeInsets.only(bottom: 20),
+      padding: EdgeInsets.only(bottom: 15),
       child: GestureDetector(
         onTap: () {
           Navigator.of(context)
               .push(MaterialPageRoute<Null>(builder: (BuildContext context) {
-            // * 클릭한 영화의 DetailScreen 출력
             return OneReviewScreen(); //navigator 하지 않고 그냥 바로 return 뒤에 위젯 안 붙이면 어케 되지?
           }));
         },
@@ -79,23 +79,27 @@ class CertainReviewsScreen extends StatelessWidget {
                   color: Color(0xfff6f6f6),
                   borderRadius: BorderRadius.circular(7),
                 ),
-                padding: EdgeInsets.all(10),
+                padding: EdgeInsets.fromLTRB(20,15,20,20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
                         CircleAvatar(
+                          radius: 15,
                             backgroundImage: NetworkImage(usersnapshot.data?[
                                 'profileUrl']) //image.network하면 안 되고 networkimage해야 됨
                             ),
-                        Text(reviewdata.username),
+                        SizedBox(width: 10,),
+                        Text(usersnapshot.data?['name']),
                       ],
                     ),
                     Divider(
-                      height: 1,
+                      height: 20,
                     ),
-                    Text(reviewdata.content),
+                    Text(reviewdata.content, style: const TextStyle(
+                      height: 1.3,
+                    )),
                   ],
                 ),
               );

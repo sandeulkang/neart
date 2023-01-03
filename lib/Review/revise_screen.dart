@@ -20,11 +20,13 @@ class _ReviseScreenState extends State<ReviseScreen> {
   late TextEditingController reviewController;
   final _formKey = GlobalKey<FormState>();
 
-  void _tryValidation() {
-    final isValid = _formKey.currentState!.validate();
+  bool _tryValidation() {
+    final bool isValid = _formKey.currentState!.validate();
+    print(isValid);
     if (isValid) {
       _formKey.currentState!.save();
     }
+    return isValid;
   }
 
   @override
@@ -39,7 +41,7 @@ class _ReviseScreenState extends State<ReviseScreen> {
           actions: [
             TextButton(
               onPressed: () {
-                _tryValidation();
+                if (!_tryValidation()) return;
                 FirebaseFirestore
                     .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
                     .collection('review')
@@ -72,12 +74,13 @@ class _ReviseScreenState extends State<ReviseScreen> {
               return Form(
                 key: _formKey,
                 child: TextFormField(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   style: TextStyle(fontSize: 13, letterSpacing: 0.7),
                   maxLines: null,
                   controller: reviewController,
                   autofocus: true,
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value == null || value.isEmpty/*value?.isNotEmpty != true*/) {
                       return '리뷰를 작성해주세요!';
                     }
                     return null;

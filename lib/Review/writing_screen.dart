@@ -16,22 +16,14 @@ class _WritingScreenState extends State<WritingScreen> {
   String userReview = '';
   TextEditingController reviewController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  late dynamic userName ;
 
-  @override
-  void initState() {
-    realinitState();
-  }
-
-  realinitState() async{
-    return userName = await FirebaseFirestore.instance.collection('member').doc(FirebaseAuth.instance.currentUser!.email).get();
-  }
-
-  void _tryValidation() {
-    final isValid = _formKey.currentState!.validate();
+  bool _tryValidation() {
+    final bool isValid = _formKey.currentState!.validate();
+    print(isValid);
     if (isValid) {
       _formKey.currentState!.save();
     }
+    return isValid;
   }
 
   @override
@@ -46,7 +38,7 @@ class _WritingScreenState extends State<WritingScreen> {
           actions: [
             TextButton(
               onPressed: () {
-                _tryValidation();
+                if (!_tryValidation()) return;
                 FirebaseFirestore
                     .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
                     .collection('review')
@@ -57,7 +49,6 @@ class _WritingScreenState extends State<WritingScreen> {
                   'exhibitiontitle': widget.exhibition.title,
                   'content': reviewController.text,
                   'time': FieldValue.serverTimestamp(),
-                  'username' : userName.data!()['name']
                 });
                 Navigator.pop(context);
               },
@@ -72,12 +63,13 @@ class _WritingScreenState extends State<WritingScreen> {
         child: Form(
           key: _formKey,
           child: TextFormField(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             style: TextStyle(fontSize: 13, letterSpacing: 0.7),
             maxLines: null,
             controller: reviewController,
             autofocus: true,
             validator: (value) {
-              if (value!.isEmpty) {
+              if (value == null || value.isEmpty/*value?.isNotEmpty != true*/) {
                 return '리뷰를 작성해주세요!';
               }
               return null;
