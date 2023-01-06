@@ -12,31 +12,9 @@ import 'package:neart/Model/model_article.dart';
 import '../Model/model_review.dart';
 
 class Ppage1 extends StatelessWidget {
-  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
-  Widget _fetchData(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-        stream: firebaseFirestore.collection('exhibition').snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(
-              child: Text('Some error occured: ${snapshot.error.toString()}'),
-            );
-          }
-          if (snapshot.hasData) {
-            return _buildBody(
-                context,
-                snapshot.data!
-                    .docs); //snapshot 전체를 다루는 게 아니라 snapshot.data!.docs만 국한적으로 다룸
-          }
-          return const LinearProgressIndicator();
-        });
-  }
-
-  Widget _buildBody(BuildContext context, List<DocumentSnapshot> snapshot) {
-    // 실제적으로 exhibition들의 '리스트'가 생겨나는 타이밍
-    List<Exhibition> exhibitions =
-    snapshot.map((d) => Exhibition.fromSnapshot(d)).toList();
+  @override
+  Widget build(BuildContext context) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -87,11 +65,6 @@ class Ppage1 extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _fetchData(context);
   }
 }
 

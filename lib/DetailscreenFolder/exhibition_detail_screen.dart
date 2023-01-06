@@ -25,6 +25,7 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
   var placeinformation = '';
   var placeinformation2 = '';
 
+
   @override
   void initState() {
     super.initState();
@@ -36,9 +37,7 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
         .collection('placeinfo')
         .doc(widget.exhibition.place)
         .get();
-    //placeinfodata는
-    // 여기보면 알 수 있다시피 get한 documentsnapshot에서 바로 map []찾을 수 있음, 물론 하나의 doc일 때 편하게 쓸 수 있는 거겠지?
-    // 이걸로 listview를 만든다든지 할 거면 당연히 for 반복문이 필요할 것임
+
     placeinformation = await placeinfodata['info'];
     placeinformation2 = await placeinfodata['info2'];
   }
@@ -156,6 +155,10 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
                                                           .get(),
                                                       builder:
                                                           (context, heart) {
+                                                            Map<String,dynamic> mapdata = {
+                                                              'title' : widget.exhibition.title,
+                                                              'ref' : FirebaseFirestore.instance.collection('exhibition').doc(widget.exhibition.title),  // Product document Reference
+                                                            };
                                                         if (!heart.hasData) {
                                                           return const SizedBox(
                                                               width: 1);
@@ -218,10 +221,7 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
                                                                         .doc(widget
                                                                             .exhibition
                                                                             .title)
-                                                                        .set({
-                                                                      'title':
-                                                                          widget.exhibition.title
-                                                                    });
+                                                                        .set(mapdata);
                                                                   });
                                                                 },
                                                               );

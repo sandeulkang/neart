@@ -44,7 +44,6 @@ class _Page2State extends State<Page2> {
   //현재 snapshot이 어떤 상태인지 파악이 필요함 Querysnapshot의 모든 데이터, 즉 모든 docs를 가지고 있는 상태, 즉 doc들의 집합인 list
   Widget _buildList(
       BuildContext context, List<QueryDocumentSnapshot> snapshot) {
-    //documentSnapshot이 아닌 QueryDocumentSnapshot이다
     List<QueryDocumentSnapshot> searchResults = [];
 
     for (QueryDocumentSnapshot d in snapshot) {
