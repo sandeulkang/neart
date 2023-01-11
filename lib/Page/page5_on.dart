@@ -8,7 +8,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:neart/MyPage/like_screen.dart';
 
-import '../MyPage/likee_screen.dart';
+import '../MyPage/checked_screen.dart';
 
 class Page5_on extends StatefulWidget {
   const Page5_on({Key? key}) : super(key: key);
@@ -229,7 +229,7 @@ class _Page5_onState extends State<Page5_on> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              LikeeScreen()));
+                                              LikeScreen()));
                                 },
                               ),
                               InkWell(
@@ -248,7 +248,13 @@ class _Page5_onState extends State<Page5_on> {
                                     )
                                   ],
                                 ),
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              CheckedScreen()));
+                                },
                               ),
                               InkWell(
                                 child: Column(

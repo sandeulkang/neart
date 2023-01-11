@@ -192,31 +192,27 @@ Widget recentReviewColumn() {
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                   child: InkWell(
                     onTap: () {
-                      // Navigator.of(context).push(
-                      //   MaterialPageRoute<Null>(
-                      //     builder: (BuildContext context) {
-                      //       return ExhibitionDetailScreen(exhibition: );
-                            //exhibition타입의 아이를 넘겨야 한다.
-                            //string으로 넘길 경우 코드를 수정해야 하고
-                            //그럼 page1, page2 등에서 넘겨주는 파라미터 또한 string타입으로 바꿔야 한다
-                            //이렇게 되면 매번 특정전시 doc을 다시 불러오기 때문에 비효율적이다
-                      //     },
-                      //   ),
-                      // );
+                      Navigator.of(context).push(
+                        MaterialPageRoute<Null>(
+                          builder: (BuildContext context) {
+                            return OneReviewScreen(reviewdoc: reviews.data![i].writeremail+reviews.data![i].exhibitiontitle);
+                              },
+                        ),
+                      );
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Color(0xfff6f6f6),
+                        color: const Color(0xfff6f6f6),
                         borderRadius: BorderRadius.circular(7),
                       ),
-                      padding: EdgeInsets.fromLTRB(10, 15, 20, 10),
+                      padding: const EdgeInsets.fromLTRB(10, 15, 20, 10),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           FutureBuilder <DocumentSnapshot>(
                               future: FirebaseFirestore.instance
                                   .collection('member')
-                                  .doc(reviews.data![i].useremail)
+                                  .doc(reviews.data![i].writeremail)
                                   .get(),
                               builder: (context, usersnapshot) {
                                 if (!usersnapshot.hasData)
@@ -228,16 +224,16 @@ Widget recentReviewColumn() {
                                     CircleAvatar(
                                         radius: 15,
                                         backgroundImage: NetworkImage(
-                                            usersnapshot.data?[
+                                            usersnapshot.data![
                                             'profileUrl']) //image.network하면 안 되고 networkimage해야 됨
                                     ),
-                                    SizedBox(width: 10,),
-                                    Text(usersnapshot.data?['name']),
+                                    const SizedBox(width: 10,),
+                                    Text(usersnapshot.data!['name'],),
                                   ],
                                 );
                               }
                           ),
-                          Divider(
+                          const Divider(
                             height: 20,
                           ),
                           Text(reviews.data![i].content, maxLines: 2, overflow: TextOverflow.ellipsis,),

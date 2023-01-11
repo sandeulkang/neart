@@ -24,7 +24,7 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
   FirebaseFirestore db = FirebaseFirestore.instance;
   var placeinformation = '';
   var placeinformation2 = '';
-
+  var mapdata = {};
 
   @override
   void initState() {
@@ -33,10 +33,8 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
   }
 
   void asyncInitState() async {
-    DocumentSnapshot placeinfodata = await db
-        .collection('placeinfo')
-        .doc(widget.exhibition.place)
-        .get();
+    DocumentSnapshot placeinfodata =
+        await db.collection('placeinfo').doc(widget.exhibition.place).get();
 
     placeinformation = await placeinfodata['info'];
     placeinformation2 = await placeinfodata['info2'];
@@ -44,6 +42,13 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Map<String, dynamic> mapdata = {
+      'title': widget.exhibition.title,
+      'ref': FirebaseFirestore.instance
+          .collection('exhibition')
+          .doc(widget.exhibition.title), // Product document Reference
+      'time': FieldValue.serverTimestamp(),
+    };
     return Scaffold(
       backgroundColor: const Color(0xffebebeb),
       body: CustomScrollView(
@@ -155,10 +160,6 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
                                                           .get(),
                                                       builder:
                                                           (context, heart) {
-                                                            Map<String,dynamic> mapdata = {
-                                                              'title' : widget.exhibition.title,
-                                                              'ref' : FirebaseFirestore.instance.collection('exhibition').doc(widget.exhibition.title),  // Product document Reference
-                                                            };
                                                         if (!heart.hasData) {
                                                           return const SizedBox(
                                                               width: 1);
@@ -221,7 +222,8 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
                                                                         .doc(widget
                                                                             .exhibition
                                                                             .title)
-                                                                        .set(mapdata);
+                                                                        .set(
+                                                                            mapdata);
                                                                   });
                                                                 },
                                                               );
@@ -284,10 +286,8 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
                                                                     .doc(widget
                                                                         .exhibition
                                                                         .title)
-                                                                    .set({
-                                                                  'title':
-                                                                      widget.exhibition.title
-                                                                });
+                                                                    .set(
+                                                                        mapdata);
                                                               });
                                                             },
                                                           )),
@@ -324,14 +324,16 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
                                                         MaterialPageRoute(
                                                             builder: (context) =>
                                                                 ReviseScreen(
-                                                                    exhibition:
-                                                                        widget
-                                                                            .exhibition)));
+                                                                    reviewdoc:FirebaseAuth.instance.currentUser!.email!+widget.exhibition.title)));
                                                   },
                                                   child: Container(
-                                                    width: MediaQuery.of(context).size.width,
-                                                    padding: const EdgeInsets
-                                                        .all(20),
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            20),
                                                     margin: const EdgeInsets
                                                         .fromLTRB(10, 0, 10, 0),
                                                     height: 50,
@@ -347,8 +349,8 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
                                                       reviewsnapshot
                                                           .data!['content'],
                                                       maxLines: 1,
-                                                      overflow: TextOverflow
-                                                          .ellipsis,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                     ),
                                                   ),
                                                 )

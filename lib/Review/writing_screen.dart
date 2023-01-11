@@ -49,6 +49,11 @@ class _WritingScreenState extends State<WritingScreen> {
                   'exhibitiontitle': widget.exhibition.title,
                   'content': reviewController.text,
                   'time': FieldValue.serverTimestamp(),
+                  'exhibitref': FirebaseFirestore.instance
+                      .collection('exhibition')
+                      .doc(widget.exhibition.title),
+                  'poster': widget.exhibition.poster,
+                  // 'writerref': FirebaseFirestore.instance.collection('member').doc(FirebaseAuth.instance.currentUser!.email)
                 });
                 Navigator.pop(context);
               },

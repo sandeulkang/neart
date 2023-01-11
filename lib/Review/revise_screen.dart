@@ -5,11 +5,9 @@ import 'package:flutter/material.dart';
 import '../Model/model_exhibitions.dart';
 
 class ReviseScreen extends StatefulWidget {
-  final Exhibition exhibition;
+  final reviewdoc;
 
-  // var now = new DateTime.now();
-
-  ReviseScreen({required this.exhibition});
+  ReviseScreen({required this.reviewdoc});
 
   @override
   State<ReviseScreen> createState() => _ReviseScreenState();
@@ -45,8 +43,7 @@ class _ReviseScreenState extends State<ReviseScreen> {
                 FirebaseFirestore
                     .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
                     .collection('review')
-                    .doc(FirebaseAuth.instance.currentUser!.email! +
-                        widget.exhibition.title)
+                    .doc(widget.reviewdoc)
                     .update({
                   'content': reviewController.text,
                   'time': FieldValue.serverTimestamp()
@@ -65,8 +62,7 @@ class _ReviseScreenState extends State<ReviseScreen> {
             future: FirebaseFirestore
                 .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
                 .collection('review')
-                .doc(FirebaseAuth.instance.currentUser!.email! +
-                    widget.exhibition.title)
+                .doc(widget.reviewdoc)
                 .get(),
             builder: (context, snapshot) {
               reviewController =
