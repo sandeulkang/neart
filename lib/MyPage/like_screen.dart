@@ -39,7 +39,7 @@ class LikeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '내가 본 전시',
+          '좋아요한 전시',
           style: TextStyle(fontSize: 16),
         ),
         centerTitle: true,

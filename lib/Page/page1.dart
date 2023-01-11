@@ -93,7 +93,6 @@ Widget recentArtColumn() {
             physics: const NeverScrollableScrollPhysics(),
             // shrinkWrap: true,
             itemCount: articles.data!.length,
-            //data 뒤에 ! 붙이면 null check on nullablevalue라는 에러뜸
             itemBuilder: (BuildContext context, i) {
               return
                 Padding(
@@ -185,8 +184,6 @@ Widget recentReviewColumn() {
             // shrinkWrap: true,
             itemCount: reviews.data!.length,
             itemBuilder: (BuildContext context, i) {
-              reviews.data![i].exhibitiontitle;
-
               return
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),

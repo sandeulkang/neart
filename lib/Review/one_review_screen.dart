@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:neart/Review/revise_screen.dart';
 
+import '../DetailscreenFolder/exhibition_detail_screen.dart';
+import '../Model/model_exhibitions.dart';
 import '../Model/model_review.dart';
 
 //최근 올라온 리뷰를 클릭하든
@@ -24,6 +26,8 @@ class OneReviewScreen extends StatefulWidget {
 
 class _OneReviewScreenState extends State<OneReviewScreen> {
   final Auth = FirebaseAuth.instance;
+  var ref;
+
 
   // final Review review;
   @override
@@ -45,35 +49,54 @@ class _OneReviewScreenState extends State<OneReviewScreen> {
                     children: [
                       Stack(
                         children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            //그 전시의 이름과 포스터
-                            children: [
-                              SizedBox(
-                                  child:
-                                      Image.network(snapshot.data!['poster']),
-                                  width: 70),
-                              SizedBox(
-                                width: 15,
-                              ),
-                              Flexible(
-                                child: Text(
-                                  snapshot.data!['exhibitiontitle'],
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600),
-                                  overflow: TextOverflow.visible,
-                                  maxLines: 2,
+                          GestureDetector(
+                            onTap: () async{
+                              ref = await snapshot.data!['exhibitref'];
+                              await ref.get().then(
+                                      (DocumentSnapshot docu) async{
+                                    if(docu.exists) {
+                                      final exhibition = Exhibition.fromSnapshot(docu);
+                                      await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ExhibitionDetailScreen(exhibition: exhibition)),
+
+                                      );
+                                    }
+                                  }
+                              );
+                            },
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              //그 전시의 이름과 포스터
+                              children: [
+                                SizedBox(
+                                    child:
+                                        Image.network(snapshot.data!['poster']),
+                                    width: 70),
+                                SizedBox(
+                                  width: 15,
                                 ),
-                              )
-                            ],
+                                Flexible(
+                                  child: Text(
+                                    snapshot.data!['exhibitiontitle'],
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600),
+                                    overflow: TextOverflow.visible,
+                                    maxLines: 2,
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                           // Positioned(
                           //   top:45,
                           //     right:30,
                           //     child: ),
                           Positioned(
-                            right: 30,
+                            right: 15,
                             top: 60,
                             child: FutureBuilder<DocumentSnapshot>(
                                 future: FirebaseFirestore.instance
