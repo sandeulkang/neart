@@ -1,12 +1,7 @@
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:neart/Model/model_exhibitions.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 
-import '../DetailscreenFolder/exhibition_detail_screen.dart';
-import '../Lab/article_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../ListWidget/certain_word_article.dart';
 import '../Model/model_article.dart';
 
@@ -25,6 +20,7 @@ class _Page4State extends State<Page4> {
   final TextEditingController _filter = TextEditingController();
   FocusNode focusNode = FocusNode();
   String _searchText = "";
+  var url;
 
   _Page4State() {
     _filter.addListener(() {
@@ -47,7 +43,7 @@ class _Page4State extends State<Page4> {
           .orderBy('time', descending: true)
           .snapshots(), //QuerySnapshot 타입임
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return LinearProgressIndicator();
+        if (!snapshot.hasData) return const LinearProgressIndicator();
         return _buildList(context, snapshot.data!.docs);
       },
     );
@@ -66,16 +62,14 @@ class _Page4State extends State<Page4> {
       }
     }
 
-    return Container(
-      child: ListView( //리스트 뷰와 싱글찰드스크롤뷰 안에서 for i 로 칼럼 찰드 만드는 거의 차이가 뭐일지
-        physics :NeverScrollableScrollPhysics(), //shinkwraptrue만 하고 이거 안 하면 안 돼요~
-        shrinkWrap: true,
-        scrollDirection: Axis.vertical,
-        padding: EdgeInsets.all(3),
-        // * map()함수를 통해 각 아이템을 buildListItem 함수로 넣고 호출
-        children:
-            searchResults.map((data) => _buildListItem(context, data)).toList(),
-      ),
+    return ListView( //리스트 뷰와 싱글찰드스크롤뷰 안에서 for i 로 칼럼 찰드 만드는 거의 차이가 뭐일지
+      physics :const NeverScrollableScrollPhysics(), //shinkwraptrue만 하고 이거 안 하면 안 돼요~
+      shrinkWrap: true,
+      scrollDirection: Axis.vertical,
+      padding: const EdgeInsets.all(3),
+      // * map()함수를 통해 각 아이템을 buildListItem 함수로 넣고 호출
+      children:
+          searchResults.map((data) => _buildListItem(context, data)).toList(),
     );
   }
 
@@ -85,54 +79,48 @@ class _Page4State extends State<Page4> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
       child: InkWell(
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute<Null>(
-              builder: (BuildContext context) {
-                // * 클릭한 영화의 DetailScreen 출력
-                return ArticleScreen(article: article);
-              },
-            ),
-          );
+        onTap: () async{
+          final url = Uri.parse(article.url);
+          if (await canLaunchUrl(url)) {
+            launchUrl(url, mode: LaunchMode.externalApplication);
+          }
         },
-        child: Container(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Image.network(
-                article.poster,
-                height: 80,
-                width: 110,
-              ),
-              Expanded(
-                flex:5,
-                child: Container(
-                  padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        article.title,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        style: const TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.w600),
-                      ),
-                      const SizedBox(
-                        height: 4,
-                      ),
-                      Text(
-                        article.content,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        style: TextStyle(fontSize:11)
-                      ),
-                    ],
-                  ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Image.network(
+              article.poster,
+              height: 80,
+              width: 110,
+            ),
+            Expanded(
+              flex:5,
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      article.title,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: const TextStyle(
+                          fontSize: 13, fontWeight: FontWeight.w600),
+                    ),
+                    const SizedBox(
+                      height: 4,
+                    ),
+                    Text(
+                      article.content,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: const TextStyle(fontSize:11)
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -146,14 +134,14 @@ class _Page4State extends State<Page4> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               '지금 조회수 높은 칼럼',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
             ),
             CertainWordArticle(word: "인기"),
             Container(
               height: 60,
-              padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+              padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
               child: Row(
                 children: [
                   Expanded(
@@ -161,18 +149,18 @@ class _Page4State extends State<Page4> {
                     // * 검색 입력 필드 만들기
                     child: TextField(
                       focusNode: focusNode,
-                      style: TextStyle(fontSize: 15, color: Colors.black),
+                      style: const TextStyle(fontSize: 15, color: Colors.black),
                       autofocus: false,
                       controller: _filter,
                       decoration: InputDecoration(
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                         labelText: '키워드를 검색해 보세요!',
-                        labelStyle: TextStyle(color: Colors.black),
+                        labelStyle: const TextStyle(color: Colors.black),
                         // * 검색창 디자인
                         filled: true,
                         fillColor: Colors.white54,
                         // * 좌측 아이콘 추가
-                        prefixIcon: Icon(
+                        prefixIcon: const Icon(
                           Icons.search,
                           color: Colors.black38,
                           size: 20,
@@ -180,7 +168,7 @@ class _Page4State extends State<Page4> {
                         // * 우측 아이콘 추가
                         suffixIcon: focusNode.hasFocus
                             ? IconButton(
-                                icon: Icon(
+                                icon: const Icon(
                                   Icons.cancel,
                                   color: Colors.black38,
                                   size: 20,
@@ -195,15 +183,15 @@ class _Page4State extends State<Page4> {
                               )
                             : Container(),
                         // * 검색창 디자인(테두리, 테두리 색상 등)
-                        focusedBorder: OutlineInputBorder(
+                        focusedBorder: const OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.black26),
                             borderRadius:
                                 BorderRadius.all(Radius.circular(20))),
-                        enabledBorder: OutlineInputBorder(
+                        enabledBorder: const OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.black26),
                             borderRadius:
                                 BorderRadius.all(Radius.circular(20))),
-                        border: OutlineInputBorder(
+                        border: const OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.black26),
                             borderRadius:
                                 BorderRadius.all(Radius.circular(20))),
@@ -214,9 +202,9 @@ class _Page4State extends State<Page4> {
                   focusNode.hasFocus
                       ? Expanded(
                           child: TextButton(
-                            child: Text(
+                            child: const Text(
                               "취소",
-                              style: TextStyle(color: Colors.black38),
+                              style:  TextStyle(color: Colors.black38),
                             ),
                             onPressed: () {
                               setState(() {

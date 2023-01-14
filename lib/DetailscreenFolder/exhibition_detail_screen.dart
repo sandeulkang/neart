@@ -4,11 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:neart/DetailscreenFolder/recommend_column.dart';
+import 'package:neart/Lab/recommend_column.dart';
 import 'package:neart/DetailscreenFolder/together_exhibit.dart';
 import 'package:neart/ListWidget/certain_reviews_screen.dart';
 import 'package:neart/Review/writing_screen.dart';
-import '../Review/revise_screen.dart';
+import '../Review/one_review_screen.dart';
 import '../Model/model_exhibitions.dart';
 
 class ExhibitionDetailScreen extends StatefulWidget {
@@ -74,9 +74,9 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
                           .get(),
                       builder: (context, havebeen) {
                         if (!havebeen.hasData)
-                          return const SizedBox(
+                          {return const SizedBox(
                             width: 1,
-                          );
+                          );}
                         return Container(
                           decoration: const BoxDecoration(
                               color: Colors.white,
@@ -323,7 +323,7 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
                                                         context,
                                                         MaterialPageRoute(
                                                             builder: (context) =>
-                                                                ReviseScreen(
+                                                                OneReviewScreen(
                                                                     reviewdoc:FirebaseAuth.instance.currentUser!.email!+widget.exhibition.title)));
                                                   },
                                                   child: Container(

@@ -29,11 +29,11 @@ class _Page2State extends State<Page2> {
   }
 
   Widget _buildBody(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
+    return FutureBuilder<QuerySnapshot>(
+      future: FirebaseFirestore.instance
           .collection('exhibition')
           .orderBy('time', descending: true)
-          .snapshots(), //QuerySnapshot 타입임
+          .get(), //QuerySnapshot 타입임, .data.docs 붙여줌으로써 리스트가 되는 거임
       builder: (context, snapshot) {
         if (!snapshot.hasData) return const LinearProgressIndicator();
         return _buildList(context, snapshot.data!.docs);
@@ -49,8 +49,9 @@ class _Page2State extends State<Page2> {
     for (QueryDocumentSnapshot d in snapshot) {
       // *string.contains()를 활용해 searchText를 포함한 snapshot을 리스트에 추가
       // * 주의!) data.toString()해도 실행은 되지만 검색 결과가 안 나옴!
-      if (d.data().toString().contains(_searchText)) {
+      if ((d.data()! as Map)['keyword'].toString().contains(_searchText)) {
         //여기서는 Exhㅓibition.toString에 포함된(즉 $title,keyword에 포함되어있나를 살펴보는 것 같다)
+        //toString이라는 메소드는 해당 데이터 내의 모든 텍스트를 불러와 string타입으로 변환한단 뜻 같다
         searchResults.add(d); //이로써 searchResults는 선별되어진 docs 들로 구성된 list이다
       }
     }
@@ -129,95 +130,92 @@ class _Page2State extends State<Page2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        //얘 singlechildscrollview로 하면 안 될만 한 게
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.fromLTRB(10, 5, 5, 10),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 6,
-                    // * 검색 입력 필드 만들기
-                    child: TextField(
-                      focusNode: focusNode,
-                      style: const TextStyle(fontSize: 15, color: Colors.black),
-                      autofocus: false,
-                      controller: _filter,
-                      decoration: InputDecoration(
-                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                        labelText: '지역, 장소, 장르 등 키워드를 검색해 보세요!',
-                        labelStyle: const TextStyle(color: Colors.black),
-                        // * 검색창 디자인
-                        filled: true,
-                        fillColor: Colors.white54,
-                        // * 좌측 아이콘 추가
-                        prefixIcon: const Icon(
-                          Icons.search,
-                          color: Colors.black38,
-                          size: 20,
-                        ),
-                        // * 우측 아이콘 추가
-                        suffixIcon: focusNode.hasFocus
-                            ? IconButton(
-                                icon: const Icon(
-                                  Icons.cancel,
-                                  color: Colors.black38,
-                                  size: 20,
-                                ),
-                                // * cancle 아이콘 누르면 _filter와 _searchText 초기화
-                                onPressed: () {
-                                  setState(() {
-                                    _filter.clear();
-                                    _searchText = "";
-                                  });
-                                },
-                              )
-                            : Container(),
-                        // * 검색창 디자인(테두리, 테두리 색상 등)
-                        focusedBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black26),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20))),
-                        enabledBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black26),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20))),
-                        border: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black26),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20))),
+      body: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.fromLTRB(10, 5, 5, 10),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 6,
+                  // * 검색 입력 필드 만들기
+                  child: TextField(
+                    focusNode: focusNode,
+                    style: const TextStyle(fontSize: 15, color: Colors.black),
+                    autofocus: false,
+                    controller: _filter,
+                    decoration: InputDecoration(
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      labelText: '지역, 장소, 장르 등 키워드를 검색해 보세요!',
+                      labelStyle: const TextStyle(color: Colors.black),
+                      // * 검색창 디자인
+                      filled: true,
+                      fillColor: Colors.white54,
+                      // * 좌측 아이콘 추가
+                      prefixIcon: const Icon(
+                        Icons.search,
+                        color: Colors.black38,
+                        size: 20,
                       ),
+                      // * 우측 아이콘 추가
+                      suffixIcon: focusNode.hasFocus
+                          ? IconButton(
+                              icon: const Icon(
+                                Icons.cancel,
+                                color: Colors.black38,
+                                size: 20,
+                              ),
+                              // * cancle 아이콘 누르면 _filter와 _searchText 초기화
+                              onPressed: () {
+                                setState(() {
+                                  _filter.clear();
+                                  _searchText = "";
+                                });
+                              },
+                            )
+                          : Container(),
+                      // * 검색창 디자인(테두리, 테두리 색상 등)
+                      focusedBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black26),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(20))),
+                      enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black26),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(20))),
+                      border: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black26),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(20))),
                     ),
                   ),
-                  // * 검색바 클릭시 취소 버튼 생겼다가 취소 누르면 없어지게 만들기
-                  focusNode.hasFocus
-                      ? Expanded(
-                          child: TextButton(
-                            child: const Text(
-                              "취소",
-                              style: TextStyle(color: Colors.black38),
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _filter.clear();
-                                _searchText = "";
-                                focusNode.unfocus();
-                              });
-                            },
+                ),
+                // * 검색바 클릭시 취소 버튼 생겼다가 취소 누르면 없어지게 만들기
+                focusNode.hasFocus
+                    ? Expanded(
+                        child: TextButton(
+                          child: const Text(
+                            "취소",
+                            style: TextStyle(color: Colors.black38),
                           ),
-                        )
-                      : Expanded(
-                          flex: 0,
-                          child: Container(),
-                        )
-                ],
-              ),
+                          onPressed: () {
+                            setState(() {
+                              _filter.clear();
+                              _searchText = "";
+                              focusNode.unfocus();
+                            });
+                          },
+                        ),
+                      )
+                    : Expanded(
+                        flex: 0,
+                        child: Container(),
+                      )
+              ],
             ),
-            _buildBody(context)
-          ],
-        ),
+          ),
+          _buildBody(context)
+        ],
       ),
     );
   }

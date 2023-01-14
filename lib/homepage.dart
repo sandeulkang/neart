@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
           });
         },
         currentIndex: _index,
-        items: [
+        items: const [
           const BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'home',

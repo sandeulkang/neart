@@ -1,19 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:neart/Review/revise_screen.dart';
 
 import '../DetailscreenFolder/exhibition_detail_screen.dart';
 import '../Model/model_exhibitions.dart';
-import '../Model/model_review.dart';
-
-//최근 올라온 리뷰를 클릭하든
-//전시 디테일스크린에서 리뷰를 클릭하든
-//
-//ui 먼저 생각하고
-//필수 마라미터 생각하기
-//필수 파라미터? 그냥 그 리뷰 doc의 이름으로 하면 되지
-//그
 
 class OneReviewScreen extends StatefulWidget {
   OneReviewScreen({required this.reviewdoc});
@@ -25,15 +17,14 @@ class OneReviewScreen extends StatefulWidget {
 }
 
 class _OneReviewScreenState extends State<OneReviewScreen> {
-  final Auth = FirebaseAuth.instance;
+  final auth = FirebaseAuth.instance;
   var ref;
-
 
   // final Review review;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('리뷰')),
+        appBar: AppBar(title: const Text('리뷰', style: TextStyle(fontSize: 16))),
         body: SingleChildScrollView(
           child: FutureBuilder<DocumentSnapshot>(
               future: FirebaseFirestore.instance
@@ -41,31 +32,34 @@ class _OneReviewScreenState extends State<OneReviewScreen> {
                   .doc(widget.reviewdoc)
                   .get(),
               builder: (context, snapshot) {
-                if (!snapshot.hasData) return LinearProgressIndicator();
+                var Date = DateFormat('yyyy.MM.dd.').format((snapshot.data?['time'] as Timestamp).toDate());
+                if (!snapshot.hasData) return const LinearProgressIndicator();
                 return Padding(
                   padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                   child: Column(
+
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Stack(
                         children: [
                           GestureDetector(
-                            onTap: () async{
+                            onTap: () async {
                               ref = await snapshot.data!['exhibitref'];
-                              await ref.get().then(
-                                      (DocumentSnapshot docu) async{
-                                    if(docu.exists) {
-                                      final exhibition = Exhibition.fromSnapshot(docu);
-                                      await Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                ExhibitionDetailScreen(exhibition: exhibition)),
-
-                                      );
-                                    }
-                                  }
-                              );
+                              await ref
+                                  .get()
+                                  .then((DocumentSnapshot docu) async {
+                                if (docu.exists) {
+                                  final exhibition =
+                                      Exhibition.fromSnapshot(docu);
+                                  await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ExhibitionDetailScreen(
+                                                exhibition: exhibition)),
+                                  );
+                                }
+                              });
                             },
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,17 +69,24 @@ class _OneReviewScreenState extends State<OneReviewScreen> {
                                     child:
                                         Image.network(snapshot.data!['poster']),
                                     width: 70),
-                                SizedBox(
+                                const SizedBox(
                                   width: 15,
                                 ),
                                 Flexible(
-                                  child: Text(
-                                    snapshot.data!['exhibitiontitle'],
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600),
-                                    overflow: TextOverflow.visible,
-                                    maxLines: 2,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        snapshot.data!['exhibitiontitle'],
+                                        style: const TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600),
+                                        overflow: TextOverflow.visible,
+                                        maxLines: 2,
+                                      ),
+                                      SizedBox(height: 5,),
+                                      Text(Date, style: TextStyle(color: Colors.black38),),
+                                    ],
                                   ),
                                 )
                               ],
@@ -97,100 +98,125 @@ class _OneReviewScreenState extends State<OneReviewScreen> {
                           //     child: ),
                           Positioned(
                             right: 15,
-                            top: 60,
+                            top: 65,
                             child: FutureBuilder<DocumentSnapshot>(
                                 future: FirebaseFirestore.instance
                                     .collection('member')
                                     .doc(snapshot.data!['writeremail'])
                                     .get(),
                                 builder: (context, usersnapshot) {
-                                  if (!usersnapshot.hasData)
-                                    return LinearProgressIndicator();
+                                  if (!usersnapshot.hasData) {
+                                    return const LinearProgressIndicator();
+                                  }
                                   return Row(
                                     children: [
-                                      Text(
+                                      const Text(
                                         'written by',
                                         style: TextStyle(
                                             fontSize: 10,
                                             color: Colors.black54),
                                       ),
-                                      SizedBox(width: 5),
+                                      const SizedBox(width: 5),
                                       CircleAvatar(
-                                          radius: 15,
+                                          radius: 14,
                                           backgroundImage: NetworkImage(
                                               usersnapshot.data![
                                                   'profileUrl']) //image.network하면 안 되고 networkimage해야 됨
                                           ),
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 7,
                                       ),
                                       Text(
                                         usersnapshot.data!['name'],
-                                        style: TextStyle(fontSize: 14),
+                                        style: const TextStyle(fontSize: 13),
                                       ),
 
-                                      //writer의 이름과 프로필 url
                                     ],
                                   );
                                 }),
                           )
                         ],
                       ),
-                      Divider(
+                      const Divider(
                         height: 40,
                         color: Colors.black26,
                       ),
-                      Container(
-                        child: Text(
-                          snapshot.data!['content'],
-                          style: TextStyle(
-                            fontSize: 12,
-                            height: 1.3,
-                          ),
+                      // Row(
+                      //   children: [
+                      //     SizedBox(width: MediaQuery.of(context).size.width*0.65),
+                      //     Text(Date, style: TextStyle(color: Colors.black38),),
+                      //   ],
+                      // ),
+                      Text(
+                        snapshot.data!['content'],
+                        style: const TextStyle(
+                          fontSize: 12,
+                          height: 1.3,
                         ),
                       ),
-                      SizedBox(height:30),
+                      const SizedBox(height: 50),
+
                       Visibility(
-                          visible: FirebaseAuth.instance.currentUser?.email ==
+                          visible: auth.currentUser?.email ==
                               snapshot.data!['writeremail'],
                           child: Row(
                             children: [
-                              SizedBox(width:MediaQuery.of(context).size.width*0.55),
-                              TextButton(
-                                  onPressed: () {
+                              SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.63),
+                              GestureDetector(
+                                  onTap: () {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => ReviseScreen(
                                                 reviewdoc: widget.reviewdoc)));
                                   },
-                                  style: TextButton.styleFrom(backgroundColor:Color(0xfff1f1f1),),
-                                  child: const Text(
-                                    '수정',
-                                    style: TextStyle(color: Colors.black87, fontSize: 12),
-                                  )),
-                              SizedBox(width: 5,),
-                              TextButton(
-                                style: TextButton.styleFrom(backgroundColor:Color(0xfff1f1f1),),
-                                child: const Text(
-                                  '삭제',
-                                    style: TextStyle(color: Colors.black87, fontSize: 12),
-                                ),
-                                onPressed: () {
+                                  child: Container(
+                                      width: 50,
+                                      height: 30,
+                                      color: const Color(0xfff1f1f1),
+                                      child: const Center(
+                                        child: Text(
+                                          '수정',
+                                          style: TextStyle(
+                                              color: Colors.black87,
+                                              fontSize: 12),
+                                        ),
+                                      ))),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              GestureDetector(
+                                child: Container(
+                                    width: 50,
+                                    height: 30,
+                                    color: const Color(0xfff1f1f1),
+                                    child: const Center(
+                                      child: Text(
+                                        '삭제',
+                                        style: TextStyle(
+                                            color: Colors.black87,
+                                            fontSize: 12),
+                                      ),
+                                    )),
+                                onTap: () {
                                   showDialog(
                                       context: context,
                                       barrierDismissible: true,
                                       builder: (BuildContext context) {
                                         return AlertDialog(
                                           //얘가 futuredynamic탕입이래
-                                          content: Text('정말로 리뷰를 삭제하시겠어요?'),
-                                          contentPadding: EdgeInsets.all(30),
+                                          content:
+                                              const Text('정말로 리뷰를 삭제하시겠어요?'),
+                                          contentPadding:
+                                              const EdgeInsets.all(30),
                                           actions: [
                                             TextButton(
                                                 onPressed: () {
                                                   Navigator.pop(context);
                                                 },
-                                                child: Text(
+                                                child: const Text(
                                                   '아니오',
                                                   style: TextStyle(
                                                       color: Colors.black),
@@ -205,7 +231,7 @@ class _OneReviewScreenState extends State<OneReviewScreen> {
                                                   });
                                                   Navigator.pop(context);
                                                 },
-                                                child: Text('네',
+                                                child: const Text('네',
                                                     style: TextStyle(
                                                         color: Colors.black))),
                                           ],

@@ -17,28 +17,28 @@ class LikeScreen extends StatelessWidget {
     //docSnapshot은 QuerySnapshot<Map<>>이다
     //이 뒤에 .docs를 해주어야 List가 나오는거 ㅇㅇ
 
-    List<DocumentSnapshot> RefList = [];
+    List<DocumentSnapshot> refList = [];
 
     for (QueryDocumentSnapshot d in docSnapshot.docs) {
       final data = await d.data() as Map<String, dynamic>;
-      var Ref = await data['ref'];
+      var ref = await data['ref'];
 
-      await Ref.get().then(
+      await ref.get().then(
             (DocumentSnapshot documentSnapshot) {
           if (documentSnapshot.exists) {
-            RefList.add(documentSnapshot);
+            refList.add(documentSnapshot);
           }
         },
       );
     }
-    return RefList;
+    return refList;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           '좋아요한 전시',
           style: TextStyle(fontSize: 16),
         ),
@@ -46,9 +46,9 @@ class LikeScreen extends StatelessWidget {
       ),
       body: FutureBuilder<List<DocumentSnapshot>>(
           future: bringHeartDocs(),
-          builder: (context, RefList) {
-            if (!RefList.hasData) {
-              return LinearProgressIndicator();
+          builder: (context, refList) {
+            if (!refList.hasData) {
+              return const LinearProgressIndicator();
             }
             return GridView.builder(
               padding: const EdgeInsets.fromLTRB(15, 5, 15, 0),
@@ -57,9 +57,9 @@ class LikeScreen extends StatelessWidget {
                   mainAxisSpacing: 5, //수평 Padding
                   crossAxisSpacing: 1,
                   childAspectRatio: 0.5),
-              itemCount: RefList.data!.length,
+              itemCount: refList.data!.length,
               itemBuilder: (BuildContext context, int i) {
-                List<Exhibition> exhibitions = RefList.data!
+                List<Exhibition> exhibitions = refList.data!
                     .map((data) => Exhibition.fromSnapshot(data))
                     .toList();
                 return Column(

@@ -19,7 +19,6 @@ class MyHttpOverrides extends HttpOverrides{
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  KakaoSdk.init(nativeAppKey: 'd1858bd6bb810fa8d1582b059e9986ac');
   await Firebase.initializeApp(
   );
   HttpOverrides.global = MyHttpOverrides();
@@ -48,7 +47,6 @@ class _MyAppState extends State<MyApp> {
       ),
       title: 'Neart',
       routes: {
-        '/Authentication': (context) => const Authentication(),
         '/Page5_on': (context) => Page5_on(),
         '/Page5_null': (context) => Page5_null(),
       },

@@ -19,7 +19,6 @@ class _WritingScreenState extends State<WritingScreen> {
 
   bool _tryValidation() {
     final bool isValid = _formKey.currentState!.validate();
-    print(isValid);
     if (isValid) {
       _formKey.currentState!.save();
     }
@@ -30,7 +29,7 @@ class _WritingScreenState extends State<WritingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text(
+          title: const Text(
             '리뷰 작성',
             style: TextStyle(fontSize: 16),
           ),
@@ -57,7 +56,7 @@ class _WritingScreenState extends State<WritingScreen> {
                 });
                 Navigator.pop(context);
               },
-              child: Text(
+              child: const Text(
                 '작성',
                 style: TextStyle(color: Colors.black),
               ),
@@ -69,7 +68,7 @@ class _WritingScreenState extends State<WritingScreen> {
           key: _formKey,
           child: TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            style: TextStyle(fontSize: 13, letterSpacing: 0.7),
+            style: const TextStyle(fontSize: 13, letterSpacing: 0.7),
             maxLines: null,
             controller: reviewController,
             autofocus: true,
@@ -79,7 +78,7 @@ class _WritingScreenState extends State<WritingScreen> {
               }
               return null;
             },
-            decoration: InputDecoration(border: InputBorder.none),
+            decoration: const InputDecoration(border: InputBorder.none),
           ),
         ),
       ),

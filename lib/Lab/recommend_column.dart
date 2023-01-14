@@ -5,30 +5,22 @@ import 'package:neart/Model/model_review.dart';
 
 import '../Review/revise_screen.dart';
 
-class CertainReviewsScreen extends StatelessWidget {
-  final title;
+class RecommendColumn extends StatelessWidget {
+  final keyword;
 
-  CertainReviewsScreen({required this.title});
+  RecommendColumn({required this.keyword});
 
   late dynamic reviewList;
 
   Widget _buildBody(BuildContext context) {
     return FutureBuilder<QuerySnapshot>(
-      // FireStore 인스턴스의 exhibition 컬렉션의 snapshot을 가져옴
       future: FirebaseFirestore.instance
-          .collection('review')
-          .where("exhibitiontitle", isEqualTo: title)
+          .collection('Column')
           .orderBy('time', descending: true)
-          .get(),
+          .get(), //QuerySnapshot 타입임, .data.docs 붙여줌으로써 리스트가 되는 거임
       builder: (context, snapshot) {
-        reviewList = snapshot.data!.docs; //list 형태임. 안에
-        // snapshot의 데이터가 없는 경우 Linear~ 생성
-        if (!snapshot.hasData) {
-          return const LinearProgressIndicator();
-        }
-        return reviewList.isNotEmpty //.length사용 안 하고 isempty사용하면 된다고 말씀해주셨던 거
-            ? _buildList(context, reviewList)
-            : noReview(context);
+        if (!snapshot.hasData) return const LinearProgressIndicator();
+        return _buildList(context, snapshot.data!.docs);
       },
     );
   }
@@ -40,7 +32,20 @@ class CertainReviewsScreen extends StatelessWidget {
         child: const Center(child: Text('아직 작성된 후기가 없어요.')));
   }
 
-  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
+  Widget _buildList(
+      BuildContext context, List<QueryDocumentSnapshot> snapshot) {
+    List<QueryDocumentSnapshot> searchResults = [];
+
+    for (QueryDocumentSnapshot d in snapshot) {
+      // *string.contains()를 활용해 searchText를 포함한 snapshot을 리스트에 추가
+      // * 주의!) data.toString()해도 실행은 되지만 검색 결과가 안 나옴!
+      if ((d.data()! as Map)['keyword'].toString().contains(keyword)) {
+        //여기서는 Exhㅓibition.toString에 포함된(즉 $title,keyword에 포함되어있나를 살펴보는 것 같다)
+        //toString이라는 메소드는 해당 데이터 내의 모든 텍스트를 불러와 string타입으로 변환한단 뜻 같다
+        searchResults.add(d); //이로써 searchResults는 선별되어진 docs 들로 구성된 list이다
+      }
+    }
+
     return ListView(
         physics: const NeverScrollableScrollPhysics(),
         //shinkwraptrue만 하고 이거 안 하면 안 돼요~
@@ -49,7 +54,7 @@ class CertainReviewsScreen extends StatelessWidget {
         // padding: EdgeInsets.all(5),
         // * map()함수를 통해 각 아이템을 buildListItem 함수로 넣고 호출
         children:
-            snapshot.map((data) => _buildListItem(context, data)).toList());
+        snapshot.map((data) => _buildListItem(context, data)).toList());
   }
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
@@ -91,8 +96,8 @@ class CertainReviewsScreen extends StatelessWidget {
                         CircleAvatar(
                             radius: 15,
                             backgroundImage: NetworkImage(usersnapshot.data?[
-                                'profileUrl']) //image.network하면 안 되고 networkimage해야 됨
-                            ),
+                            'profileUrl']) //image.network하면 안 되고 networkimage해야 됨
+                        ),
                         const SizedBox(
                           width: 10,
                         ),

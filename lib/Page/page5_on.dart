@@ -229,7 +229,7 @@ class _Page5_onState extends State<Page5_on> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              LikeScreen()));
+                                              const LikeScreen()));
                                 },
                               ),
                               InkWell(
@@ -253,7 +253,7 @@ class _Page5_onState extends State<Page5_on> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              CheckedScreen()));
+                                             CheckedScreen()));
                                 },
                               ),
                               InkWell(

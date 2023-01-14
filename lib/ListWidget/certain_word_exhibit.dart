@@ -36,7 +36,7 @@ class _CertainWordExhibitState extends State<CertainWordExhibit> {
       stream: FirebaseFirestore.instance.collection('exhibition').snapshots(),
       builder: (context, snapshot) {
         // snapshot의 데이터가 없는 경우 Linear~ 생성
-        if (!snapshot.hasData) return LinearProgressIndicator();
+        if (!snapshot.hasData) return const LinearProgressIndicator();
         return _buildList(context, snapshot.data!.docs);
       },
     );
@@ -56,11 +56,11 @@ class _CertainWordExhibitState extends State<CertainWordExhibit> {
     }
 
     // * listView 생성
-    return Container(
+    return SizedBox(
       height: 430,
       child: ListView(
           scrollDirection: Axis.horizontal,
-          padding: EdgeInsets.all(3),
+          padding: const EdgeInsets.all(3),
           // * map()함수를 통해 각 아이템을 buildListItem 함수로 넣고 호출
           children: searchResults
               .map((data) => _buildListItem(context, data))

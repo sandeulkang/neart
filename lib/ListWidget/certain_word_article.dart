@@ -18,7 +18,7 @@ class CertainWordArticle extends StatelessWidget {
       stream: FirebaseFirestore.instance.collection('Column').snapshots(),
       builder: (context, snapshot) {
         // snapshot의 데이터가 없는 경우 Linear~ 생성
-        if (!snapshot.hasData) return LinearProgressIndicator();
+        if (!snapshot.hasData) return const LinearProgressIndicator();
         return _buildList(context, snapshot.data!.docs);
       },
     );
@@ -59,7 +59,7 @@ class CertainWordArticle extends StatelessWidget {
             ),
           );
         },
-        child: Container(
+        child: SizedBox(
           width: MediaQuery.of(context).size.width*0.9,
           height: MediaQuery.of(context).size.width*0.9*0.3,
           child: Row(
@@ -71,7 +71,7 @@ class CertainWordArticle extends StatelessWidget {
                 width: 120,
               ),
               Container(
-                padding: EdgeInsets.fromLTRB(10, 5, 0, 0),
+                padding: const EdgeInsets.fromLTRB(10, 5, 0, 0),
                 width: MediaQuery.of(context).size.width - 200,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

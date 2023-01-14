@@ -44,9 +44,8 @@ class CheckedScreen1 extends StatelessWidget {
             return const LinearProgressIndicator();
           }
           return GridView.builder(
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
                 mainAxisSpacing: 3, //수평 Padding
@@ -80,7 +79,7 @@ class CheckedScreen1 extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.fromLTRB(5, 8, 0, 0),
+                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
