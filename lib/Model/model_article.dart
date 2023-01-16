@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Article {
   final String title;
-  final String keyword;
+  final List keyword;
   final String url;
   final String content;
   final DocumentReference? reference;

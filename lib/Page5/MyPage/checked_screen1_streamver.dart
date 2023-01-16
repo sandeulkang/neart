@@ -1,46 +1,36 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../../DetailscreenFolder/exhibition_detail_screen.dart';
+import '../../Model/model_exhibitions.dart';
 
-import '../DetailscreenFolder/exhibition_detail_screen.dart';
-import '../Model/model_exhibitions.dart';
 
-class CheckedScreen1 extends StatelessWidget {
-  const CheckedScreen1({Key? key}) : super(key: key);
-
-  Future<List<DocumentSnapshot>> bringCheckDocs() async {
-    final docRef = FirebaseFirestore.instance
-        .collection('member')
-        .doc(FirebaseAuth.instance.currentUser!.email)
-        .collection('havebeen')
-        .orderBy('time', descending: true);
-    final docSnapshot = await docRef.get();
-    //docSnapshot은 QuerySnapshot<Map<>>이다
-    //이 뒤에 .docs를 해주어야 List가 나오는거 ㅇㅇ
-
-    List<DocumentSnapshot> refList = [];
-
-    for (QueryDocumentSnapshot d in docSnapshot.docs) {
-      final data = await d.data() as Map<String, dynamic>;
-      var ref = await data['ref'];
-
-      await ref.get().then(
-        (DocumentSnapshot documentSnapshot) {
-          if (documentSnapshot.exists) {
-            refList.add(documentSnapshot);
-          }
-        },
-      );
-    }
-    return refList;
-  }
+//내가 다녀온 전시 스크린
+class CcheckedScreen1 extends StatelessWidget {
+  const CcheckedScreen1({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<DocumentSnapshot>>(
-        future: bringCheckDocs(),
-        builder: (context, refList) {
-          if (!refList.hasData) {
+    return StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('member')
+            .doc(FirebaseAuth.instance.currentUser!.email)
+            .collection('havebeen')
+            .orderBy('time', descending: true)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const LinearProgressIndicator();
+          }
+          return _buildUi(context, snapshot.data!.docs);
+        });
+  }
+
+  Widget _buildUi(context, snapshot) {
+    return FutureBuilder<List<Exhibition>>(
+        future: _buildList(context, snapshot),
+        builder: (context, exhibitionsList) {
+          if (!exhibitionsList.hasData) {
             return const LinearProgressIndicator();
           }
           return GridView.builder(
@@ -51,11 +41,8 @@ class CheckedScreen1 extends StatelessWidget {
                 mainAxisSpacing: 3, //수평 Padding
                 crossAxisSpacing: 0,
                 childAspectRatio: 0.42),
-            itemCount: refList.data!.length,
+            itemCount: exhibitionsList.data!.length,
             itemBuilder: (BuildContext context, int i) {
-              List<Exhibition> exhibitions = refList.data!
-                  .map((data) => Exhibition.fromSnapshot(data))
-                  .toList();
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -65,7 +52,7 @@ class CheckedScreen1 extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                             builder: (context) => ExhibitionDetailScreen(
-                                exhibition: exhibitions[i])),
+                                exhibition: exhibitionsList.data![i])),
                         //즉 Exhibition 타입의 아이를 넘기는 거임
                       );
                     },
@@ -73,7 +60,7 @@ class CheckedScreen1 extends StatelessWidget {
                       height: 180,
                       width: MediaQuery.of(context).size.width * 0.3,
                       child: Image.network(
-                        exhibitions[i].poster,
+                        exhibitionsList.data![i].poster,
                         fit: BoxFit.fitHeight,
                       ),
                     ),
@@ -84,16 +71,16 @@ class CheckedScreen1 extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          exhibitions[i].title,
+                          exhibitionsList.data![i].title,
                           style: const TextStyle(
                               fontSize: 12, fontWeight: FontWeight.w600),
                         ),
                         const SizedBox(
                           height: 4,
                         ),
-                        Text(exhibitions[i].place),
+                        Text(exhibitionsList.data![i].place),
                         const SizedBox(height: 2),
-                        Text(exhibitions[i].date),
+                        Text(exhibitionsList.data![i].date),
                       ],
                     ),
                   ),
@@ -102,5 +89,20 @@ class CheckedScreen1 extends StatelessWidget {
             },
           );
         });
+  }
+
+  Future<List<Exhibition>> _buildList(BuildContext context, List<QueryDocumentSnapshot> snapshot) async {
+    List<Exhibition> exhibitionsList = [];
+
+    for (QueryDocumentSnapshot d in snapshot) {
+      await (d.data() as Map<String, dynamic>)['ref'].get().then( //documentreference가 완전히 그 document로 이동할 때까지 기다려야 한다
+              (DocumentSnapshot documentSnapshot) {
+            if (documentSnapshot.exists) { //document로 이동이 됐다면
+              final exhibition = Exhibition.fromSnapshot(documentSnapshot); //그 documentsnapshot을 내가 만들어둔 타입 Exhibition으로 바꾼다
+              exhibitionsList.add(exhibition);//그것을 exhibitionList라는 변수에 저장한다
+            }}
+      );
+    }
+    return exhibitionsList;
   }
 }

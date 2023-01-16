@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:neart/Review/one_review_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../Lab/article_screen.dart';
-import '../ListWidget/certain_word_exhibit.dart';
+import 'certain_word_exhibit.dart';
 import 'package:neart/Model/model_article.dart';
 import '../Model/model_review.dart';
 
-class Ppage1 extends StatelessWidget {
+class Page1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
@@ -16,47 +15,18 @@ class Ppage1 extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            '요즘 인기 있는 전시',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+          Text('요즘 인기있는 전시',
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10,),
           CertainWordExhibit(word: '인기'),
-          const SizedBox(
-            height: 40,
-          ),
-          const Text(
-            '지금 뜨고 있는 키워드 #인천',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
-          ),
-          const SizedBox(height: 10),
+          MainText(text: '지금 뜨고 있는 키워드 #인천'),
           CertainWordExhibit(word: '인천'),
-          const SizedBox(height: 60),
-          const Text(
-            '최근 올라온 리뷰',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
-          ),
-          const SizedBox(height: 10),
+          MainText(text: '최근 올라온 리뷰'),
           recentReview(),
-          const SizedBox(
-            height: 60,
-          ),
-          const Text(
-            '곧 끝나는 전시',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
-          ),
-          const SizedBox(height: 10),
+          MainText(text: '곧 끝나는 전시',),
           CertainWordExhibit(word: '곧 끝나는'),
-          const SizedBox(
-            height: 60,
-          ),
-          const Text(
-            '아트 칼럼',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
+          MainText(text: '아트 칼럼',),
           recentArtColumn(),
         ],
       ),
@@ -64,6 +34,9 @@ class Ppage1 extends StatelessWidget {
   }
 }
 
+//////////////////여기 비효율적일 수도 있겠단 생각이 든다
+
+//recent ArtColumn 위젯의 future method
 Future getArticleData() async {
   QuerySnapshot a = await FirebaseFirestore.instance
       .collection('Column')
@@ -75,14 +48,15 @@ Future getArticleData() async {
   return articles;
 }
 
+//recent ArtColumn 위젯
 Widget recentArtColumn() {
   return FutureBuilder(
     future: getArticleData(), //
     builder: (BuildContext context, AsyncSnapshot articles) {
       if (!articles.hasData)
-        {return const SizedBox(
-          width: 1,
-        );}
+      {return const SizedBox(
+        width: 1,
+      );}
       return ListView.builder(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
@@ -95,7 +69,7 @@ Widget recentArtColumn() {
                   onTap: () async{
                     final url = Uri.parse(articles.data![i].url);
                     if (await canLaunchUrl(url)) {
-                    launchUrl(url, mode: LaunchMode.externalApplication);
+                      launchUrl(url, mode: LaunchMode.externalApplication);
                     }
                   },
                   child: Row(
@@ -142,6 +116,7 @@ Widget recentArtColumn() {
 }
 
 
+//recentreview 위젯의 future method
 Future getReviewData() async {
   QuerySnapshot a = await FirebaseFirestore.instance
       .collection('review')
@@ -153,15 +128,17 @@ Future getReviewData() async {
   return reviews;
 }
 
+//recentReview 위젯
 Widget recentReview() {
   return FutureBuilder(
     future: getReviewData(), //
     builder: (BuildContext context, AsyncSnapshot reviews) {
       if (!reviews.hasData)
-        {return const SizedBox(
-          width: 1,
-        );}
+      {return const SizedBox(
+        width: 1,
+      );}
       return ListView.builder(
+          itemCount: 3,
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemBuilder: (BuildContext context, i) {
@@ -173,11 +150,11 @@ Widget recentReview() {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) {
-                          return OneReviewScreen(reviewdoc: reviews.data![i].writeremail+reviews.data![i].exhibitiontitle);
+                          return OneReviewScreen(reviewdata: reviews.data![i]);
                           //여기서 onereviewscreen이 안에서 futurebuilder를 사용하면
                           //불러왔던 리뷰의 문서를 괜히 또 읽게 되는 것이다 읽기 비용이 더 들게 된다
-                          //위젯으로 바꿔서 보내자 모든 원리뷰스크린을 위젯화하자
-                            },
+                          //위젯으로 바꿔서, 즉 플러 내에서 사용한 맵으로 바꾸어서 보내자 모든 원리뷰스크린을 위젯화하자
+                        },
                       ),
                     );
                   },
@@ -197,9 +174,9 @@ Widget recentReview() {
                                 .get(),
                             builder: (context, usersnapshot) {
                               if (!usersnapshot.hasData)
-                                {return const SizedBox(
-                                  width: 1,
-                                );}
+                              {return const SizedBox(
+                                width: 1,
+                              );}
                               return Row(
                                 children: [
                                   CircleAvatar(
@@ -228,3 +205,19 @@ Widget recentReview() {
   );
 }
 
+//메인 텍스트 리팩토링
+class MainText extends StatelessWidget{
+  MainText({required this.text});
+
+  String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 50, 0, 10),
+      child: Text(text,
+        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+      ),
+    );
+  }
+}

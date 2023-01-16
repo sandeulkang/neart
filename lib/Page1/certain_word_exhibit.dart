@@ -4,11 +4,6 @@ import 'package:flutter/material.dart';
 import '../DetailscreenFolder/exhibition_detail_screen.dart';
 import '../Model/model_exhibitions.dart';
 
-//특정한 word를 가진 exhibit 모두를 가져오는 certainwordexhibit은 당연히 page2에는 사용할 수 없다.
-//page2는 .builder로 구성되기 때문이다. 모두 불러오면 이건 데이터 읽는 비용이 많이 든다.
-//page4는 column들 모두 불러와도 데이터 읽는 비용 얼마 안 드니까 .builder아니고 이거로 할까 생각중이다.
-//너무많이 부러로아질것같으면 .count 추가하면 된다
-
 class CertainWordExhibit extends StatefulWidget {
   final String word;
 

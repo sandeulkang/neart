@@ -13,6 +13,8 @@ class WritingScreen extends StatefulWidget {
 }
 
 class _WritingScreenState extends State<WritingScreen> {
+  final _currentUser = FirebaseAuth.instance.currentUser!;
+  final _firestore = FirebaseFirestore.instance;
   String userReview = '';
   TextEditingController reviewController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -38,21 +40,18 @@ class _WritingScreenState extends State<WritingScreen> {
             TextButton(
               onPressed: () {
                 if (!_tryValidation()) return;
-                FirebaseFirestore
-                    .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
+                _firestore //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
                     .collection('review')
-                    .doc(FirebaseAuth.instance.currentUser!.email! +
-                        widget.exhibition.title)
+                    .doc(_currentUser.email! + widget.exhibition.title)
                     .set({
-                  'useremail': FirebaseAuth.instance.currentUser!.email,
+                  'useremail': _currentUser.email,
                   'exhibitiontitle': widget.exhibition.title,
                   'content': reviewController.text,
                   'time': FieldValue.serverTimestamp(),
-                  'exhibitref': FirebaseFirestore.instance
+                  'exhibitref': _firestore
                       .collection('exhibition')
                       .doc(widget.exhibition.title),
                   'poster': widget.exhibition.poster,
-                  // 'writerref': FirebaseFirestore.instance.collection('member').doc(FirebaseAuth.instance.currentUser!.email)
                 });
                 Navigator.pop(context);
               },
@@ -73,7 +72,8 @@ class _WritingScreenState extends State<WritingScreen> {
             controller: reviewController,
             autofocus: true,
             validator: (value) {
-              if (value == null || value.isEmpty/*value?.isNotEmpty != true*/) {
+              if (value == null ||
+                  value.isEmpty /*value?.isNotEmpty != true*/) {
                 return '리뷰를 작성해주세요!';
               }
               return null;

@@ -2,11 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:neart/Model/model_article.dart';
-import '../Lab/article_screen.dart';
-
-//popularexhibit 레이아웃처럼 옆으로 넘어가게.. 하고
-//검색바 아래에 나오는 exhibit은 아래로 내려가는 것이고 검색어 따라 stful이므로 클래스 재활용 불가능하다
-//이건 stl로 만들고
+import '../trash/article_screen.dart';
 
 class CertainWordArticle extends StatelessWidget {
   final String word;
@@ -14,10 +10,9 @@ class CertainWordArticle extends StatelessWidget {
   CertainWordArticle({required this.word});
 
   Widget _buildBody(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection('Column').snapshots(),
+    return FutureBuilder<QuerySnapshot>(
+      future: FirebaseFirestore.instance.collection('Column').where('keyword', arrayContains: word).get(),
       builder: (context, snapshot) {
-        // snapshot의 데이터가 없는 경우 Linear~ 생성
         if (!snapshot.hasData) return const LinearProgressIndicator();
         return _buildList(context, snapshot.data!.docs);
       },
@@ -25,19 +20,11 @@ class CertainWordArticle extends StatelessWidget {
   }
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
-    List<DocumentSnapshot> searchResults = [];
-    // *데이터에 searchText가 포함되는지 필터링 진행
-    for (DocumentSnapshot d in snapshot) {
-      if (d.data().toString().contains(word)) {
-        searchResults.add(d);
-      }
-    }
-
     // * listView 생성
     return
     CarouselSlider(
           // * map()함수를 통해 각 아이템을 buildListItem 함수로 넣고 호출
-          items: searchResults
+          items: snapshot
               .map((data) => _buildListItem(context, data))
               .toList(),
       options: CarouselOptions(autoPlay: true, viewportFraction: 0.9, aspectRatio: 2.8), );
@@ -106,3 +93,4 @@ class CertainWordArticle extends StatelessWidget {
     return _buildBody(context);
   }
 }
+

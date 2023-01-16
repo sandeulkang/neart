@@ -4,82 +4,48 @@ import 'package:flutter/material.dart';
 import '../Model/model_exhibitions.dart';
 import 'exhibition_detail_screen.dart';
 
-class TogetherExhibit extends StatefulWidget {
+class TogetherExhibit extends StatelessWidget {
+  final String place;
 
-  final Exhibition exhibition;
-
-  TogetherExhibit({required this.exhibition});
-
-  @override
-  State<TogetherExhibit> createState() => _TogetherExhibitState();
-}
-
-class _TogetherExhibitState extends State<TogetherExhibit> {
-
-  dynamic exhibitionInDetail;
-  dynamic placeExhibitQuery;
-
-  @override
-  void initState() {
-    super.initState();
-    exhibitionInDetail = widget.exhibition;
-    placeExhibitQuery = FirebaseFirestore.instance
-        .collection('exhibition')
-        .where('place', isEqualTo: exhibitionInDetail.place);  //Query<Map<String, dynamic>> 타입임.
-    //placeExhibitQuery를 스냅샷으로 builder로 굴려주고 listview 하면 되지 않을까? 이거랑 지금 비슷한 구조인 게
-  }
+  TogetherExhibit({required this.place});
 
   Widget _buildBody(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      // FireStore 인스턴스의 exhibition 컬렉션의 snapshot을 가져옴
-      stream: placeExhibitQuery.snapshots(),
-      builder: (context, snapshot) {
-        // snapshot의 데이터가 없는 경우 Linear~ 생성
-        if (!snapshot.hasData) return const LinearProgressIndicator();
-        return _buildList(context, snapshot.data!.docs);
-      },
-    );
-  }
-
-  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot){
-    List<DocumentSnapshot> placeExhibitList = [];
-    for (DocumentSnapshot d in snapshot) {
-      //이미 같은 이름의 장소를 가진 전시들의 query를 불러온 상황인데, 여기서 또 같은 이름의 장소를 contain하고 있는지 쭉 검사한다
-      //당연히 있겠지 ㅇㅇ 이 부분이 너무 비효율적인 것 같은데 placaeExhibitList에 바로 넣는 방법은 없나?
-      if (d.data().toString().contains(exhibitionInDetail.place)) {
-        // print(word);
-        placeExhibitList.add(d);
-      }
-    }
-
-    return SizedBox(
-      height: 430,
-      child: ListView(
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.all(3),
-          // * map()함수를 통해 각 아이템을 buildListItem 함수로 넣고 호출
-          children: placeExhibitList
-              .map((data) => _buildListItem(context, data))
-              .toList()),
-    );
+    return FutureBuilder<QuerySnapshot>(
+        future: FirebaseFirestore.instance
+            .collection('exhibition')
+            .where('place', isEqualTo: place)
+            .get(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return const LinearProgressIndicator();
+          return SizedBox(
+              height: 460,
+              child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  children: snapshot.data!.docs
+                      .map((data) => _buildListItem(context, data))
+                      .toList()));
+        });
   }
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
-    final exhibition = Exhibition.fromSnapshot(data);
-    // * 각각을 누를 수 있도록 InkWell() 사용
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           InkWell(
-            child: Image.network(exhibition.poster, height: 350,),
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute<Null>(
-                  builder: (BuildContext context) {
-                    // * 클릭한 영화의 DetailScreen 출력
-                    return ExhibitionDetailScreen(exhibition: exhibition);
-                  }));
+            child: Image.network(
+              data['poster'],
+              height: 350,
+            ),
+            onTap: () async{
+              final exhibition = await Exhibition.fromSnapshot(data);
+              Navigator.of(context).push(
+                  MaterialPageRoute<Null>(builder: (BuildContext context) {
+                // * 클릭한 영화의 DetailScreen 출력
+                return ExhibitionDetailScreen(exhibition: exhibition);
+              }));
             },
           ),
           Container(
@@ -88,17 +54,16 @@ class _TogetherExhibitState extends State<TogetherExhibit> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  exhibition.title,
+                  data['title'],
                   style: const TextStyle(
                       fontSize: 14, fontWeight: FontWeight.w600),
-
                 ),
                 const SizedBox(
                   height: 4,
                 ),
-                Text(exhibition.place),
+                Text(data['place'],),
                 const SizedBox(height: 2),
-                Text(exhibition.date),
+                Text(data['date']),
               ],
             ),
           ),
@@ -107,10 +72,8 @@ class _TogetherExhibitState extends State<TogetherExhibit> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return  _buildBody(context);
+    return _buildBody(context);
   }
 }
-

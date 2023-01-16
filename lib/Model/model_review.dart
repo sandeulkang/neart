@@ -5,8 +5,8 @@ class Review {
   final String writeremail;
   final String exhibitiontitle;
   final String poster;
+  final time;
   final DocumentReference exhibitref;
-  final DocumentReference writerref;
   final DocumentReference? reference;
 
 
@@ -15,8 +15,8 @@ class Review {
         writeremail = map['writeremail'],
   exhibitiontitle = map['exhibitiontitle'],
   exhibitref = map['exhibitref'],
-  writerref = map['writerref'],
-  poster = map['poster'];
+  poster = map['poster'],
+  time = map['time'];
 
   Review.fromSnapshot(DocumentSnapshot snapshot) //Exhibition이라는 클래스에서 Exhibition.fromSnapshot이라는 메소드를 만들었다. snapshot이라는 객체를 받아들인다.
       : this.fromMap(snapshot.data() as Map<String, dynamic>,

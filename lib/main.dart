@@ -6,8 +6,8 @@ import 'package:neart/homepage.dart';
 import 'package:neart/trash/authenticationpage.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'dart:io';
-import 'Page/page5_null.dart';
-import 'Page/page5_on.dart';
+import 'Page5/page5_null.dart';
+import 'Page5/page5_on.dart';
 
 class MyHttpOverrides extends HttpOverrides{
   @override

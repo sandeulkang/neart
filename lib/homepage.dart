@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:neart/Page/page2.dart';
-import 'package:neart/Page/page4.dart';
-import 'package:neart/Page/page1.dart';
-import 'Page/page5.dart';
-import 'Page/page5_null.dart';
+import 'package:neart/Page2/page2.dart';
+import 'package:neart/Page4/page4.dart';
+import 'package:neart/Page1/page1.dart';
+import 'Page5/page5.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -17,7 +15,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   var _index = 0;
   final _pages = [
-    Ppage1(),
+    Page1(),
     const Page2(),
     const Page4(),
     const Page5(),
@@ -44,17 +42,13 @@ class _HomePageState extends State<HomePage> {
         },
         currentIndex: _index,
         items: const [
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'home',
-          ),
-          const BottomNavigationBarItem(
-              icon: Icon(Icons.search) ,
-              label: 'Exhibit'),
-
-          const BottomNavigationBarItem(
+           BottomNavigationBarItem(
+            icon: Icon(Icons.home), label: 'home',),
+           BottomNavigationBarItem(
+              icon: Icon(Icons.search), label: 'Exhibit'),
+           BottomNavigationBarItem(
               icon: Icon(Icons.account_balance), label: 'Curator'),
-          const BottomNavigationBarItem(icon: Icon(Icons.person), label: 'My'),
+           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'My'),
         ],
       ),
     );

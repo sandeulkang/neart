@@ -1,16 +1,16 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'Checked_screen1.dart';
 import 'Checked_screen2.dart';
 
+
+//다녀온 전시, 남긴 리뷰 두 스크린으로 나뉠 것이다
 class CheckedScreen extends StatefulWidget {
   @override
   State<CheckedScreen> createState() => _CheckedScreenState();
 }
 
 class _CheckedScreenState extends State<CheckedScreen> {
-  bool isExhibitScreen = true;
+  bool isExhibitScreen = true; //내가 본 전시가 클릭되면 true 남긴 리뷰가 클릭되면 false 될 예정
 
   @override
   Widget build(BuildContext context) {
@@ -41,14 +41,13 @@ class _CheckedScreenState extends State<CheckedScreen> {
                           isExhibitScreen = false;
                         });
                       },
-                      child: Text('남긴 리뷰',style: TextStyle(color: isExhibitScreen ?Colors.black54 :Colors.black ),))
+                      child: Text('남긴 후기',style: TextStyle(color: isExhibitScreen ?Colors.black54 :Colors.black ),))
                 ],
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(15,0,15,0),
                 child: isExhibitScreen ? const CheckedScreen1() : CheckedScreen2(),
               ),
-              //이게 좋을 지 삼항연산이 좋을지
             ],
           ),
         ));

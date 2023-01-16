@@ -1,8 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import '../Model/model_exhibitions.dart';
 
 class ReviseScreen extends StatefulWidget {
   final reviewdoc;
@@ -45,7 +42,6 @@ class _ReviseScreenState extends State<ReviseScreen> {
                     .doc(widget.reviewdoc)
                     .update({
                   'content': reviewController.text,
-                  'time': FieldValue.serverTimestamp()
                 });
                 Navigator.pop(context);
               },
@@ -59,13 +55,12 @@ class _ReviseScreenState extends State<ReviseScreen> {
         padding: const EdgeInsets.fromLTRB(25, 10, 25, 10),
         child: FutureBuilder<DocumentSnapshot>(
             future: FirebaseFirestore
-                .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
+                .instance
                 .collection('review')
                 .doc(widget.reviewdoc)
                 .get(),
             builder: (context, snapshot) {
-              reviewController =
-                  TextEditingController(text: snapshot.data!['content']);
+              reviewController = TextEditingController(text: snapshot.data!['content']);
               return Form(
                 key: _formKey,
                 child: TextFormField(
