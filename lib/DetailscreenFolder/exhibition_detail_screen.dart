@@ -40,6 +40,7 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
     await db.collection('placeinfo').doc(widget.exhibition.place).get();
     placeinformation = await placeinfodata['info'];
     placeinformation2 = await placeinfodata['info2'];
+
   }
 
   @override

@@ -23,6 +23,7 @@ class Exhibition {
       : this.fromMap(snapshot.data() as Map<String, dynamic>,
             reference: snapshot.reference);
 
+
   @override
   String toString() => "Exhibition<$title:$keyword>"; //toString이라는 메소드를 이용하면 ""라는 string타입의 값이 도출된다?
 }

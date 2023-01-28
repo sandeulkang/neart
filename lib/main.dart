@@ -1,11 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
-import 'package:neart/Review/writing_screen.dart';
+import 'package:neart/ApiLab/apiscreen.dart';
 import 'package:neart/homepage.dart';
-import 'package:neart/trash/authenticationpage.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+// import 'dart:html';
 import 'dart:io';
+import 'ApiLab/jsonscreen.dart';
 import 'Page5/page5_null.dart';
 import 'Page5/page5_on.dart';
 
@@ -50,7 +50,7 @@ class _MyAppState extends State<MyApp> {
         '/Page5_on': (context) => Page5_on(),
         '/Page5_null': (context) => Page5_null(),
       },
-      home: const HomePage(),
+      home: HomePage(),
     );
   }
 }

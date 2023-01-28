@@ -8,7 +8,6 @@ import '../../Review/one_review_screen.dart';
 
 //내가 남긴 후기 스크린
 class CheckedScreen2 extends StatelessWidget {
-  dynamic reviewlist; //사용자가 남긴 review들을 불러와 넣어줄 리스트
   dynamic reviewdata; //위 리스트에 담긴 데이터를, 내가 만들어둔 모델을 통해 타입 바꿔줄 거임 ㅇㅇ 그걸 넣을 변수
 
   @override
@@ -35,7 +34,7 @@ class CheckedScreen2 extends StatelessWidget {
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                       child: InkWell(
                         onTap: () async {
-                          reviewdata = await Review.fromSnapshot(reviewlist[i]);
+                          reviewdata = await Review.fromSnapshot(snapshot.data!.docs[i]);
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (BuildContext context) {
@@ -54,10 +53,10 @@ class CheckedScreen2 extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               FutureBuilder<Exhibition>(
-                                  future: getExhibitRef(reviewlist[i]),
+                                  future: getExhibitRef(snapshot.data!.docs[i]),
                                   builder: (context, exhibition) {
                                     var date = DateFormat('yyyy.MM.dd').format(
-                                        (reviewlist[i]['time'] as Timestamp)
+                                        (snapshot.data!.docs[i]['time'] as Timestamp)
                                             .toDate());
                                     if (!exhibition.hasData) {
                                       return const SizedBox(
@@ -89,7 +88,7 @@ class CheckedScreen2 extends StatelessWidget {
                                 height: 20,
                               ),
                               Text(
-                                reviewlist[i]['content'],
+                                snapshot.data!.docs[i]['content'],
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(fontSize: 11),
