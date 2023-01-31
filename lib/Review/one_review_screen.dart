@@ -100,7 +100,8 @@ class _OneReviewScreenState extends State<OneReviewScreen> {
                               .get(),
                           builder: (context, usersnapshot) {
                             if (!usersnapshot.hasData) {
-                              return const LinearProgressIndicator();
+                              return const SizedBox(width:1);
+                              //linear어쩌고 하면 BoxConstraints forces an infinite width. 에러 뜸
                             }
                             return Row(
                               children: [
@@ -211,7 +212,7 @@ class _OneReviewScreenState extends State<OneReviewScreen> {
                                                 .collection('review')
                                                 .doc(widget.reviewdata
                                                         .writeremail +
-                                                    widget.reviewdata.title)
+                                                    widget.reviewdata.exhibitiontitle)
                                                 .delete();
                                           });
                                           Navigator.pop(context);

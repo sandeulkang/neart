@@ -30,6 +30,9 @@ class CheckedScreen2 extends StatelessWidget {
                   shrinkWrap: true,
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (context, i) {
+                    var date = DateFormat('yyyy.MM.dd').format(
+                        (snapshot.data!.docs[i]['time'] as Timestamp)
+                            .toDate());
                     return Padding(
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                       child: InkWell(
@@ -52,18 +55,7 @@ class CheckedScreen2 extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              FutureBuilder<Exhibition>(
-                                  future: getExhibitRef(snapshot.data!.docs[i]),
-                                  builder: (context, exhibition) {
-                                    var date = DateFormat('yyyy.MM.dd').format(
-                                        (snapshot.data!.docs[i]['time'] as Timestamp)
-                                            .toDate());
-                                    if (!exhibition.hasData) {
-                                      return const SizedBox(
-                                        width: 1,
-                                      );
-                                    }
-                                    return Row(
+                            Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
@@ -72,9 +64,9 @@ class CheckedScreen2 extends StatelessWidget {
                                             SizedBox(
                                                 width: 30,
                                                 child: Image.network(
-                                                    exhibition.data!.poster)),
+                                                    snapshot.data!.docs[i]['poster'])),
                                             const SizedBox(width: 10),
-                                            Text(exhibition.data!.title),
+                                            Text(snapshot.data!.docs[i]['exhibitiontitle']),
                                           ],
                                         ),
                                         Text(
@@ -82,8 +74,8 @@ class CheckedScreen2 extends StatelessWidget {
                                           style: const TextStyle(fontSize: 10),
                                         )
                                       ],
-                                    );
-                                  }),
+                                    ),
+                                  // }),
                               const Divider(
                                 height: 20,
                               ),
@@ -101,16 +93,4 @@ class CheckedScreen2 extends StatelessWidget {
                   });
         });
   }
-}
-
-Future<Exhibition> getExhibitRef(DocumentSnapshot review) async {
-  dynamic ref;
-  dynamic docu;
-  dynamic exhibition;
-
-  ref = await review['exhibitref'];
-  docu = await ref.get();
-  exhibition = Exhibition.fromSnapshot(docu);
-
-  return exhibition;
 }

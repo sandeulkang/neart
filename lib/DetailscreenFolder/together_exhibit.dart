@@ -35,11 +35,15 @@ class TogetherExhibit extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           InkWell(
-            child: Image.network(
-              data['poster'],
+            child: SizedBox(
               height: 350,
+              width: 262,
+              child: Image.network(
+                data['poster'],
+                fit: BoxFit.fitHeight,
+              ),
             ),
-            onTap: () async{
+            onTap: () async {
               final exhibition = await Exhibition.fromSnapshot(data);
               Navigator.of(context).push(
                   MaterialPageRoute<Null>(builder: (BuildContext context) {
@@ -53,15 +57,21 @@ class TogetherExhibit extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+              SizedBox(
+              width: 257,
+              child: Text(
                   data['title'],
                   style: const TextStyle(
                       fontSize: 14, fontWeight: FontWeight.w600),
-                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                ),),
                 const SizedBox(
                   height: 4,
                 ),
-                Text(data['place'],),
+                Text(
+                  data['place'],
+                ),
                 const SizedBox(height: 2),
                 Text(data['date']),
               ],

@@ -39,7 +39,7 @@ class _ReviseScreenState extends State<ReviseScreen> {
                 FirebaseFirestore
                     .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
                     .collection('review')
-                    .doc(widget.reviewdoc)
+                    .doc(widget.reviewdoc.writeremail+widget.reviewdoc.exhibitiontitle)
                     .update({
                   'content': reviewController.text,
                 });
@@ -57,7 +57,7 @@ class _ReviseScreenState extends State<ReviseScreen> {
             future: FirebaseFirestore
                 .instance
                 .collection('review')
-                .doc(widget.reviewdoc)
+                .doc(widget.reviewdoc.writeremail+widget.reviewdoc.exhibitiontitle)
                 .get(),
             builder: (context, snapshot) {
               reviewController = TextEditingController(text: snapshot.data!['content']);

@@ -39,7 +39,6 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
     DocumentSnapshot placeinfodata =
     await db.collection('placeinfo').doc(widget.exhibition.place).get();
     placeinformation = await placeinfodata['info'];
-    placeinformation2 = await placeinfodata['info2'];
 
   }
 
@@ -348,10 +347,16 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
                             style: TextStyle(
                                 fontSize: 13, fontWeight: FontWeight.w600),
                           ),
-                          Text(placeinformation2.replaceAll("\\n", "\n"),
-                              style: const TextStyle(
-                                height: 1.5,
-                              ))
+                          FutureBuilder<DocumentSnapshot>(
+                            future: db.collection('placeinfo').doc(widget.exhibition.place).get(),
+                            builder: (context,snapshot) {
+                              if(!snapshot.hasData) {return SizedBox(width: 1,);}
+                              return Text(snapshot.data!['info2'].replaceAll("\\n", "\n"),
+                                  style: const TextStyle(
+                                    height: 1.5,
+                                  ));
+                            }
+                          )
                         ]),
                   ),
                   MainContainer(

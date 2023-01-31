@@ -14,16 +14,14 @@ class CertainWordExhibit extends StatefulWidget {
 }
 
 class _CertainWordExhibitState extends State<CertainWordExhibit> {
-
   dynamic word;
 
   @override
   void initState() {
     super.initState();
-    word = widget.word;//Query<Map<String, dynamic>> 타입임.
+    word = widget.word; //Query<Map<String, dynamic>> 타입임.
     //placeExhibitQuery를 스냅샷으로 builder로 굴려주고 listview 하면 되지 않을까? 이거랑 지금 비슷한 구조인 게
   }
-
 
   Widget _buildBody(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -36,7 +34,6 @@ class _CertainWordExhibitState extends State<CertainWordExhibit> {
       },
     );
   }
-
 
   // *buildlist에서는 검색 결과에 따라 데이터를 처리해 listView 생성해줌
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
@@ -52,7 +49,7 @@ class _CertainWordExhibitState extends State<CertainWordExhibit> {
 
     // * listView 생성
     return SizedBox(
-      height: 430,
+      height: 460,
       child: ListView(
           scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.all(3),
@@ -73,25 +70,31 @@ class _CertainWordExhibitState extends State<CertainWordExhibit> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           InkWell(
-            child: Image.network(exhibition.poster, height: 350,),
+            child: Image.network(
+              exhibition.poster,
+              height: 350,
+            ),
             onTap: () {
-              Navigator.of(context).push(MaterialPageRoute<Null>(
-                  builder: (BuildContext context) {
-                    // * 클릭한 영화의 DetailScreen 출력
-                    return ExhibitionDetailScreen(exhibition: exhibition);
-                  }));
+              Navigator.of(context).push(
+                  MaterialPageRoute<Null>(builder: (BuildContext context) {
+                return ExhibitionDetailScreen(exhibition: exhibition);
+              }));
             },
           ),
           Container(
-            padding: const EdgeInsets.fromLTRB(5,10, 0, 0),
+            padding: const EdgeInsets.fromLTRB(5, 10, 0, 0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  exhibition.title,
-                  style: const TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.w600),
-
+                SizedBox(
+                  width: 250,
+                  child: Text(
+                    exhibition.title,
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.w600),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 const SizedBox(
                   height: 4,
@@ -106,7 +109,6 @@ class _CertainWordExhibitState extends State<CertainWordExhibit> {
       ),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {

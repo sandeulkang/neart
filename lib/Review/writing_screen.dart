@@ -44,7 +44,7 @@ class _WritingScreenState extends State<WritingScreen> {
                     .collection('review')
                     .doc(_currentUser.email! + widget.exhibition.title)
                     .set({
-                  'useremail': _currentUser.email,
+                  'writeremail': _currentUser.email,
                   'exhibitiontitle': widget.exhibition.title,
                   'content': reviewController.text,
                   'time': FieldValue.serverTimestamp(),

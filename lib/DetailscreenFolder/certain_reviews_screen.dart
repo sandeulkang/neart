@@ -23,8 +23,8 @@ class CertainReviewsScreen extends StatelessWidget {
         }
         return snapshot.data!.docs.isEmpty
             ? SizedBox(
-            height: 60,
-            child: const Center(child: Text('아직 작성된 후기가 없어요.')))
+             height: 60,
+             child: const Center(child: Text('아직 작성된 후기가 없어요.')))
             : ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,

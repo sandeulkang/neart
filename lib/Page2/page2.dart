@@ -42,7 +42,7 @@ class _Page2State extends State<Page2> {
       BuildContext context, List<QueryDocumentSnapshot> snapshot) {
     List<QueryDocumentSnapshot> searchResults = [];
     for (QueryDocumentSnapshot d in snapshot) {
-      if ((d.data()! as Map)['keyword'].toString().contains(_searchText)) {
+      if ((d.data()! as Map)['keyword'].toString().contains(_searchText)|(d.data()! as Map)['title'].toString().contains(_searchText)|(d.data()! as Map)['place'].toString().contains(_searchText)) {
         searchResults.add(d);
       }
     }
@@ -82,7 +82,6 @@ class _Page2State extends State<Page2> {
                   width: MediaQuery.of(context).size.width*0.45,
                   child: Image.network(
                     exhibitions[i].poster,
-                    fit: BoxFit.fitHeight,
                   ),
                 ),
               ),
