@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'Checked_screen1.dart';
-import 'Checked_screen2.dart';
+import 'checked_screen1_streamver_only.dart';
+import 'checked_screen2_streamver.dart';
 
 
 //다녀온 전시, 남긴 리뷰 두 스크린으로 나뉠 것이다
@@ -46,7 +46,7 @@ class _CheckedScreenState extends State<CheckedScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(15,0,15,0),
-                child: isExhibitScreen ? const CheckedScreen1() : CheckedScreen2(),
+                child: isExhibitScreen ?  CcheckedScreen1only() : CcheckedScreen2(),
               ),
             ],
           ),

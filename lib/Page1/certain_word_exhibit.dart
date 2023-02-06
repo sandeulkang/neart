@@ -28,8 +28,7 @@ class _CertainWordExhibitState extends State<CertainWordExhibit> {
       // FireStore 인스턴스의 exhibition 컬렉션의 snapshot을 가져옴
       stream: FirebaseFirestore.instance.collection('exhibition').snapshots(),
       builder: (context, snapshot) {
-        // snapshot의 데이터가 없는 경우 Linear~ 생성
-        if (!snapshot.hasData) return const LinearProgressIndicator();
+        if (!snapshot.hasData) return const LinearProgressIndicator(color: Colors.black38,);
         return _buildList(context, snapshot.data!.docs);
       },
     );

@@ -178,7 +178,8 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
                                                                   userdoc
                                                                       .collection('heart')
                                                                       .doc(widget.exhibition.title)
-                                                                      .set(mapdata);
+                                                                      .set(
+                                                                      mapdata);
                                                                 })
                                                                 : needLoginDialog(
                                                                 context);
@@ -217,7 +218,12 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
                                                             ? setState(() {
                                                               userdoc.collection('havebeen')
                                                                   .doc(widget.exhibition.title)
-                                                                  .set(mapdata);
+                                                                  .set({'poster':widget.exhibition.poster,
+                                                                'place':widget.exhibition.place,
+                                                                'title': widget.exhibition.title,
+                                                                'ref': db.collection('exhibition').doc(widget.exhibition.title),
+                                                                'time': FieldValue.serverTimestamp(),
+                                                              });
                                                             })
                                                             : needLoginDialog(context);
                                                       },
@@ -238,10 +244,10 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
                                   height: 80,
                                   child: FirebaseAuth.instance.currentUser == null
                                       ? const SizedBox(width: 1)
-                                      : FutureBuilder<DocumentSnapshot>(
-                                      future: db.collection('review')
-                                          .doc(FirebaseAuth.instance.currentUser!.email! + widget.exhibition.title)
-                                          .get(),
+                                      : StreamBuilder<DocumentSnapshot>(
+                                    //얘는 streambuilder필수임 리뷰가 수정, 작성, 삭제 등등 되면 바로 업데이트 되어야 하니까
+                                      stream: db.collection('review')
+                                          .doc(FirebaseAuth.instance.currentUser!.email! + widget.exhibition.title).snapshots(),
                                       builder: (context, reviewsnapshot) {
                                         if (!reviewsnapshot.hasData) {
                                           return const SizedBox(width: 1);

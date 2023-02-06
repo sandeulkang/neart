@@ -21,7 +21,7 @@ class LikeScreen extends StatelessWidget {
           future: bringHeartDocs(),
           builder: (context, refList) {
             if (!refList.hasData) {
-              return const LinearProgressIndicator();
+              return const LinearProgressIndicator(color: Colors.black38,);
             }
             return refList.data!.isEmpty
                 ? const Center(child: Text('아직 좋아요한 전시가 없어요!'))

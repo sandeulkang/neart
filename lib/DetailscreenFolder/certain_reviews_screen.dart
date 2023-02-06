@@ -19,7 +19,7 @@ class CertainReviewsScreen extends StatelessWidget {
           .get(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return const LinearProgressIndicator();
+          return const LinearProgressIndicator(color: Colors.black38,);
         }
         return snapshot.data!.docs.isEmpty
             ? SizedBox(

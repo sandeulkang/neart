@@ -38,9 +38,9 @@ class _WritingScreenState extends State<WritingScreen> {
           centerTitle: true,
           actions: [
             TextButton(
-              onPressed: () {
+              onPressed: () async{
                 if (!_tryValidation()) return;
-                _firestore //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
+                await _firestore //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
                     .collection('review')
                     .doc(_currentUser.email! + widget.exhibition.title)
                     .set({

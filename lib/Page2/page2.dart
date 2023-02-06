@@ -31,7 +31,7 @@ class _Page2State extends State<Page2> {
           .orderBy('time', descending: true)
           .get(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return const LinearProgressIndicator();
+        if (!snapshot.hasData) return const LinearProgressIndicator(color: Colors.black38,);
         return _buildList(context, snapshot.data!.docs);
       },
     );

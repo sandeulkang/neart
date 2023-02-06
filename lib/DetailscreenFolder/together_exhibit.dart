@@ -16,7 +16,7 @@ class TogetherExhibit extends StatelessWidget {
             .where('place', isEqualTo: place)
             .get(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData) return const LinearProgressIndicator();
+          if (!snapshot.hasData) return const LinearProgressIndicator(color: Colors.black38,);
           return SizedBox(
               height: 460,
               child: ListView(

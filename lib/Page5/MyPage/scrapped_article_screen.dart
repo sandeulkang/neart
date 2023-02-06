@@ -26,7 +26,7 @@ class _ScrapeScreenState extends State<ScrapeScreen> {
           future: bringBookmarkDocs(),
           builder: (context, refList) {
             if (!refList.hasData) {
-              return const LinearProgressIndicator();
+              return const LinearProgressIndicator(color: Colors.black38,);
             }
             return refList.data!.isEmpty
                 ? const Center(child: Text('아직 스크랩한 칼럼이 없어요!'))

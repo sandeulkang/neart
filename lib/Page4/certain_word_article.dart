@@ -2,10 +2,11 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:neart/Model/model_article.dart';
-import '../trash/article_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CertainWordArticle extends StatelessWidget {
   final String word;
+  var url;
 
   CertainWordArticle({required this.word});
 
@@ -13,7 +14,7 @@ class CertainWordArticle extends StatelessWidget {
     return FutureBuilder<QuerySnapshot>(
       future: FirebaseFirestore.instance.collection('Column').where('keyword', arrayContains: word).get(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return const LinearProgressIndicator();
+        if (!snapshot.hasData) return const LinearProgressIndicator(color: Colors.black38,);
         return _buildList(context, snapshot.data!.docs);
       },
     );
@@ -36,15 +37,11 @@ class CertainWordArticle extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
       child: InkWell(
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute<Null>(
-              builder: (BuildContext context) {
-                // * 클릭한 영화의 DetailScreen 출력
-                return ArticleScreen(article: article);
-              },
-            ),
-          );
+        onTap: () async {
+          final url = Uri.parse(article.url);
+          if (await canLaunchUrl(url)) {
+            launchUrl(url, mode: LaunchMode.externalApplication);
+          }
         },
         child: SizedBox(
           width: MediaQuery.of(context).size.width*0.9,

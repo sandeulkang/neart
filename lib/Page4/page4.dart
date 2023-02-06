@@ -37,7 +37,7 @@ class _Page4State extends State<Page4> {
           .orderBy('time', descending: true)
           .get(), //QuerySnapshot 타입임
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return const LinearProgressIndicator();
+        if (!snapshot.hasData) return const LinearProgressIndicator(color: Colors.black38,);
         return _buildList(context, snapshot.data!.docs);
       },
     );
@@ -172,7 +172,7 @@ class _Page4State extends State<Page4> {
                                     },
                                   );
                           }
-                          return const LinearProgressIndicator();
+                          return const LinearProgressIndicator(color: Colors.black38,);
                         }),
                   )
           ],

@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:neart/Review/revise_screen.dart';
 import '../DetailscreenFolder/exhibition_detail_screen.dart';
 import '../Model/model_exhibitions.dart';
+import '../endExhibitDialog.dart';
 
 //어떤 리뷰를 클릭했을 때 구체적으로 그 리뷰를 보여주는 스크린이다
 //내가 만들어 두었던 Review 모델 타입의 파라미터를 전달받는다
@@ -52,13 +53,14 @@ class _OneReviewScreenState extends State<OneReviewScreen> {
                                     exhibition: exhibition)),
                           );
                         }
+                        else{endExhibitDialog(context);}
                       });
                     },
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
-                          width: 70,
+                          width: 75, height: 110,
                           child: Image.network(widget.reviewdata.poster),
                         ),
                         const SizedBox(
@@ -91,7 +93,7 @@ class _OneReviewScreenState extends State<OneReviewScreen> {
                   //작성자
                   Positioned(
                     right: 15,
-                    top: 65,
+                    top: 80,
                     child: Container(
                       child: FutureBuilder<DocumentSnapshot>(
                           future: FirebaseFirestore.instance
@@ -207,15 +209,13 @@ class _OneReviewScreenState extends State<OneReviewScreen> {
                                         )),
                                     TextButton(
                                         onPressed: () {
-                                          setState(() {
-                                            FirebaseFirestore.instance
+                                           FirebaseFirestore.instance
                                                 .collection('review')
                                                 .doc(widget.reviewdata
                                                         .writeremail +
                                                     widget.reviewdata.exhibitiontitle)
                                                 .delete();
-                                          });
-                                          Navigator.pop(context);
+                                           Navigator.of(context)..pop()..pop();
                                         },
                                         child: const Text('네',
                                             style: TextStyle(
