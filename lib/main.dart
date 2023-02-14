@@ -1,3 +1,4 @@
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:neart/homepage.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'dart:io';
 import 'Page5/page5_null.dart';
 import 'Page5/page5_on.dart';
+import 'nonetworkpage.dart';
 
 class MyHttpOverrides extends HttpOverrides{
   @override
@@ -16,9 +18,8 @@ class MyHttpOverrides extends HttpOverrides{
 }
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-  );
+  await WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   HttpOverrides.global = MyHttpOverrides();
   runApp(MyApp());
 }
@@ -27,9 +28,13 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
+
+
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
+    var result = (Connectivity().checkConnectivity());
+    if(result == ConnectivityResult.none){}
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -48,7 +53,7 @@ class _MyAppState extends State<MyApp> {
         '/Page5_on': (context) => Page5_on(),
         '/Page5_null': (context) => Page5_null(),
       },
-      home: HomePage(),
+      home: result == ConnectivityResult.none ?NoNetworkPage():HomePage() ,
     );
   }
 }

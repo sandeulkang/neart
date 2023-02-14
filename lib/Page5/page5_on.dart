@@ -1,10 +1,12 @@
 import 'dart:io';
+import 'package:circular_menu/circular_menu.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'MyPage/checked_screen.dart';
 import 'MyPage/like_screen.dart';
@@ -77,7 +79,10 @@ class _Page5_onState extends State<Page5_on> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      height: MediaQuery.of(context).size.height * 0.7,
+                      height: MediaQuery
+                          .of(context)
+                          .size
+                          .height * 0.7,
                       child: Column(
                         children: [
                           //유저 프로필 이미지
@@ -86,8 +91,8 @@ class _Page5_onState extends State<Page5_on> {
                             CircleAvatar(
                                 radius: 60,
                                 backgroundImage: NetworkImage(snapshot.data?[
-                                    'profileUrl']) //image.network하면 안 되고 networkimage해야 됨
-                                ),
+                                'profileUrl']) //image.network하면 안 되고 networkimage해야 됨
+                            ),
                             Positioned(
                                 left: 87,
                                 top: 87,
@@ -137,7 +142,7 @@ class _Page5_onState extends State<Page5_on> {
                                         return Stack(children: [
                                           Row(
                                             mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
+                                            MainAxisAlignment.spaceEvenly,
                                             children: [
                                               TextButton(
                                                 child: const Text(
@@ -160,14 +165,14 @@ class _Page5_onState extends State<Page5_on> {
                                                     if (!_tryValidation())
                                                       return;
                                                     setState(
-                                                      () {
+                                                          () {
                                                         FirebaseFirestore
                                                             .instance
                                                             .collection(
-                                                                'member')
+                                                            'member')
                                                             .doc(_auth
-                                                                .currentUser!
-                                                                .email!)
+                                                            .currentUser!
+                                                            .email!)
                                                             .update({
                                                           'name': nameController
                                                               .text,
@@ -196,8 +201,8 @@ class _Page5_onState extends State<Page5_on> {
                                                 },
                                                 autofocus: true,
                                                 decoration:
-                                                    const InputDecoration(
-                                                        filled: false),
+                                                const InputDecoration(
+                                                    filled: false),
                                               ),
                                             ),
                                           ),
@@ -234,62 +239,54 @@ class _Page5_onState extends State<Page5_on> {
                                   where: const ScrapeScreen()),
                             ],
                           ),
-
-                          // Padding(
-                          //     padding: const EdgeInsets.symmetric(vertical: 50),
-                          //     child: TextButton(
-                          //         child: const Text('전시 write'),
-                          //         onPressed: () async {
-                          //           FirebaseFirestore
-                          //               .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
-                          //               .collection('placeinfo')
-                          //               .doc('국립현대미술관 과천')
-                          //               .set({
-                          //             'info': '휴관일 : 월요일',
-                          //             'info2':
-                          //                 '주소 : 경기 과천시 광명로 313 국립현대미술관\n운영 시간 : 10:00-18:00\n -입장 마감 시간 : 18시 30분 \n관람료 : 상설전 무료, 기획전 변동\n 연락처 : 02-2188-6000 \n*지하철 4호선 서울대공원역 4번출구에서 20분 간격으로 왕복버스 운행. \n*보다 자세한 사항은 공식 사이트를 확인해 주세요.',
-                          //           });
-                          //
-                          //           FirebaseFirestore
-                          //               .instance //앞에 var 붙이면 local변수가 돼서 아래에서 사용이 안 된다.
-                          //               .collection('exhibition')
-                          //               .doc('MMCA 예술놀이마당')
-                          //               .set({
-                          //             'title': 'MMCA 예술놀이마당',
-                          //             'admission': '무료',
-                          //             'place': '국립현대미술관 과천',
-                          //             'date': '12.28.-10.31.',
-                          //             'explanation':
-                          //                 '어린이미술관의 기능을 강화하고 과천관을 가족 중심 미술관으로 특화하기 위해 시작된 «MMCA예술놀이마당»은 ‘예술·자연·놀이’를 주제로 과천관 안과 밖을 연결하는 프로젝트이다.\n2022년 «MMCA 예술놀이마당»에서는 현대 미술 작가들의 시선으로 바라본 과천-미술관 풍경을 실감형 콘텐츠로 만날 수 있다. 미술관과 자연을 소재로 제작된 실감형 콘텐츠는 디지털 매체를 적극적으로 활용하여 어린이·가족 관람객의 미술관교육 경험 확장이 가능하도록 하고, 감각을 활용한 놀이적 접근으로 어린이들에게 예술 기반의 몰입과 창의적 경험을 유도한다. \n‹미술관 풍경›은 작가의 시선으로 사진 안에 담은 미술관 바깥 풍경을 미술관 안과 연결하며 자연이라는 시간 속에서 축적된 이미지를 콜라주한 작품이다. 이번 전시에서는 어린이미술관과 작가가 협업하여 자연을 주제로 한 사진과 영상, 체험형 인터랙티브 아트 등을 선보인다. \n‘빛·바람·흙·나무·도토리·은행’ 등 작품 속 다양한 자연물을 통해 관람객들은 자연의 법칙이 시간의 흐름에 따라 순환하고 있는 미술관 풍경을 볼 수 있다. 올해 두 번째로 기획된 «MMCA 예술놀이마당»에서 예술, 자연, 놀이가 있는 미술관을 경험하길 바란다. \n\n김태동, ‹미술관 풍경›, 2022, 사진 꼴라쥬, 작가소장\n‹미술관 풍경›은 김태동 작가의 시선으로 사진 안에 담은 미술관 바깥 풍경을 미술관 안과 자연스럽게 연결하며 자연이라는 시간 속에서 축적된 이미지들을 콜라주한 작업이다. 미술관 바깥의 풍경이 사진이라는 이미지를 통해 밀집되어 나타나며, 사진 작가가 어떤 시간의 풍경을 담아내느냐에 따라 다양한 해석이 가능하다. 작가는 어린이들에게 익숙하지만 낯선 풍경, 미술관과 함께 공존하면서도 분리된 미술관 풍경을 주목하게 한다. 자연과 풍경은 김태동 작가의 작업으로 미술관의 안과 밖을 연결하는 매개체로서 이미지화되어 우리에게 소개된다. 빛, 바람, 흙, 나무, 열매, 씨앗 등 작품 속 다양한 소재들은 자연의 법칙이 시간의 흐름에 따라 순환하고 있음을 보여 준다. 이 작품은 미술관 풍경을 시간대별로 촬영한 40여 장의 사진을 다시 대형 사진으로 조합·설치하여 참여자들에게 국립현대미술관 과천관의 자연과 풍경을 감상하도록 한다. \n\n프로그램\n미술관 풍경 놀이\n낙엽 모으기, 도토리 줍기, 은행 찾기\n자연 속 미술관인 국립현대미술관 과천을 배경으로 한 참여형 인터랙티브 아트를 경험할 수 있다. \n움직임이 인식되는 화면 속에서 어린이들은 손으로 낙엽을 모으고 도토리를 줍는 등 다양한 움직임 활동을 통해 체험할 수 있다. \n\n미술관 풍경 만들기\n나의 이야기가 담긴 ‘미술관 풍경을 만들고 표현해 볼 수 있으며, 작가와 나의 ‘미술관 풍경’을 연결하고, 우리들의 ‘미술관 풍경’을 만들 수 있다. \n\n미술관 풍경 퍼즐 놀이\n‹미술관 풍경›을 감상하고 퍼즐을 맞춰 볼 수 있다. \n\n',
-                          //             'keyword': '어린이/과천',
-                          //             'poster':
-                          //                 'https://postfiles.pstatic.net/MjAyMzAyMDNfMjEw/MDAxNjc1NDAxOTA3NjY3.DKUo1S4xzJGTy4fCxl4lvm2pbCk_fq3xf8fyNXiMH4Mg.mtpDC3AF9j0fgmGGgqJ59HJi9tojfyW88_bziqJmYeYg.PNG.tksemf0628/%ED%99%94%EB%A9%B4_%EC%BA%A1%EC%B2%98_2023-02-03_142417.png?type=w773',
-                          //             'time': FieldValue.serverTimestamp(),
-                          //           });
-                          //
-                          //         }))
                         ],
                       ),
                     ),
                     Center(
-                      child: GestureDetector(
-                          child: Container(
-                            width: 75,
-                            height: 23,
-                            decoration: BoxDecoration(
-                                border: Border(
-                                    bottom: BorderSide(color: Colors.black38))),
-                            child: Center(
-                              child: const Text(
-                                'Logout',
-                                style: TextStyle(color: Colors.black54, fontSize: 13),
-                              ),
-                            ),
+                        child: SizedBox(
+                          width:100, height:100,
+                          child: CircularMenu(
+                            toggleButtonSize: 30,
+                            toggleButtonColor: Colors.white70,
+                            toggleButtonIconColor: Colors.black87,
+                            radius: 30,
+                            alignment: Alignment.topCenter,
+                            items: [
+                              CircularMenuItem(
+                                  icon: Icons.logout,
+                                  onTap: () async {
+                                    await _auth.signOut(); //disconnect는 계정 삭제다
+                                    setState(() {});
+                                  }),
+                              CircularMenuItem(onTap: () async{
+                                final url = Uri.parse('https://overjoyed-frill-4c1.notion.site/577f51d3da2e46e0892f4ae5455e9381');
+                                if (await canLaunchUrl(url)) {
+                                  launchUrl(url, mode: LaunchMode.externalApplication);
+                                }
+                              }, icon: Icons.info),
+                              // CircularMenuItem(onTap: () {}, icon:Icons.re)
+                            ],
                           ),
-                          onTap: () async {
-                            await _auth.signOut(); //disconnect는 계정 삭제다
-                            setState(() {});
-                          }),
+                        )
+                      // GestureDetector(
+                      //     child: Container(
+                      //       width: 75,
+                      //       height: 23,
+                      //       decoration: BoxDecoration(
+                      //           border: Border(
+                      //               bottom: BorderSide(color: Colors.black38))),
+                      //       child: Center(
+                      //         child: const Text(
+                      //           'Logout',
+                      //           style: TextStyle(
+                      //               color: Colors.black54, fontSize: 13),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //     onTap: () async {
+                      //       await _auth.signOut(); //disconnect는 계정 삭제다
+                      //       setState(() {});
+                      //     }),
                     ),
                   ],
                 );

@@ -29,7 +29,7 @@ class _OneReviewScreenState extends State<OneReviewScreen> {
     var date = DateFormat('yyyy.MM.dd.')
         .format((widget.reviewdata.time as Timestamp).toDate());
     return Scaffold(
-        appBar: AppBar(title: const Text('리뷰', style: TextStyle(fontSize: 16))),
+        appBar: AppBar(title: const Text('후기', style: TextStyle(fontSize: 16))),
         body: SingleChildScrollView(
             child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
@@ -196,7 +196,7 @@ class _OneReviewScreenState extends State<OneReviewScreen> {
                               barrierDismissible: true,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  content: const Text('정말로 리뷰를 삭제하시겠어요?'),
+                                  content: const Text('정말로 후기를 삭제하시겠어요?'),
                                   contentPadding: const EdgeInsets.all(30),
                                   actions: [
                                     TextButton(

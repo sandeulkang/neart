@@ -298,7 +298,7 @@ class _ExhibitionDetailScreenState extends State<ExhibitionDetailScreen> {
                                             height: 50,
                                             child: const Center(
                                               child: Text(
-                                                '클릭하여 리뷰를 적어보세요!',
+                                                '클릭하여 후기를 적어보세요!',
                                                 style: TextStyle(
                                                     color: Colors.black87),
                                               ),

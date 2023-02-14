@@ -53,7 +53,7 @@ class LikeScreen extends StatelessWidget {
                               );
                             },
                             child: SizedBox(
-                              height: 280,
+                              height: 250,
                               width: MediaQuery.of(context).size.width * 0.45,
                               child: Image.network(
                                 exhibitions[i].poster,

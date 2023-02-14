@@ -22,7 +22,7 @@ class Page1 extends StatelessWidget {
           CertainWordExhibit(word: '인기'),
           MainText(text: '지금 뜨고 있는 키워드 #개인전'),
           CertainWordExhibit(word: '개인전'),
-          MainText(text: '최근 올라온 리뷰'),
+          MainText(text: '최근 올라온 후기'),
           recentReview(),
           MainText(text: '곧 끝나는 전시',),
           CertainWordExhibit(word: '곧 끝나는'),
