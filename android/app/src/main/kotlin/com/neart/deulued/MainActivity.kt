@@ -1,4 +1,4 @@
-package com.example.neart
+package com.neart.deulued
 
 import io.flutter.embedding.android.FlutterActivity
 
